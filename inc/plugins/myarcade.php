@@ -235,7 +235,7 @@ function myarcade_install()
 		"maxplaysday" => 0,
 		"canmoderategames" => 1,
 		"cancreatetournaments" => 1
-	);	
+	);
 	$db->update_query("usergroups", $update_array, "cancp='1' OR issupermod='1'");
 
 	$update_array = array(
@@ -247,7 +247,7 @@ function myarcade_install()
 		"canviewgamestats" => 0,
 		"canviewtournaments" => 0,
 		"canjointournaments" => 0
-	);	
+	);
 	$db->update_query("usergroups", $update_array, "isbannedgroup='1' OR canview='0' OR gid IN('1','5')");
 
 	$cache->update_usergroups();
@@ -268,6 +268,7 @@ function myarcade_is_installed()
 function myarcade_uninstall()
 {
 	global $db, $cache;
+
 	if($db->table_exists("arcadegames"))
 	{
 		$db->drop_table("arcadegames");
@@ -607,8 +608,9 @@ desc=Descending',
 		'optionscode' => 'radio
 0=Disabled
 1=Arcade Moderators and Administrators only
-2=Everyone',
-		'value' => 2,
+2=Registered Members
+3=Everyone',
+		'value' => 3,
 		'disporder' => 15,
 		'gid' => intval($gid)
 	);

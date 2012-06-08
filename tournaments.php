@@ -54,7 +54,11 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 	{
 		$online = whos_online();
 	}
-	else if($mybb->settings['arcade_whosonline'] == 2)
+	else if($mybb->settings['arcade_whosonline'] == 2 && $mybb->user['uid'])
+	{
+		$online = whos_online();
+	}
+	else if($mybb->settings['arcade_whosonline'] == 3)
 	{
 		$online = whos_online();
 	}
