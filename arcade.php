@@ -131,7 +131,7 @@ switch($mybb->input['sessdo'])
 		echo "&validate=1&microone=$microone&result=OK";
 	break;
 	case 'burn':
-		$perpage = $mybb->settings['scoresperpage'];
+		$perpage = intval($mybb->settings['scoresperpage']);
 
 		$score = $mybb->cookies['v3score'];
 		$name = $mybb->input['id'];
@@ -268,7 +268,7 @@ if($mybb->input['action'] == "play")
 		);
 		$db->insert_query("arcadesessions", $new_session);
 
-		my_setcookie('arcadesession', $sid);
+		my_setcookie('arcadesession', $sid, 21600);
 
 		$startedon = $information[$tournament['round']]['starttime'];
 		$roundstartedon = my_date($mybb->settings['dateformat'], $startedon).", ".my_date($mybb->settings['timeformat'], $startedon);
@@ -292,7 +292,7 @@ if($mybb->input['action'] == "play")
 		);
 		$db->insert_query("arcadesessions", $new_session);
 
-		my_setcookie('arcadesession', $sid);
+		my_setcookie('arcadesession', $sid, 21600);
 	}
 
 	$query = $db->simple_select("arcadechampions", "*", "gid='{$game['gid']}'");
