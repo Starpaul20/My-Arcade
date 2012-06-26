@@ -1,7 +1,7 @@
 <?php
 /**
  * My Arcade
- * Copyright 2011 Starpaul20
+ * Copyright 2012 Starpaul20
  */
 
 $arcade_templates['arcade'] = "<html>

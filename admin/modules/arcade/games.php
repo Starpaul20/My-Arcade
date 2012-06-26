@@ -662,14 +662,14 @@ if($mybb->input['action'] == "delete")
 	}
 	else
 	{
-		$page->output_confirm_action("index.php?module=arcade-games&amp;action=delete&amp;bid={$bookmark['gid']}", $lang->confirm_game_deletion);
+		$page->output_confirm_action("index.php?module=arcade-games&amp;action=delete&amp;gid={$game['gid']}", $lang->confirm_game_deletion);
 	}
 }
 
 if($mybb->input['action'] == "disable")
 {
 	$plugins->run_hooks("admin_arcade_games_disable");
-	
+
 	$query = $db->simple_select("arcadegames", "*", "gid='".intval($mybb->input['gid'])."'");
 	$game = $db->fetch_array($query);
 
@@ -682,7 +682,7 @@ if($mybb->input['action'] == "disable")
 	$active = array(
 		"active" => 0
 	);
-	$db->update_query("arcadegames", $active, "gid='{$mybb->input['gid']}'");
+	$db->update_query("arcadegames", $active, "gid='{$game['gid']}'");
 
 	$plugins->run_hooks("admin_arcade_games_disable_commit");
 
@@ -709,7 +709,7 @@ if($mybb->input['action'] == "enable")
 	$active = array(
 		"active" => 1
 	);
-	$db->update_query("arcadegames", $active, "gid='{$mybb->input['gid']}'");
+	$db->update_query("arcadegames", $active, "gid='{$game['gid']}'");
 
 	$plugins->run_hooks("admin_arcade_games_enable_commit");
 
@@ -763,33 +763,33 @@ if(!$mybb->input['action'])
 	$table->construct_header($lang->controls, array("class" => "align_center", 'width' => '15%'));
 
 	$query = $db->simple_select("arcadegames", "*", "", array('limit_start' => $start, 'limit' => 20, 'order_by' => 'name'));
-	while($arcade_games = $db->fetch_array($query))
+	while($arcade_game = $db->fetch_array($query))
 	{
-		if(!$arcade_games['lastplayed'])
+		if(!$arcade_game['lastplayed'])
 		{
-			$arcade_games['lastplayed'] = $lang->na;
+			$arcade_game['lastplayed'] = $lang->na;
 		}
 		else
-		$arcade_games['lastplayed'] = date("jS M Y, G:i", $arcade_games['lastplayed']);
+		$arcade_game['lastplayed'] = date("jS M Y, G:i", $arcade_game['lastplayed']);
 		$trow = alt_trow();
 
-		$table->construct_cell("<strong><a href=\"index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_games['gid']}\">{$arcade_games['name']}</a></strong><br />
-<a href=\"index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_games['gid']}\"><img src=\"../arcade/largeimages/".$arcade_games['largeimage'].".gif\" border=\"0\" alt=\"\" />", array("class" => "align_center"));
-		$table->construct_cell($arcade_games['description']);
-		$table->construct_cell($arcade_games['plays'], array("class" => "align_center"));
-		$table->construct_cell($arcade_games['lastplayed'], array("class" => "align_center"));
+		$table->construct_cell("<strong><a href=\"index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_game['gid']}\">{$arcade_game['name']}</a></strong><br />
+<a href=\"index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_game['gid']}\"><img src=\"../arcade/largeimages/".$arcade_game['largeimage'].".gif\" border=\"0\" alt=\"\" />", array("class" => "align_center"));
+		$table->construct_cell($arcade_game['description']);
+		$table->construct_cell($arcade_game['plays'], array("class" => "align_center"));
+		$table->construct_cell($arcade_game['lastplayed'], array("class" => "align_center"));
 
-		$popup = new PopupMenu("game_{$arcade_games['gid']}", $lang->options);
-		$popup->add_item($lang->edit_game, "index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_games['gid']}");
-		if($arcade_games['active'] == 1)
+		$popup = new PopupMenu("game_{$arcade_game['gid']}", $lang->options);
+		$popup->add_item($lang->edit_game, "index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_game['gid']}");
+		if($arcade_game['active'] == 1)
 		{
-			$popup->add_item($lang->disable_game, "index.php?module=arcade-games&amp;action=disable&amp;gid={$arcade_games['gid']}&amp;my_post_key={$mybb->post_code}");
+			$popup->add_item($lang->disable_game, "index.php?module=arcade-games&amp;action=disable&amp;gid={$arcade_game['gid']}&amp;my_post_key={$mybb->post_code}");
 		}
 		else
 		{
-			$popup->add_item($lang->enable_game, "index.php?module=arcade-games&amp;action=enable&amp;gid={$arcade_games['gid']}&amp;my_post_key={$mybb->post_code}");
+			$popup->add_item($lang->enable_game, "index.php?module=arcade-games&amp;action=enable&amp;gid={$arcade_game['gid']}&amp;my_post_key={$mybb->post_code}");
 		}
-		$popup->add_item($lang->delete_game, "index.php?module=arcade-games&amp;action=delete&amp;gid={$arcade_games['gid']}&amp;my_post_key={$mybb->post_code}", "return AdminCP.deleteConfirmation(this, '{$lang->confirm_game_deletion}')");
+		$popup->add_item($lang->delete_game, "index.php?module=arcade-games&amp;action=delete&amp;gid={$arcade_game['gid']}&amp;my_post_key={$mybb->post_code}", "return AdminCP.deleteConfirmation(this, '{$lang->confirm_game_deletion}')");
 		$table->construct_cell($popup->fetch(), array('class' => 'align_center'));
 		$table->construct_row();
 	}

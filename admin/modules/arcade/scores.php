@@ -31,17 +31,17 @@ $plugins->run_hooks("admin_arcade_scores_begin");
 if($mybb->input['action'] == 'prune')
 {
 	$plugins->run_hooks("admin_arcade_scores_prune");
-	
+
 	if($mybb->request_method == 'post')
 	{
 		$where = 'dateline < '.(TIME_NOW-(intval($mybb->input['older_than'])*86400));
-		
+
 		// Searching for entries by a particular user
 		if($mybb->input['uid'])
 		{
 			$where .= " AND uid='".intval($mybb->input['uid'])."'";
 		}
-		
+
 		// Searching for entries for a specific game
 		if($mybb->input['gid'] > 0)
 		{
@@ -66,14 +66,15 @@ if($mybb->input['action'] == 'prune')
 		flash_message($lang->success_pruned_scores, 'success');
 		admin_redirect("index.php?module=arcade-scores");
 	}
+
 	$page->add_breadcrumb_item($lang->prune_scores, "index.php?module=arcade-scores&amp;action=prune");
 	$page->output_header($lang->prune_scores);
 	$page->output_nav_tabs($sub_tabs, 'prune_scores');
-	
+
 	// Fetch filter options
 	$sortbysel[$mybb->input['sortby']] = 'selected="selected"';
 	$ordersel[$mybb->input['order']] = 'selected="selected"';
-	
+
 	$user_options[''] = $lang->all_users;
 	$user_options['0'] = '----------';
 	
@@ -95,7 +96,7 @@ if($mybb->input['action'] == 'prune')
 
 	$game_options[''] = $lang->all_games;
 	$game_options['0'] = '----------';
-	
+
 	$query2 = $db->query("
 		SELECT DISTINCT s.gid, g.name
 		FROM ".TABLE_PREFIX."arcadescores s
@@ -125,22 +126,22 @@ if($mybb->input['action'] == 'prune')
 	$buttons[] = $form->generate_submit_button($lang->prune_scores);
 	$form->output_submit_wrapper($buttons);
 	$form->end();
-	
+
 	$page->output_footer();
 }
 
 if(!$mybb->input['action'])
 {
 	$plugins->run_hooks("admin_arcade_scores_start");
-	
+
 	$page->output_header($lang->scores);
 
 	$page->output_nav_tabs($sub_tabs, 'scores');
-	
+
 	$perpage = intval($mybb->input['perpage']);
 	if(!$perpage)
 	{
-		$perpage = $mybb->settings['threadsperpage'];
+		$perpage = intval($mybb->settings['threadsperpage']);
 	}
 
 	$where = 'WHERE 1=1';
@@ -181,7 +182,7 @@ if(!$mybb->input['action'])
 		{$where}
 	");
 	$rescount = $db->fetch_field($query, "count");
-	
+
 	// Figure out if we need to display multiple pages.
 	if($mybb->input['page'] != "last")
 	{
@@ -211,7 +212,7 @@ if(!$mybb->input['action'])
 		$start = 0;
 		$pagecnt = 1;
 	}
-	
+
 	$table = new Table;
 	$table->construct_header($lang->username, array('width' => '10%'));
 	$table->construct_header($lang->game, array("class" => "align_center", 'width' => '20%'));
@@ -236,7 +237,7 @@ if(!$mybb->input['action'])
 		$trow = alt_trow();
 		$username = format_name($logitem['username'], $logitem['usergroup'], $logitem['displaygroup']);
 		$logitem['profilelink'] = build_profile_link($username, $logitem['uid']);
-		$logitem['game'] = "<a href=\"arcade.php?action=play&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['gname'])."</a>";
+		$logitem['game'] = "<a href=\"arcade.php?action=scores&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['gname'])."</a>";
 
 		$table->construct_cell($logitem['profilelink']);
 		$table->construct_cell($logitem['game']);
@@ -252,7 +253,7 @@ if(!$mybb->input['action'])
 		$table->construct_cell($lang->no_scores, array("colspan" => "6"));
 		$table->construct_row();
 	}
-	
+
 	$table->output($lang->scores);
 
 	// Do we need to construct the pagination?
@@ -267,7 +268,7 @@ if(!$mybb->input['action'])
 
 	$user_options[''] = $lang->all_users;
 	$user_options['0'] = '----------';
-	
+
 	$query = $db->query("
 		SELECT DISTINCT s.uid, u.username
 		FROM ".TABLE_PREFIX."arcadescores s
@@ -286,7 +287,7 @@ if(!$mybb->input['action'])
 
 	$game_options[''] = $lang->all_games;
 	$game_options['0'] = '----------';
-	
+
 	$query2 = $db->query("
 		SELECT DISTINCT s.gid, g.name
 		FROM ".TABLE_PREFIX."arcadescores s
@@ -302,13 +303,13 @@ if(!$mybb->input['action'])
 		}
 		$game_options[$game['gid']] = $game['name'];
 	}
-	
+
 	$sort_by = array(
 		'dateline' => $lang->date,
 		'username' => $lang->username,
 		'game' => $lang->game_name
 	);
-	
+
 	$order_array = array(
 		'asc' => $lang->asc,
 		'desc' => $lang->desc
@@ -325,7 +326,7 @@ if(!$mybb->input['action'])
 	$buttons[] = $form->generate_submit_button($lang->filter_scores);
 	$form->output_submit_wrapper($buttons);
 	$form->end();
-	
+
 	$page->output_footer();
 }
 

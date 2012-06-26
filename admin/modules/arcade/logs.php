@@ -29,45 +29,46 @@ $plugins->run_hooks("admin_arcade_logs_begin");
 if($mybb->input['action'] == 'prune')
 {
 	$plugins->run_hooks("admin_arcade_logs_prune");
-	
+
 	if($mybb->request_method == 'post')
 	{
 		$where = 'dateline < '.(TIME_NOW-(intval($mybb->input['older_than'])*86400));
-		
+
 		// Searching for entries by a particular user
 		if($mybb->input['uid'])
 		{
 			$where .= " AND uid='".intval($mybb->input['uid'])."'";
 		}
-		
+
 		// Searching for entries for a specific game
 		if($mybb->input['gid'] > 0)
 		{
 			$where .= " AND gid='".intval($mybb->input['gid'])."'";
 		}
-		
+
 		$db->delete_query("arcadelogs", $where);
 		$num_deleted = $db->affected_rows();
-		
+
 		$plugins->run_hooks("admin_arcade_logs_prune_commit");
-		
+
 		// Log admin action
 		log_admin_action($mybb->input['older_than'], $mybb->input['uid'], $mybb->input['gid'], $num_deleted);
 
 		flash_message($lang->success_pruned_arcade_logs, 'success');
 		admin_redirect("index.php?module=arcade-logs");
 	}
+
 	$page->add_breadcrumb_item($lang->prune_arcade_logs, "index.php?module=arcade-logs&amp;action=prune");
 	$page->output_header($lang->prune_arcade_logs);
 	$page->output_nav_tabs($sub_tabs, 'prune_arcade_logs');
-	
+
 	// Fetch filter options
 	$sortbysel[$mybb->input['sortby']] = 'selected="selected"';
 	$ordersel[$mybb->input['order']] = 'selected="selected"';
-	
+
 	$user_options[''] = $lang->all_users;
 	$user_options['0'] = '----------';
-	
+
 	$query = $db->query("
 		SELECT DISTINCT l.uid, u.username
 		FROM ".TABLE_PREFIX."arcadelogs l
@@ -86,7 +87,7 @@ if($mybb->input['action'] == 'prune')
 
 	$game_options[''] = $lang->all_games;
 	$game_options['0'] = '----------';
-	
+
 	$query2 = $db->query("
 		SELECT DISTINCT l.gid, g.name
 		FROM ".TABLE_PREFIX."arcadelogs l
@@ -116,22 +117,22 @@ if($mybb->input['action'] == 'prune')
 	$buttons[] = $form->generate_submit_button($lang->prune_arcade_logs);
 	$form->output_submit_wrapper($buttons);
 	$form->end();
-	
+
 	$page->output_footer();
 }
 
 if(!$mybb->input['action'])
 {
 	$plugins->run_hooks("admin_arcade_logs_start");
-	
+
 	$page->output_header($lang->arcade_logs);
 
 	$page->output_nav_tabs($sub_tabs, 'arcade_logs');
-	
+
 	$perpage = intval($mybb->input['perpage']);
 	if(!$perpage)
 	{
-		$perpage = $mybb->settings['threadsperpage'];
+		$perpage = intval($mybb->settings['threadsperpage']);
 	}
 
 	$where = 'WHERE 1=1';
@@ -172,7 +173,7 @@ if(!$mybb->input['action'])
 		{$where}
 	");
 	$rescount = $db->fetch_field($query, "count");
-	
+
 	// Figure out if we need to display multiple pages.
 	if($mybb->input['page'] != "last")
 	{
@@ -202,14 +203,14 @@ if(!$mybb->input['action'])
 		$start = 0;
 		$pagecnt = 1;
 	}
-	
+
 	$table = new Table;
 	$table->construct_header($lang->username, array('width' => '10%'));
 	$table->construct_header($lang->date, array("class" => "align_center", 'width' => '15%'));
 	$table->construct_header($lang->action, array("class" => "align_center", 'width' => '35%'));
 	$table->construct_header($lang->information, array("class" => "align_center", 'width' => '30%'));
 	$table->construct_header($lang->ipaddress, array("class" => "align_center", 'width' => '10%'));
-	
+
 	$query = $db->query("
 		SELECT l.*, u.username, u.usergroup, u.displaygroup, g.name AS gamename
 		FROM ".TABLE_PREFIX."arcadelogs l

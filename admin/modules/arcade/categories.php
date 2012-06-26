@@ -57,7 +57,7 @@ if($mybb->input['action'] == "add")
 					{
 						$checked[] = intval($gid);
 					}
-					
+
 					$new_categories['groups'] = implode(',', $checked);
 				}
 			}
@@ -67,7 +67,7 @@ if($mybb->input['action'] == "add")
 			}
 
 			$cid = $db->insert_query("arcadecategories", $new_categories);
-			
+
 			$plugins->run_hooks("admin_arcade_categories_add_commit");
 
 			// Log admin action
@@ -113,7 +113,7 @@ if($mybb->input['action'] == "add")
 		function checkAction(id)
 		{
 			var checked = '';
-        
+
 			$$('.'+id+'s_check').each(function(e)
 			{
      	       if(e.checked == true)
@@ -162,7 +162,7 @@ if($mybb->input['action'] == "add")
 if($mybb->input['action'] == "edit")
 {
 	$plugins->run_hooks("admin_arcade_categories_edit");
-	
+
 	$query = $db->simple_select("arcadecategories", "*", "cid='".intval($mybb->input['cid'])."'");
 	$category = $db->fetch_array($query);
 
@@ -222,7 +222,7 @@ if($mybb->input['action'] == "edit")
 			}
 
 			$db->update_query("arcadecategories", $updated_category, "cid='{$category['cid']}'");
-			
+
 			$plugins->run_hooks("admin_arcade_categories_edit_commit");
 
 			// Log admin action
@@ -235,7 +235,7 @@ if($mybb->input['action'] == "edit")
 
 	$page->add_breadcrumb_item($lang->edit_category);
 	$page->output_header($lang->categories." - ".$lang->edit_category);
-	
+
 	$sub_tabs['edit_category'] = array(
 		'title' => $lang->edit_category,
 		'description' => $lang->edit_category_desc,
@@ -281,7 +281,7 @@ if($mybb->input['action'] == "edit")
 		function checkAction(id)
 		{
 			var checked = '';
-        
+
 			$$('.'+id+'s_check').each(function(e)
 			{
      	       if(e.checked == true)
@@ -330,7 +330,7 @@ if($mybb->input['action'] == "edit")
 if($mybb->input['action'] == "delete")
 {
 	$plugins->run_hooks("admin_arcade_categories_delete");
-	
+
 	$query = $db->simple_select("arcadecategories", "*", "cid='".intval($mybb->input['cid'])."'");
 	$category = $db->fetch_array($query);
 
@@ -354,7 +354,7 @@ if($mybb->input['action'] == "delete")
 
 		$db->update_query("arcadegames", $updated_category, "cid='{$category['cid']}'");
 		$db->delete_query("arcadecategories", "cid='{$category['cid']}'");
-		
+
 		$plugins->run_hooks("admin_arcade_categories_delete_commit");
 
 		// Log admin action
@@ -372,10 +372,10 @@ if($mybb->input['action'] == "delete")
 if($mybb->input['action'] == "disable")
 {
 	$plugins->run_hooks("admin_arcade_categories_disable");
-	
+
 	$query = $db->simple_select("arcadecategories", "*", "cid='".intval($mybb->input['cid'])."'");
 	$category = $db->fetch_array($query);
-	
+
 	if(!$category['cid'])
 	{
 		flash_message($lang->error_invalid_category, 'error');
@@ -385,8 +385,8 @@ if($mybb->input['action'] == "disable")
 	$active = array(
 		"active" => 0
 	);
-	$db->update_query("arcadecategories", $active, "cid='{$mybb->input['cid']}'");
-	
+	$db->update_query("arcadecategories", $active, "cid='{$category['cid']}'");
+
 	$plugins->run_hooks("admin_arcade_categories_disable_commit");
 
 	// Log admin action
@@ -399,10 +399,10 @@ if($mybb->input['action'] == "disable")
 if($mybb->input['action'] == "enable")
 {
 	$plugins->run_hooks("admin_arcade_categories_enable");
-	
+
 	$query = $db->simple_select("arcadecategories", "*", "cid='".intval($mybb->input['cid'])."'");
 	$category = $db->fetch_array($query);
-	
+
 	if(!$category['cid'])
 	{
 		flash_message($lang->error_invalid_category, 'error');
@@ -412,9 +412,9 @@ if($mybb->input['action'] == "enable")
 	$active = array(
 		"active" => 1
 	);
-	
-	$db->update_query("arcadecategories", $active, "cid='{$mybb->input['cid']}'");
-	
+
+	$db->update_query("arcadecategories", $active, "cid='{$category['cid']}'");
+
 	$plugins->run_hooks("admin_arcade_categories_enable_commit");
 
 	// Log admin action
@@ -427,7 +427,7 @@ if($mybb->input['action'] == "enable")
 if(!$mybb->input['action'])
 {
 	$plugins->run_hooks("admin_arcade_categories_start");
-	
+
 	$page->output_header($lang->categories);
 
 	$sub_tabs['categories'] = array(
@@ -442,16 +442,16 @@ if(!$mybb->input['action'])
 	);
 
 	$page->output_nav_tabs($sub_tabs, 'categories');
-	
+
 	$table = new Table;
 	$table->construct_header($lang->name);
 	$table->construct_header($lang->controls, array("class" => "align_center", 'width' => '150'));
-	
+
 	$query = $db->simple_select("arcadecategories", "*", "", array('order_by' => 'name'));
-	while($arcade_categories = $db->fetch_array($query))
+	while($arcade_category = $db->fetch_array($query))
 	{
-		$arcade_categories['name'] = htmlspecialchars_uni($arcade_categories['name']);
-		if($arcade_categories['active'] == 1)
+		$arcade_category['name'] = htmlspecialchars_uni($arcade_category['name']);
+		if($arcade_category['active'] == 1)
 		{
 			$icon = "<img src=\"styles/{$page->style}/images/icons/bullet_on.gif\" alt=\"({$lang->alt_enabled})\" title=\"{$lang->alt_enabled}\"  style=\"vertical-align: middle;\" /> ";
 		}
@@ -459,31 +459,31 @@ if(!$mybb->input['action'])
 		{
 			$icon = "<img src=\"styles/{$page->style}/images/icons/bullet_off.gif\" alt=\"({$lang->alt_disabled})\" title=\"{$lang->alt_disabled}\"  style=\"vertical-align: middle;\" /> ";
 		}
-		$table->construct_cell("<div>{$icon}<strong><a href=\"index.php?module=arcade-categories&amp;action=edit&amp;cid={$arcade_categories['cid']}\">{$arcade_categories['name']}</a></strong></div>");
+		$table->construct_cell("<div>{$icon}<strong><a href=\"index.php?module=arcade-categories&amp;action=edit&amp;cid={$arcade_category['cid']}\">{$arcade_category['name']}</a></strong></div>");
 
-		$popup = new PopupMenu("category_{$arcade_categories['cid']}", $lang->options);
-		$popup->add_item($lang->edit_category, "index.php?module=arcade-categories&amp;action=edit&amp;cid={$arcade_categories['cid']}");
-		if($arcade_categories['active'] == 1)
+		$popup = new PopupMenu("category_{$arcade_category['cid']}", $lang->options);
+		$popup->add_item($lang->edit_category, "index.php?module=arcade-categories&amp;action=edit&amp;cid={$arcade_category['cid']}");
+		if($arcade_category['active'] == 1)
 		{
-			$popup->add_item($lang->disable_category, "index.php?module=arcade-categories&amp;action=disable&amp;cid={$arcade_categories['cid']}&amp;my_post_key={$mybb->post_code}");
+			$popup->add_item($lang->disable_category, "index.php?module=arcade-categories&amp;action=disable&amp;cid={$arcade_category['cid']}&amp;my_post_key={$mybb->post_code}");
 		}
 		else
 		{
-			$popup->add_item($lang->enable_category, "index.php?module=arcade-categories&amp;action=enable&amp;cid={$arcade_categories['cid']}&amp;my_post_key={$mybb->post_code}");
+			$popup->add_item($lang->enable_category, "index.php?module=arcade-categories&amp;action=enable&amp;cid={$arcade_category['cid']}&amp;my_post_key={$mybb->post_code}");
 		}
-		$popup->add_item($lang->delete_category, "index.php?module=arcade-categories&amp;action=delete&amp;cid={$arcade_categories['cid']}&amp;my_post_key={$mybb->post_code}", "return AdminCP.deleteConfirmation(this, '{$lang->confirm_category_deletion}')");
+		$popup->add_item($lang->delete_category, "index.php?module=arcade-categories&amp;action=delete&amp;cid={$arcade_category['cid']}&amp;my_post_key={$mybb->post_code}", "return AdminCP.deleteConfirmation(this, '{$lang->confirm_category_deletion}')");
 		$table->construct_cell($popup->fetch(), array('class' => 'align_center'));
 		$table->construct_row();
 	}
-	
+
 	if($table->num_rows() == 0)
 	{
 		$table->construct_cell($lang->no_categories, array('colspan' => 2));
 		$table->construct_row();
 	}
-	
+
 	$table->output($lang->categories);
-	
+
 	$page->output_footer();
 }
 
