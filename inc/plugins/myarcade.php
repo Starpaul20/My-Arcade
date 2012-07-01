@@ -80,9 +80,9 @@ function myarcade_install()
 				description text NOT NULL,
 				about text NOT NULL,
 				controls text NOT NULL,
-				file varchar(30) NOT NULL default '',
-				smallimage varchar(30) NOT NULL default '',
-				largeimage varchar(30) NOT NULL default '',
+				file varchar(40) NOT NULL default '',
+				smallimage varchar(40) NOT NULL default '',
+				largeimage varchar(40) NOT NULL default '',
 				cid smallint(5) unsigned NOT NULL default '0',
 				plays int(10) NOT NULL default '0',
 				lastplayed bigint(30) NOT NULL default '0',
@@ -172,7 +172,7 @@ function myarcade_install()
 				dateline bigint(30) NOT NULL default '0',
 				randchar1 varchar(100) NOT NULL default '',
 				randchar2 varchar(100) NOT NULL default '',
-				gname varchar(30) NOT NULL default '',
+				gname varchar(40) NOT NULL default '',
 				gtitle varchar(50) NOT NULL default '',
 				ipaddress varchar(50) NOT NULL default '',
 				KEY uid (uid)
@@ -835,6 +835,7 @@ desc=Descending',
 	find_replace_templatesets("postbit_classic", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("header", "#".preg_quote('<ul>')."#i", '<ul>{$arcade}');
 
+	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
 	$css = array(
 		"name" => "arcade.css",
 		"tid" => 1,
@@ -854,17 +855,16 @@ td .star_rating {\nmargin: auto;\n}\n
 .star_rating li a.five_stars {\nwidth:100%;\nz-index:2;\n}\n
 .star_rating .current_rating {\nz-index:1;\nbackground-position: left center;\n}\n
 .star_rating_success, .success_message {\ncolor: #00b200;\nfont-weight: bold;\nfont-size: 10px;\nmargin-bottom: 10px;\n}\n
-.inline_rating {\nfloat: left;\nvertical-align: middle;\npadding-right: 5px;}\n
+.inline_rating {\nfloat: left;\nvertical-align: middle;\npadding-right: 5px;\n}\n
 .arcade_search {\nfloat: left;\npadding-left: 10px;\n}",
+		"cachefile" => "arcade.css",
 		"lastmodified" => TIME_NOW
 	);
+	$db->insert_query("themestylesheets", $css);
 
-	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
+	cache_stylesheet(1, "arcade.css", $css['stylesheet']);
 
-	$sid = $db->insert_query("themestylesheets", $css);
-	$db->update_query("themestylesheets", array("cachefile" => "css.php?stylesheet=".$sid), "sid = '".$sid."'", 1);
 	$tids = $db->simple_select("themes", "tid");
-
 	while($row = $db->fetch_array($tids))
 	{
 		update_theme_stylesheet_list($row['tid']);
@@ -912,6 +912,7 @@ function myarcade_deactivate()
 	while($row = $db->fetch_array($query))
 	{
 		update_theme_stylesheet_list($row['tid']);
+		@unlink(MYBB_ROOT."cache/themes/theme{$row['tid']}/arcade.css");
 	}
 
 	$query = $db->simple_select("tasks", "tid", "file='arcade'");
