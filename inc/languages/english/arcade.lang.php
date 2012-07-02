@@ -6,6 +6,7 @@
 
 $l['arcade'] = "Arcade";
 $l['arcade_disabled'] = "You cannot use the arcade system as it has been disabled by the Administrator.";
+$l['arcade_task_ran'] = "The arcade task successfully ran.";
 
 // Online activity
 $l['playing_game'] = "Playing <a href=\"arcade.php?action=play&gid={1}\">{2}</a>";

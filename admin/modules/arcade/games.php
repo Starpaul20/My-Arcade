@@ -89,8 +89,8 @@ if($mybb->input['action'] == "add_simple")
 				"cid" => intval($mybb->input['cid']),
 				"dateline" => TIME_NOW,
 				"bgcolor" => $db->escape_string($mybb->input['bgcolor']),
-				"width" => $db->escape_string($mybb->input['width']),
-				"height" => $db->escape_string($mybb->input['height']),
+				"width" => intval($mybb->input['width']),
+				"height" => intval($mybb->input['height']),
 				"sortby" => $db->escape_string($mybb->input['sortby']),
 				"tournamentselect" => intval($mybb->input['tournamentselect']),
 				"active" => intval($mybb->input['active'])
@@ -253,114 +253,111 @@ if($mybb->input['action'] == "add_tar")
 			}
 		}
 
+		// Upload file
+		$file_tar = upload_file($_FILES['tar_file'], MYBB_ROOT."arcade", $_FILES['tar_file']['name']);
+		if($file_tar['error'])
+		{
+			$errors[] = $lang->error_uploadfailed;
+		}
+
 		if(!$errors)
 		{
-			// Upload file
-			$file_tar = upload_file($_FILES['tar_file'], MYBB_ROOT."arcade", $_FILES['tar_file']['name']);
-			if($file_tar['error'])
+			// Unpack tar
+			require_once MYBB_ROOT."inc/3rdparty/tar/pcltar.lib.php";
+			$tar = PclTarExtract(MYBB_ROOT."arcade/".$_FILES['tar_file']['name'], MYBB_ROOT."arcade", "", "tar");
+
+			if($tar == 0)
 			{
-				$errors[] = $lang->error_uploadfailed;
+				$errors[] = $lang->tar_problem;
 			}
 
 			if(!$errors)
 			{
-				// Unpack tar
-				require_once MYBB_ROOT."inc/3rdparty/tar/pcltar.lib.php";
-				$tar = PclTarExtract(MYBB_ROOT."arcade/".$_FILES['tar_file']['name'], MYBB_ROOT."arcade", "", "tar");
+				// Delete tar
+				@unlink(MYBB_ROOT."arcade/".$_FILES['tar_file']['name']);
 
-				if($tar == 0)
+				// SWF file
+				if(!@copy(MYBB_ROOT."arcade/".$filename.".swf", MYBB_ROOT."arcade/swf/".$filename.".swf"))
 				{
-					$errors[] = $lang->tar_problem;
+					$errors[] = $lang->error_missing_game_tar_swf;
+				}
+				else
+				{
+					@my_chmod(MYBB_ROOT."arcade/swf/".$filename.".swf", 0777);
+					@unlink(MYBB_ROOT."arcade/".$filename.".swf");
+				}
+
+				// PHP file
+				if(!@copy(MYBB_ROOT."arcade/".$filename.".php", MYBB_ROOT."arcade/php/".$filename.".php"))
+				{
+					$errors[] = $lang->error_missing_game_tar_php;
+				}
+				else
+				{
+					@my_chmod(MYBB_ROOT."arcade/php/".$filename.".php", 0777);
+					@unlink(MYBB_ROOT."arcade/".$filename.".php");
+				}
+
+				// Large image file
+				if(!@copy(MYBB_ROOT."arcade/".$filename."1.gif", MYBB_ROOT."arcade/largeimages/".$filename."1.gif"))
+				{
+					$errors[] = $lang->error_missing_game_tar_largeimage;
+				}
+				else
+				{
+					@my_chmod(MYBB_ROOT."arcade/largeimages/".$filename."1.gif", 0777);
+					@unlink(MYBB_ROOT."arcade/".$filename."1.gif");
+				}
+
+				// Small image file
+				if(!@copy(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/smallimages/".$filename."2.gif"))
+				{
+					$errors[] = $lang->error_missing_game_tar_smallimage;
+				}
+				else
+				{
+					@my_chmod(MYBB_ROOT."arcade/smallimages/".$filename."2.gif", 0777);
+					@unlink(MYBB_ROOT."arcade/".$filename."2.gif");
 				}
 
 				if(!$errors)
 				{
-					// Delete tar
-					@unlink(MYBB_ROOT."arcade/".$_FILES['tar_file']['name']);
+					// Load PHP file and insert game into database
+					require_once(MYBB_ROOT."arcade/php/".$filename.".php");
 
-					// SWF file
-					if(!@copy(MYBB_ROOT."arcade/".$filename.".swf", MYBB_ROOT."arcade/swf/".$filename.".swf"))
+					if($config['highscore_type'] == "low" || $config['highscore_type'] == "asc")
 					{
-						$errors[] = $lang->error_missing_game_tar_swf;
+						$sortby = "asc";
 					}
 					else
 					{
-						@my_chmod(MYBB_ROOT."arcade/swf/".$filename.".swf", 0777);
-						@unlink(MYBB_ROOT."arcade/".$filename.".swf");
+						$sortby = "desc";
 					}
 
-					// PHP file
-					if(!@copy(MYBB_ROOT."arcade/".$filename.".php", MYBB_ROOT."arcade/php/".$filename.".php"))
-					{
-						$errors[] = $lang->error_missing_game_tar_php;
-					}
-					else
-					{
-						@my_chmod(MYBB_ROOT."arcade/php/".$filename.".php", 0777);
-						@unlink(MYBB_ROOT."arcade/".$filename.".php");
-					}
+					$new_game = array(
+						"name" => $db->escape_string($config['gtitle']),
+						"description" => $db->escape_string($config['gwords']),
+						"about" => $db->escape_string($config['object']),
+						"controls" => $db->escape_string($config['gkeys']),
+						"file" => $db->escape_string($config['gname']),
+						"smallimage" => $db->escape_string($config['gname']."2"),
+						"largeimage" => $db->escape_string($config['gname']."1"),
+						"cid" => intval($mybb->input['cid']),
+						"dateline" => TIME_NOW,
+						"bgcolor" => $db->escape_string($config['bgcolor']),
+						"width" => intval($config['gwidth']),
+						"height" => intval($config['gheight']),
+						"sortby" => $db->escape_string($sortby),
+						"tournamentselect" => intval($mybb->input['tournamentselect']),
+						"active" => intval($mybb->input['active'])
+					);
 
-					// Large image file
-					if(!@copy(MYBB_ROOT."arcade/".$filename."1.gif", MYBB_ROOT."arcade/largeimages/".$filename."1.gif"))
-					{
-						$errors[] = $lang->error_missing_game_tar_largeimage;
-					}
-					else
-					{
-						@my_chmod(MYBB_ROOT."arcade/largeimages/".$filename."1.gif", 0777);
-						@unlink(MYBB_ROOT."arcade/".$filename."1.gif");
-					}
+					$gid = $db->insert_query("arcadegames", $new_game);
 
-					// Small image file
-					if(!@copy(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/smallimages/".$filename."2.gif"))
-					{
-						$errors[] = $lang->error_missing_game_tar_smallimage;
-					}
-					else
-					{
-						@my_chmod(MYBB_ROOT."arcade/smallimages/".$filename."2.gif", 0777);
-						@unlink(MYBB_ROOT."arcade/".$filename."2.gif");
-					}
+					$plugins->run_hooks("admin_arcade_games_add_tar_commit");
 
-					if(!$errors)
-					{
-						// Load PHP file and insert game into database
-						require_once(MYBB_ROOT."arcade/php/".$filename.".php");
-
-						if($config['highscore_type'] == "low" || $config['highscore_type'] == "asc")
-						{
-							$sortby = "asc";
-						}
-						else
-						{
-							$sortby = "desc";
-						}
-
-						$new_game = array(
-							"name" => $db->escape_string($config['gtitle']),
-							"description" => $db->escape_string($config['gwords']),
-							"about" => $db->escape_string($config['object']),
-							"controls" => $db->escape_string($config['gkeys']),
-							"file" => $db->escape_string($config['gname']),
-							"smallimage" => $db->escape_string($config['gname']."2"),
-							"largeimage" => $db->escape_string($config['gname']."1"),
-							"cid" => intval($mybb->input['cid']),
-							"dateline" => TIME_NOW,
-							"bgcolor" => $db->escape_string($config['bgcolor']),
-							"width" => intval($config['gwidth']),
-							"height" => intval($config['gheight']),
-							"sortby" => $db->escape_string($sortby),
-							"tournamentselect" => intval($mybb->input['tournamentselect']),
-							"active" => intval($mybb->input['active'])
-						);
-
-						$gid = $db->insert_query("arcadegames", $new_game);
-
-						$plugins->run_hooks("admin_arcade_games_add_tar_commit");
-
-						// Log admin action
-						log_admin_action($gid, $config['gtitle']);
-					}
+					// Log admin action
+					log_admin_action($gid, $config['gtitle']);
 				}
 			}
 
@@ -496,8 +493,8 @@ if($mybb->input['action'] == "edit")
 				"largeimage" => $db->escape_string($mybb->input['largeimage']),
 				"cid" => intval($mybb->input['cid']),
 				"bgcolor" => $db->escape_string($mybb->input['bgcolor']),
-				"width" => $db->escape_string($mybb->input['width']),
-				"height" => $db->escape_string($mybb->input['height']),
+				"width" => intval($mybb->input['width']),
+				"height" => intval($mybb->input['height']),
 				"sortby" => $db->escape_string($mybb->input['sortby']),
 				"tournamentselect" => intval($mybb->input['tournamentselect']),
 				"active" => intval($mybb->input['active'])
@@ -805,7 +802,7 @@ if(!$mybb->input['action'])
 	$query = $db->simple_select("arcadegames", "COUNT(gid) AS games");
 	$total_rows = $db->fetch_field($query, "games");
 
-	echo "<br />".draw_admin_pagination($pagenum, "20", $total_rows, "index.php?module=arcade-games&amp;page={page}");
+	echo draw_admin_pagination($pagenum, "20", $total_rows, "index.php?module=arcade-games&amp;page={page}");
 
 	$page->output_footer();
 }

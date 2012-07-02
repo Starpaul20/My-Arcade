@@ -130,6 +130,7 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 	$insert_player = array(
 		"tid" => $tid,
 		"uid" => intval($mybb->user['uid']),
+		"username" => $db->escape_string($mybb->user['username']),
 		"round" => 1
 	);
 	$db->insert_query("arcadetournamentplayers", $insert_player);
@@ -347,11 +348,10 @@ if($mybb->input['action'] == "view")
 		$numplayers = $players / $colspan_round;
 
 		$query = $db->query("
-			SELECT p.*, u.username
-			FROM ".TABLE_PREFIX."arcadetournamentplayers p
-			LEFT JOIN ".TABLE_PREFIX."users u ON (p.uid=u.uid)
-			WHERE p.tid='{$tid}' AND p.status !='4' AND p.round='{$rid}'
-			ORDER BY p.score {$game['sortby']}, p.attempts ASC
+			SELECT *
+			FROM ".TABLE_PREFIX."arcadetournamentplayers
+			WHERE tid='{$tid}' AND status !='4' AND round='{$rid}'
+			ORDER BY score {$game['sortby']}, attempts ASC
 		");
 		$players_count = $db->num_rows($query);
 
@@ -490,6 +490,7 @@ if($mybb->input['action'] == "join")
 	$insert_player = array(
 		"tid" => intval($tournament['tid']),
 		"uid" => intval($mybb->user['uid']),
+		"username" => $db->escape_string($mybb->user['username']),
 		"round" => 1
 	);
 	$db->insert_query("arcadetournamentplayers", $insert_player);

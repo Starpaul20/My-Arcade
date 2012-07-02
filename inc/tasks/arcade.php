@@ -127,7 +127,7 @@ function task_arcade($task)
 					$db->update_query("arcadetournaments", $update_tournament, "tid='{$round['tid']}'");
 
 					$query3 = $db->query("
-						SELECT p.*, u.*, p.uid AS player
+						SELECT p.*, u.*, p.uid AS player, p.username AS playerusername
 						FROM ".TABLE_PREFIX."arcadetournamentplayers p
 						LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
 						WHERE p.tid='{$round['tid']}' AND p.round='{$round['round']}' AND p.attempts != '0'
@@ -139,6 +139,7 @@ function task_arcade($task)
 						$insert_player = array(
 							"tid" => intval($round['tid']),
 							"uid" => intval($player['player']),
+							"username" => $db->escape_string($player['playerusername']),
 							"round" => $round['round'] + 1
 						);
 						$db->insert_query("arcadetournamentplayers", $insert_player);
@@ -297,6 +298,6 @@ function task_arcade($task)
 	}
 	update_tournaments_stats();
 
-	add_task_log($task, "The arcade task successfully ran.");
+	add_task_log($task, $lang->arcade_task_ran);
 }
 ?>

@@ -199,6 +199,7 @@ function myarcade_install()
 				pid int(10) unsigned NOT NULL auto_increment,
 				tid int(10) unsigned NOT NULL default '0',
 				uid int(10) unsigned NOT NULL default '0',
+				username varchar(120) NOT NULL default '',
 				score float NOT NULL,
 				round int(2) NOT NULL default '0',
 				attempts int(5) NOT NULL default '0',
@@ -862,7 +863,7 @@ td .star_rating {\nmargin: auto;\n}\n
 	);
 	$db->insert_query("themestylesheets", $css);
 
-	cache_stylesheet(1, "arcade.css", $css['stylesheet']);
+	cache_stylesheet(1, $css['cachefile'], $css['stylesheet']);
 
 	$tids = $db->simple_select("themes", "tid");
 	while($row = $db->fetch_array($tids))
@@ -1403,6 +1404,7 @@ function myarcade_user_update(&$user)
 
 		$db->update_query("arcadechampions", $username_update, "uid='{$user->uid}'");
 		$db->update_query("arcadescores", $username_update, "uid='{$user->uid}'");
+		$db->update_query("arcadetournamentplayers", $username_update, "uid='{$user->uid}'");
 	}
 }
 
@@ -1422,21 +1424,28 @@ function myarcade_merge()
 	);
 	$db->update_query("arcadechampions", $username, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadescores", $username, "uid='{$source_user['uid']}'");
+	$db->update_query("arcadetournamentplayers", $username, "uid='{$source_user['uid']}'");
 
 	$uid = array(
 		"uid" => $destination_user['uid']
-	);	
+	);
 	$db->update_query("arcadechampions", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadescores", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcaderatings", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadefavorites", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadelogs", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadesessions", $uid, "uid='{$source_user['uid']}'");
+	$db->update_query("arcadetournamentplayers", $uid, "uid='{$source_user['uid']}'");
 
 	$last_player = array(
 		"lastplayeduid" => $destination_user['uid']
 	);
 	$db->update_query("arcadegames", $last_player, "lastplayeduid='{$source_user['uid']}'");
+
+	$champion = array(
+		"champion" => $destination_user['uid']
+	);
+	$db->update_query("arcadetournaments", $champion, "champion='{$source_user['uid']}'");
 }
 
 // Delete everything if user is deleted
