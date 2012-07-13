@@ -50,6 +50,7 @@ $plugins->add_hook("admin_user_users_delete_commit", "myarcade_delete");
 $plugins->add_hook("admin_user_groups_edit_graph_tabs", "myarcade_usergroups_permission");
 $plugins->add_hook("admin_user_groups_edit_graph", "myarcade_usergroups_graph");
 $plugins->add_hook("admin_user_groups_edit_commit", "myarcade_usergroups_commit");
+$plugins->add_hook("admin_tools_cache_begin", "moodmanager_datacache_class");
 $plugins->add_hook("admin_tools_get_admin_log_action", "myarcade_admin_adminlog");
 
 // The information that shows up on the plugin manager
@@ -1543,6 +1544,56 @@ function myarcade_usergroups_commit()
 	$updated_group['canviewtournaments'] = intval($mybb->input['canviewtournaments']);
 	$updated_group['canjointournaments'] = intval($mybb->input['canjointournaments']);
 	$updated_group['cancreatetournaments'] = intval($mybb->input['cancreatetournaments']);
+}
+
+// Rebuild arcade caches in Admin CP
+function myarcade_datacache_class()
+{
+	global $cache;
+	require_once MYBB_ROOT."inc/functions_arcade.php";
+
+	if(class_exists('MyDatacache'))
+	{
+		class ArcadeDatacache extends MyDatacache
+		{
+			function update_tournaments_stats()
+			{
+				update_tournaments_stats();
+			}
+
+			function reload_arcade_mostonline()
+			{
+				global $db, $cache;
+
+				$query = $db->simple_select("datacache", "title,cache", "title='arcade_mostonline'");
+				$cache->update("arcade_mostonline", @unserialize($db->fetch_field($query, "cache")));
+			}
+		}
+
+		$cache = null;
+		$cache = new ArcadeDatacache;
+	}
+	else
+	{
+		class MyDatacache extends datacache
+		{
+			function update_tournaments_stats()
+			{
+				update_tournaments_stats();
+			}
+
+			function reload_arcade_mostonline()
+			{
+				global $db, $cache;
+
+				$query = $db->simple_select("datacache", "title,cache", "title='arcade_mostonline'");
+				$cache->update("arcade_mostonline", @unserialize($db->fetch_field($query, "cache")));
+			}
+		}
+
+		$cache = null;
+		$cache = new MyDatacache;
+	}
 }
 
 // Admin Log display
