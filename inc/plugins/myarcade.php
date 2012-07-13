@@ -50,7 +50,7 @@ $plugins->add_hook("admin_user_users_delete_commit", "myarcade_delete");
 $plugins->add_hook("admin_user_groups_edit_graph_tabs", "myarcade_usergroups_permission");
 $plugins->add_hook("admin_user_groups_edit_graph", "myarcade_usergroups_graph");
 $plugins->add_hook("admin_user_groups_edit_commit", "myarcade_usergroups_commit");
-$plugins->add_hook("admin_tools_cache_begin", "moodmanager_datacache_class");
+$plugins->add_hook("admin_tools_cache_begin", "myarcade_datacache_class");
 $plugins->add_hook("admin_tools_get_admin_log_action", "myarcade_admin_adminlog");
 
 // The information that shows up on the plugin manager
