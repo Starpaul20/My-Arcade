@@ -8,9 +8,10 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_gamebit,arcade_menu,arcade_play,arcade_play_rating,arcade_play_tournament,arcade_rating,arcade_scores,arcade_scores_bit,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify";
-$templatelist .= ",arcade_statistics,arcade_stats,arcade_statistics_bestplayers,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,arcade_no_display,arcade_online_memberbit,arcade_online,arcade_settings_champpostbit,multipage_page_current,multipage_page,multipage_nextpage,multipage,multipage_prevpage";
-$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_favorites,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_tournaments,arcade_search_catagory,arcade_search,arcade_no_games";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_gamebit,arcade_menu,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit";
+$templatelist .= ",arcade_statistics,arcade_stats,arcade_statistics_bestplayers,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,multipage_page_current,multipage_page,multipage_nextpage,multipage,multipage_prevpage";
+$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_tournaments";
+$templatelist .= ",arcade_rating,arcade_online_memberbit,arcade_online,arcade_search_catagory,arcade_search,arcade_no_games,arcade_scores,arcade_scores_bit,arcade_no_display,arcade_play,arcade_play_rating,arcade_play_tournament,arcade_favorites";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -2572,7 +2573,7 @@ if(!$mybb->input['action'])
 			$query = $db->query("
 				SELECT t.*, p.uid, g.active, g.name, g.smallimage
 				FROM ".TABLE_PREFIX."arcadetournamentplayers p
-				LEFT JOIN ".TABLE_PREFIX."arcadetournaments t ON (p.tid=t.tid)
+				LEFT JOIN ".TABLE_PREFIX."arcadetournaments t ON (p.tid=t.tid AND t.round=p.round)
 				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (t.gid=g.gid)
 				WHERE p.uid='{$mybb->user['uid']}' AND t.status IN(1,2) AND p.status !='4' AND g.active='1'{$cat_sql_game}
 				ORDER BY t.dateline DESC

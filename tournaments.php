@@ -7,7 +7,8 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds";
+$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit";
+$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -298,10 +299,17 @@ if($mybb->input['action'] == "view")
 	{
 		$status_message = $lang->tournament_active;
 
-		$query = $db->simple_select("arcadetournamentplayers", "*", "tid='{$tid}'");
+		$query = $db->simple_select("arcadetournamentplayers", "pid", "tid='{$tid}' AND round='{$tournament['round']}' AND uid='{$mybb->user['uid']}'");
 		$player = $db->fetch_array($query);
 
-		$tournament_link = "<a href=\"arcade.php?action=play&tid={$tid}\">{$lang->play_now}</a>";
+		if($player['pid'])
+		{
+			$tournament_link = "<a href=\"arcade.php?action=play&tid={$tid}\">{$lang->play_now}</a>";
+		}
+		else
+		{
+			$tournament_link = "";
+		}
 	}
 
 	if($tournament['status'] == 3)
