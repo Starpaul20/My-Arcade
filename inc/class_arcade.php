@@ -284,7 +284,7 @@ class Arcade
 			$update_score = array(
 				"score" => $db->escape_string($score),
 				"attempts" => $current_score['attempts'] + 1,
-				"scoreattempt" => $current_score['scoreattempt'] + 1,
+				"scoreattempt" => $current_score['attempts'] + 1,
 				"timeplayed" => TIME_NOW
 			);
 			$db->update_query("arcadetournamentplayers", $update_score, "pid='{$current_score['pid']}'");
