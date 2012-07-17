@@ -1107,7 +1107,16 @@ function myarcade_postbit_post($post)
 	$lang->load("arcade");
 	$usergroup = user_permissions($post['uid']);
 
-	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $mybb->user['champdisplaypostbit'] == 1)
+	if($mybb->user['uid'] == 0)
+	{
+		$champdisplaypostbit = 1;
+	}
+	else
+	{
+		$champdisplaypostbit = $mybb->user['champdisplaypostbit'];
+	}
+
+	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
 		if($unviewable)
 		{
@@ -1160,7 +1169,16 @@ function myarcade_postbit_other($post)
 
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 
-	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] ==1 && $mybb->user['champdisplaypostbit'] == 1)
+	if($mybb->user['uid'] == 0)
+	{
+		$champdisplaypostbit = 1;
+	}
+	else
+	{
+		$champdisplaypostbit = $mybb->user['champdisplaypostbit'];
+	}
+
+	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
 		$unviewable = get_unviewable_categories($mybb->user['usergroup']);
 		if($unviewable)
