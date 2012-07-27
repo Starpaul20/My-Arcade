@@ -831,12 +831,14 @@ desc=Descending',
 	);
 	$db->insert_query("templates", $insert_array);
 
+	// Update templates
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("member_profile", "#".preg_quote('{$signature}')."#i", '{$signature}{$arcadeprofile}');
 	find_replace_templatesets("postbit", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("postbit_classic", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("header", "#".preg_quote('<ul>')."#i", '<ul>{$arcade}');
 
+	// Inserts arcade stylesheet
 	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
 	$css = array(
 		"name" => "arcade.css",
@@ -866,12 +868,13 @@ td .star_rating {\nmargin: auto;\n}\n
 
 	cache_stylesheet(1, $css['cachefile'], $css['stylesheet']);
 
-	$tids = $db->simple_select("themes", "tid");
-	while($row = $db->fetch_array($tids))
+	$query = $db->simple_select("themes", "tid");
+	while($row = $db->fetch_array($query))
 	{
 		update_theme_stylesheet_list($row['tid']);
 	}
 
+	// Inserts arcade task
 	require_once MYBB_ROOT."inc/functions_task.php";
 	$arcadetask_insert = array(
 		"title"			=> "Arcade Tasks",
@@ -890,6 +893,7 @@ td .star_rating {\nmargin: auto;\n}\n
 	$arcadetask_insert['nextrun'] = fetch_next_run($arcadetask_insert);
 	$db->insert_query("tasks", $arcadetask_insert);
 
+	// Change Admin CP permissions
 	change_admin_permission('arcade', 'games');
 	change_admin_permission('arcade', 'categories');
 	change_admin_permission('arcade', 'scores');
@@ -998,7 +1002,9 @@ function myarcade_index()
 							$page = "&page={$pagenum}";
 						}
 						else
-						$page = "";
+						{
+							$page = "";
+						}
 
 						redirect("arcade.php?action=scores&gid={$game['gid']}&newscore=1{$page}", $message);
 					}
@@ -1043,7 +1049,9 @@ function myarcade_index()
 							$page = "&page={$pagenum}";
 						}
 						else
-						$page = "";
+						{
+							$page = "";
+						}
 
 						redirect("arcade.php?action=scores&gid={$game['gid']}&newscore=1{$page}", $message);
 					}
@@ -1065,7 +1073,9 @@ function myarcade_index()
 							$page = "&page={$pagenum}";
 						}
 						else
-						$page = "";
+						{
+							$page = "";
+						}
 
 						redirect("arcade.php?action=scores&gid={$game['gid']}&newscore=1{$page}", $message);
 					}

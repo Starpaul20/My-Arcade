@@ -135,6 +135,7 @@ if($mybb->input['action'] == "add_simple")
 	else
 	{
 		$mybb->input['active'] = 1;
+		$mybb->input['tournamentselect'] = 1;
 		$mybb->input['bgcolor'] = "000000";
 		$mybb->input['width'] = 500;
 		$mybb->input['height'] = 500;
@@ -393,6 +394,7 @@ if($mybb->input['action'] == "add_tar")
 	else
 	{
 		$mybb->input['active'] = 1;
+		$mybb->input['tournamentselect'] = 1;
 	}
 	$form_container = new FormContainer($lang->add_new_game_tar);
 	$form_container->output_row($lang->tar_file." <em>*</em>", "", $form->generate_file_upload_box('tar_file', array('id' => 'tar_file')), 'tar_file');
