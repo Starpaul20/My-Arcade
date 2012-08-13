@@ -1646,7 +1646,7 @@ function myarcade_admin_adminlog($plugin_array)
 		}
 	}
 
-	else if($plugin_array['lang_string'] == admin_log_arcade_logs_prune)
+	elseif($plugin_array['lang_string'] == admin_log_arcade_logs_prune)
 	{
 		if($plugin_array['logitem']['data'][1] && !$plugin_array['logitem']['data'][2])
 		{

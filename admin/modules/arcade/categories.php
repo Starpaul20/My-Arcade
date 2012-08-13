@@ -149,6 +149,9 @@ if($mybb->input['action'] == "add")
 	$form_container->output_row($lang->available_to_groups." <em>*</em>", '', $group_select);
 
 	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->input['active'], true));
+
+	$plugins->run_hooks("admin_arcade_categories_add_end");
+
 	$form_container->end();
 
 	$buttons[] = $form->generate_submit_button($lang->save_category);
@@ -317,6 +320,9 @@ if($mybb->input['action'] == "edit")
 	$form_container->output_row($lang->available_to_groups." <em>*</em>", '', $group_select);
 
 	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->input['active'], true));
+
+	$plugins->run_hooks("admin_arcade_categories_edit_end");
+
 	$form_container->end();
 
 	$buttons[] = $form->generate_submit_button($lang->save_category);

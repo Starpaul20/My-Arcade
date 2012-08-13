@@ -103,11 +103,11 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 	{
 		$online = whos_online();
 	}
-	else if($mybb->settings['arcade_whosonline'] == 2 && $mybb->user['uid'])
+	elseif($mybb->settings['arcade_whosonline'] == 2 && $mybb->user['uid'])
 	{
 		$online = whos_online();
 	}
-	else if($mybb->settings['arcade_whosonline'] == 3)
+	elseif($mybb->settings['arcade_whosonline'] == 3)
 	{
 		$online = whos_online();
 	}
@@ -1294,7 +1294,7 @@ if($mybb->input['action'] == "settings")
 	{
 		$pm_tournamentnotify_selected = "selected=\"selected\"";
 	}
-	else if($user['tournamentnotify'] == 2)
+	elseif($user['tournamentnotify'] == 2)
 	{
 		$email_tournamentnotify_selected = "selected=\"selected\"";
 	}
@@ -1307,7 +1307,7 @@ if($mybb->input['action'] == "settings")
 	{
 		$pm_champnotify_selected = "selected=\"selected\"";
 	}
-	else if($user['champnotify'] == 2)
+	elseif($user['champnotify'] == 2)
 	{
 		$email_champnotify_selected = "selected=\"selected\"";
 	}
@@ -1504,7 +1504,7 @@ if($mybb->input['action'] == "stats")
 			$page_url = "arcade.php?action=stats&sortby={$mybb->input['sortby']}&order={$mybb->input['order']}";
 		}
 	}
-	else if($mybb->input['uid'])
+	elseif($mybb->input['uid'])
 	{
 		$page_url = "arcade.php?action=stats&uid={$uid}";
 	}
@@ -1535,7 +1535,7 @@ if($mybb->input['action'] == "stats")
 		{
 			$userrank = $lang->na;
 		}
-		else if($score['firstplace'])
+		elseif($score['firstplace'])
 		{
 			$userrank = 1;
 		}
