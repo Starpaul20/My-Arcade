@@ -40,6 +40,7 @@ $plugins->add_hook("postbit_pm", "myarcade_postbit_other");
 $plugins->add_hook("postbit_announcement", "myarcade_postbit_other");
 $plugins->add_hook("postbit_prev", "myarcade_postbit_other");
 $plugins->add_hook("member_profile_end", "myarcade_profile");
+$plugins->add_hook("online_start", "myarcade_online_unviewable");
 $plugins->add_hook("fetch_wol_activity_end", "myarcade_online_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "myarcade_online_location");
 $plugins->add_hook("datahandler_user_update", "myarcade_user_update");
@@ -1143,7 +1144,7 @@ function myarcade_postbit_post($post)
 			SELECT c.*, g.active, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
-			WHERE g.active ='1'AND c.uid='{$post['uid']}'{$cat_sql}
+			WHERE g.active ='1' AND c.uid='{$post['uid']}'{$cat_sql}
 			ORDER BY c.dateline DESC
 			LIMIT {$mybb->settings['arcade_postbitlimit']}
 		");
@@ -1206,7 +1207,7 @@ function myarcade_postbit_other($post)
 			SELECT c.*, g.active, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
-			WHERE g.active ='1'AND c.uid='{$post['uid']}'{$cat_sql}
+			WHERE g.active ='1' AND c.uid='{$post['uid']}'{$cat_sql}
 			ORDER BY c.dateline DESC
 			LIMIT {$mybb->settings['arcade_postbitlimit']}
 		");
@@ -1295,17 +1296,42 @@ function myarcade_profile()
 	}
 }
 
+// Get unviewable games (for who's online, to reduce number of queries)
+function myarcade_online_unviewable()
+{
+	global $db, $mybb, $unviewable;
+	require_once MYBB_ROOT."inc/functions_arcade.php";
+
+	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
+	{
+		$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+	}
+}
+
 // Online activity
 function myarcade_online_activity($user_activity)
 {
-	global $user;
+	global $user, $gid_list, $parameters;
+
+	$gid_list = array();
+
 	if(my_strpos($user['location'], "arcade.php?action=play") !== false)
 	{
+		if(is_numeric($parameters['gid']))
+		{
+			$gid_list[] = $parameters['gid'];
+		}
+
 		$user_activity['activity'] = "arcade_play";
 		$user_activity['gid'] = $parameters['gid'];
 	}
 	else if(my_strpos($user['location'], "arcade.php?action=scores") !== false)
 	{
+		if(is_numeric($parameters['gid']))
+		{
+			$gid_list[] = $parameters['gid'];
+		}
+
 		$user_activity['activity'] = "arcade_scores";
 		$user_activity['gid'] = $parameters['gid'];
 	}
@@ -1359,19 +1385,46 @@ function myarcade_online_activity($user_activity)
 
 function myarcade_online_location($plugin_array)
 {
-    global $db, $mybb, $lang, $parameters;
+    global $db, $mybb, $lang, $parameters, $unviewable, $gid_list, $games;
 	$lang->load("arcade");
 
-	$query = $db->simple_select("arcadegames", "gid, name", "gid='{$parameters['gid']}'");
-	$online = $db->fetch_array($query);
+	if($unviewable)
+	{
+		$unview = "AND cid NOT IN ($unviewable)";
+	}
+
+	// Fetch any games
+	if(!is_array($games) && count($gid_list) > 0)
+	{
+		$gid_sql = implode(",", $gid_list);
+		$query = $db->simple_select("arcadegames", "gid, name", "gid IN ($gid_sql) {$unview}");
+		while($game = $db->fetch_array($query))
+		{
+			$games[$game['gid']] = htmlspecialchars_uni($game['name']);
+		}
+	}
 
 	if($plugin_array['user_activity']['activity'] == "arcade_play")
 	{
-		$plugin_array['location_name'] = $lang->sprintf($lang->playing_game, $online['gid'], $online['name']);
+		if($games[$parameters['gid']])
+		{
+			$plugin_array['location_name'] = $lang->sprintf($lang->playing_game2, $plugin_array['user_activity']['gid'], $games[$parameters['gid']]);
+		}
+		else
+		{
+			$plugin_array['location_name'] = $lang->playing_game;
+		}
 	}
 	else if($plugin_array['user_activity']['activity'] == "arcade_scores")
 	{
-		$plugin_array['location_name'] = $lang->sprintf($lang->viewing_scores, $online['gid'], $online['name']);
+		if($games[$parameters['gid']])
+		{
+			$plugin_array['location_name'] = $lang->sprintf($lang->viewing_scores2, $plugin_array['user_activity']['gid'], $games[$parameters['gid']]);
+		}
+		else
+		{
+			$plugin_array['location_name'] = $lang->viewing_scores;
+		}
 	}
 	else if($plugin_array['user_activity']['activity'] == "arcade_champions")
 	{

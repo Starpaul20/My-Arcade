@@ -9,8 +9,10 @@ $l['arcade_disabled'] = "You cannot use the arcade system as it has been disable
 $l['arcade_task_ran'] = "The arcade task successfully ran.";
 
 // Online activity
-$l['playing_game'] = "Playing <a href=\"arcade.php?action=play&gid={1}\">{2}</a>";
-$l['viewing_scores'] = "Viewing scores of <a href=\"arcade.php?action=scores&gid={1}\">{2}</a>";
+$l['playing_game'] = "Playing Game";
+$l['playing_game2'] = "Playing <a href=\"arcade.php?action=play&gid={1}\">{2}</a>";
+$l['viewing_scores'] = "Viewing Game Scores";
+$l['viewing_scores2'] = "Viewing scores of <a href=\"arcade.php?action=scores&gid={1}\">{2}</a>";
 $l['viewing_champions'] = "Viewing Arcade <a href=\"arcade.php?action=champions\">Champions</a>";
 $l['viewing_scoreboard'] = "Viewing Arcade <a href=\"arcade.php?action=scoreboard\">Scoreboard</a>";
 $l['viewing_arcade_favorites'] = "Viewing Arcade Favorites";
