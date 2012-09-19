@@ -1315,69 +1315,96 @@ function myarcade_online_activity($user_activity)
 
 	$gid_list = array();
 
-	if(my_strpos($user['location'], "arcade.php?action=play") !== false)
+	$split_loc = explode(".php", $user_activity['location']);
+	if($split_loc[0] == $user['location'])
 	{
-		if(is_numeric($parameters['gid']))
-		{
-			$gid_list[] = $parameters['gid'];
-		}
+		$filename = '';
+	}
+	else
+	{
+		$filename = my_substr($split_loc[0], -my_strpos(strrev($split_loc[0]), "/"));
+	}
 
-		$user_activity['activity'] = "arcade_play";
-		$user_activity['gid'] = $parameters['gid'];
-	}
-	else if(my_strpos($user['location'], "arcade.php?action=scores") !== false)
+	switch($filename)
 	{
-		if(is_numeric($parameters['gid']))
-		{
-			$gid_list[] = $parameters['gid'];
-		}
-
-		$user_activity['activity'] = "arcade_scores";
-		$user_activity['gid'] = $parameters['gid'];
-	}
-	else if(my_strpos($user['location'], "arcade.php?action=champions") !== false)
-	{
-		$user_activity['activity'] = "arcade_champions";
-	}
-	else if(my_strpos($user['location'], "arcade.php?action=scoreboard") !== false)
-	{
-		$user_activity['activity'] = "arcade_scoreboard";
-	}
-	else if(my_strpos($user['location'], "arcade.php?action=favorites") !== false)
-	{
-		$user_activity['activity'] = "arcade_favorites";
-	}
-	else if(my_strpos($user['location'], "arcade.php?action=settings") !== false)
-	{
-		$user_activity['activity'] = "arcade_settings";
-	}
-	else if(my_strpos($user['location'], "arcade.php?action=stats") !== false)
-	{
-		$user_activity['activity'] = "arcade_stats";
-	}
-	else if(my_strpos($user['location'], "arcade.php") !== false)
-	{
-		$user_activity['activity'] = "arcade_home";
-	}
-	else if(my_strpos($user['location'], "tournaments.php?action=view") !== false)
-	{
-		$user_activity['activity'] = "tournaments_view";
-	}
-	else if(my_strpos($user['location'], "tournaments.php?action=create") !== false)
-	{
-		$user_activity['activity'] = "tournaments_create";
-	}
-	else if(my_strpos($user['location'], "tournaments.php?action=waiting") !== false)
-	{
-		$user_activity['activity'] = "tournaments_waiting";
-	}
-	else if(my_strpos($user['location'], "tournaments.php?action=running") !== false)
-	{
-		$user_activity['activity'] = "tournaments_running";
-	}
-	else if(my_strpos($user['location'], "tournaments.php?action=finished") !== false)
-	{
-		$user_activity['activity'] = "tournaments_finished";
+		case "arcade":
+			if($parameters['action'] == "play")
+			{
+				if(is_numeric($parameters['gid']))
+				{
+					$gid_list[] = $parameters['gid'];
+				}
+				$user_activity['activity'] = "arcade_play";
+				$user_activity['gid'] = $parameters['gid'];
+			}
+			elseif($parameters['action'] == "scores")
+			{
+				if(is_numeric($parameters['gid']))
+				{
+					$gid_list[] = $parameters['gid'];
+				}
+				$user_activity['activity'] = "arcade_scores";
+				$user_activity['gid'] = $parameters['gid'];
+			}
+			elseif($parameters['action'] == "settings" || $parameters['action'] == "do_settings")
+			{
+				$user_activity['activity'] = "arcade_settings";
+			}
+			elseif($parameters['action'] == "champions")
+			{
+				$user_activity['activity'] = "arcade_champions";
+			}
+			elseif($parameters['action'] == "scoreboard")
+			{
+				$user_activity['activity'] = "arcade_scoreboard";
+			}
+			elseif($parameters['action'] == "favorites" || $parameters['action'] == "addfavorite" || $parameters['action'] == "removefavorite")
+			{
+				$user_activity['activity'] = "arcade_favorites";
+			}
+			elseif($parameters['action'] == "stats")
+			{
+				$user_activity['activity'] = "arcade_stats";
+			}
+			elseif($parameters['action'] == "results" || $parameters['action'] == "do_search")
+			{
+				$user_activity['activity'] = "arcade_search";
+			}
+			else
+			{
+				$user_activity['activity'] = "arcade_home";
+			}
+			break;
+		case "tournaments":
+			if($parameters['action'] == "create" || $parameters['action'] == "do_create")
+			{
+				$user_activity['activity'] = "tournaments_create";
+			}
+			elseif($parameters['action'] == "view")
+			{
+				$user_activity['activity'] = "tournaments_view";
+			}
+			elseif($parameters['action'] == "join")
+			{
+				$user_activity['activity'] = "tournaments_join";
+			}
+			elseif($parameters['action'] == "waiting")
+			{
+				$user_activity['activity'] = "tournaments_waiting";
+			}
+			elseif($parameters['action'] == "running")
+			{
+				$user_activity['activity'] = "tournaments_running";
+			}
+			elseif($parameters['action'] == "finished")
+			{
+				$user_activity['activity'] = "tournaments_finished";
+			}
+			else
+			{
+				$user_activity['activity'] = "arcade_home";
+			}
+			break;
 	}
 
 	return $user_activity;
@@ -1446,17 +1473,25 @@ function myarcade_online_location($plugin_array)
 	{
 		$plugin_array['location_name'] = $lang->viewing_arcade_stats;
 	}
+	else if($plugin_array['user_activity']['activity'] == "arcade_search")
+	{
+		$plugin_array['location_name'] = $lang->searching_arcade;
+	}
 	else if($plugin_array['user_activity']['activity'] == "arcade_home")
 	{
 		$plugin_array['location_name'] = $lang->viewing_arcade_home;
 	}
 	else if($plugin_array['user_activity']['activity'] == "tournaments_view")
 	{
-		$plugin_array['location_name'] = $lang->viewing_a_tournament;
+		$plugin_array['location_name'] = $lang->viewing_tournament;
 	}
 	else if($plugin_array['user_activity']['activity'] == "tournaments_create")
 	{
-		$plugin_array['location_name'] = $lang->creating_a_tournament;
+		$plugin_array['location_name'] = $lang->creating_tournament;
+	}
+	else if($plugin_array['user_activity']['activity'] == "tournaments_join")
+	{
+		$plugin_array['location_name'] = $lang->joining_tournament;
 	}
 	else if($plugin_array['user_activity']['activity'] == "tournaments_waiting")
 	{
