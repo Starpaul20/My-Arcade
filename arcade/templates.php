@@ -1000,6 +1000,9 @@ $arcade_templates['arcade_stats_tournaments'] = "<table border=\"0\" cellspacing
 <td class=\"thead\"><strong>{\$lang->tournament_statistics}</strong></td>
 </tr>
 <tr>
+<td class=\"trow1\"><strong>{\$lang->tournaments_created}</strong> {\$tournamentscreated}</td>
+</tr>
+<tr>
 <td class=\"trow1\"><strong>{\$lang->tournaments_won}</strong> {\$tournamentswon}</td>
 </tr>
 <tr>

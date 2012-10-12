@@ -118,6 +118,7 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 
 	$insert_array = array(
 		"gid" => $gid,
+		"uid" => intval($mybb->user['uid']),
 		"dateline" => TIME_NOW,
 		"status" => 1,
 		"rounds" => intval($mybb->input['rounds']),
@@ -314,7 +315,7 @@ if($mybb->input['action'] == "view")
 
 	if($tournament['status'] == 3)
 	{
-		$status_message = $lang->sprintf($lang->tournament_finished, $information['reason']);
+		$status_message = $lang->tournament_finished;
 	}
 
 	// Does the current user have permission to cancel this tournament? Show cancel link

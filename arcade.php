@@ -1588,16 +1588,22 @@ if($mybb->input['action'] == "stats")
 	if($mybb->settings['enabletournaments'] == 1 && $mybb->usergroup['canviewtournaments'] == 1)
 	{
 		$query2 = $db->query("
-			SELECT p.tid, p.uid, t.champion
+			SELECT p.tid, p.uid, t.champion, t.uid AS creater
 			FROM ".TABLE_PREFIX."arcadetournamentplayers p
 			LEFT JOIN ".TABLE_PREFIX."arcadetournaments t ON (p.tid=t.tid)
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (t.gid=g.gid)
 			WHERE p.uid='{$user['uid']}' AND p.round='1' AND g.active='1'{$cat_sql_game}
 		");
+		$tournamentscreated = 0;
 		$tournamentswon = 0;
 		$tournamentsentered = $db->num_rows($query2);
 		while($tournaments = $db->fetch_array($query2))
 		{
+			if($tournaments['creater'] == $user['uid'])
+			{
+				$tournamentscreated++;
+			}
+
 			if($tournaments['champion'] == $user['uid'])
 			{
 				$tournamentswon++;

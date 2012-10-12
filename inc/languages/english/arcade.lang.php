@@ -220,6 +220,7 @@ $l['total_scores'] = "Total Scores:";
 $l['out_of'] = "out of";
 $l['no_stats'] = "There are no stats to display.";
 $l['tournament_statistics'] = "Tournament Statistics";
+$l['tournaments_created'] = "Tournament Created:";
 $l['tournaments_won'] = "Tournaments Won:";
 $l['tournaments_entered'] = "Tournaments Entered:";
 

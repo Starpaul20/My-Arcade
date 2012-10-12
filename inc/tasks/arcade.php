@@ -44,7 +44,7 @@ function task_arcade($task)
 				SELECT p.tid, u.*
 				FROM ".TABLE_PREFIX."arcadetournamentplayers p
 				LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
-				WHERE p.tid='{$open['tid']}' AND u.tournamentnotify IN('1','2')
+				WHERE p.tid='{$open['tid']}'
 			");
 			while($player = $db->fetch_array($query))
 			{
@@ -60,7 +60,7 @@ function task_arcade($task)
 					$pm = array(
 						"subject" => $pm_subject,
 						"message" => $pm_message,
-						"fromid" => 1,
+						"fromid" => $open['uid'],
 						"toid" => array($player['uid'])
 					);
 
@@ -156,7 +156,7 @@ function task_arcade($task)
 							$pm = array(
 								"subject" => $pm_subject,
 								"message" => $pm_message,
-								"fromid" => 1,
+								"fromid" => $round['uid'],
 								"toid" => array($player['uid'])
 							);
 

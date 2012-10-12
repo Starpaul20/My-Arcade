@@ -183,6 +183,7 @@ function myarcade_install()
 	$db->write_query("CREATE TABLE ".TABLE_PREFIX."arcadetournaments (
 				tid int(10) unsigned NOT NULL auto_increment,
 				gid int(10) unsigned NOT NULL default '0',
+				uid int(10) unsigned NOT NULL default '0',
 				dateline bigint(30) NOT NULL default '0',
 				status int(1) NOT NULL default '1',
 				rounds int(2) NOT NULL default '0',
@@ -190,7 +191,7 @@ function myarcade_install()
 				numplayers int(4) NOT NULL default '1',
 				days int(1) NOT NULL default '0',
 				round int(2) NOT NULL default '0',
-				champion int(10) NOT NULL default '0',
+				champion int(10) unsigned NOT NULL default '0',
 				finishdateline bigint(30) NOT NULL default '0',
 				information text NOT NULL,
 				KEY gid (gid),
@@ -1552,6 +1553,7 @@ function myarcade_merge()
 	$db->update_query("arcadefavorites", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadelogs", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadesessions", $uid, "uid='{$source_user['uid']}'");
+	$db->update_query("arcadetournaments", $uid, "uid='{$source_user['uid']}'");
 	$db->update_query("arcadetournamentplayers", $uid, "uid='{$source_user['uid']}'");
 
 	$last_player = array(
