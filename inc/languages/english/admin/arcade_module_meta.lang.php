@@ -34,6 +34,8 @@ $l['can_moderate_games'] = "Can moderate arcade?";
 $l['can_view_tournaments'] = "Can view tournaments?";
 $l['can_join_tournaments'] = "Can join and play in tournaments?";
 $l['can_create_tournaments'] = "Can create tournaments?";
+$l['max_tournaments_day'] = "Maximum tournaments allowed per day";
+$l['max_tournaments_day_desc'] = "Maximum number of tournaments users in this group can create in a day. If empty, users can create an unlimited number of tournaments.";
 
 // Admin Log
 $l['admin_log_arcade_games_add_tar'] = "Added game #{1} ({2})";

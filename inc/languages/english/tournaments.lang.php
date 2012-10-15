@@ -23,6 +23,7 @@ $l['games_days'] = "{1} days";
 $l['error_nocreatetournaments'] = "You do not have permission to create tournaments.";
 $l['error_cannotjointournaments'] = "You do not have permission to join tournaments.";
 $l['error_notournament'] = "This game is not allowed to be used in a tournament.";
+$l['error_max_tournaments_day'] = "You cannot create more tournaments because you've already used up your allocated quota of creating {1} tournaments in the past 24 hours.";
 $l['error_nogamepermission'] = "You do not have permission to use this game.";
 $l['error_invalidgame'] = "Invalid game specificed.";
 $l['error_invalidtournament'] = "Invalid tournament specificed.";

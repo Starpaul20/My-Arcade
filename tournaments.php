@@ -105,6 +105,18 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 		error($lang->error_invalidgame);
 	}
 
+	// Check group limits
+	if($mybb->usergroup['maxtournamentsday'] > 0)
+	{
+		$query = $db->simple_select("arcadetournaments", "COUNT(*) AS create_count", "uid='{$mybb->user['uid']}' AND dateline >= '".(TIME_NOW - (60*60*24))."'");
+		$create_count = $db->fetch_field($query, "create_count");
+		if($create_count >= $mybb->usergroup['maxtournamentsday'])
+		{
+			$lang->error_max_tournaments_day = $lang->sprintf($lang->error_max_tournaments_day, $mybb->usergroup['maxtournamentsday']);
+			error($lang->error_max_tournaments_day);
+		}
+	}
+
 	// Check number of rounds - stop if number of players exceeds board membership
 	$players = pow(2, $mybb->input['rounds']);
 
@@ -163,6 +175,18 @@ if($mybb->input['action'] == "create")
 		if($tournament['tournamentselect'] != 1)
 		{
 			error($lang->error_notournament);
+		}
+	}
+
+	// Check group limits
+	if($mybb->usergroup['maxtournamentsday'] > 0)
+	{
+		$query = $db->simple_select("arcadetournaments", "COUNT(*) AS create_count", "uid='{$mybb->user['uid']}' AND dateline >= '".(TIME_NOW - (60*60*24))."'");
+		$create_count = $db->fetch_field($query, "create_count");
+		if($create_count >= $mybb->usergroup['maxtournamentsday'])
+		{
+			$lang->error_max_tournaments_day = $lang->sprintf($lang->error_max_tournaments_day, $mybb->usergroup['maxtournamentsday']);
+			error($lang->error_max_tournaments_day);
 		}
 	}
 

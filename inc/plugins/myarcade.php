@@ -233,12 +233,14 @@ function myarcade_install()
 	$db->add_column("usergroups", "canviewtournaments", "int(1) NOT NULL default '1'");
 	$db->add_column("usergroups", "canjointournaments", "int(1) NOT NULL default '1'");
 	$db->add_column("usergroups", "cancreatetournaments", "int(1) NOT NULL default '0'");
+	$db->add_column("usergroups", "maxtournamentsday", "int(3) NOT NULL default '2'");
 
 	// Setting some basic arcade permissions...
 	$update_array = array(
 		"maxplaysday" => 0,
 		"canmoderategames" => 1,
-		"cancreatetournaments" => 1
+		"cancreatetournaments" => 1,
+		"maxtournamentsday" => 0
 	);
 	$db->update_query("usergroups", $update_array, "cancp='1' OR issupermod='1'");
 
@@ -250,7 +252,8 @@ function myarcade_install()
 		"cansearchgames" => 0,
 		"canviewgamestats" => 0,
 		"canviewtournaments" => 0,
-		"canjointournaments" => 0
+		"canjointournaments" => 0,
+		"maxtournamentsday" => 0
 	);
 	$db->update_query("usergroups", $update_array, "isbannedgroup='1' OR canview='0' OR gid IN('1','5')");
 
@@ -411,6 +414,11 @@ function myarcade_uninstall()
 	if($db->field_exists("cancreatetournaments", "usergroups"))
 	{
 		$db->drop_column("usergroups", "cancreatetournaments");
+	}
+
+	if($db->field_exists("maxtournamentsday", "usergroups"))
+	{
+		$db->drop_column("usergroups", "maxtournamentsday");
 	}
 
 	$cache->update_usergroups();
@@ -1639,7 +1647,9 @@ function myarcade_usergroups_graph()
 	$tournaments_options = array(
 		$form->generate_check_box("canviewtournaments", 1, $lang->can_view_tournaments, array("checked" => $mybb->input['canviewtournaments'])),
 		$form->generate_check_box("canjointournaments", 1, $lang->can_join_tournaments, array("checked" => $mybb->input['canjointournaments'])),
-		$form->generate_check_box("cancreatetournaments", 1, $lang->can_create_tournaments, array("checked" => $mybb->input['cancreatetournaments']))
+		$form->generate_check_box("cancreatetournaments", 1, $lang->can_create_tournaments, array("checked" => $mybb->input['cancreatetournaments'])),
+		"{$lang->max_tournaments_day}:<br /><small>{$lang->max_tournaments_day_desc}</small><br />".$form->generate_text_box('maxtournamentsday', $mybb->input['maxtournamentsday'], array('id' => 'maxtournamentsday', 'class' => 'field50'))
+
 	);
 	$form_container->output_row($lang->tournaments, "", "<div class=\"group_settings_bit\">".implode("</div><div class=\"group_settings_bit\">", $tournaments_options)."</div>");
 
@@ -1662,6 +1672,7 @@ function myarcade_usergroups_commit()
 	$updated_group['canviewtournaments'] = intval($mybb->input['canviewtournaments']);
 	$updated_group['canjointournaments'] = intval($mybb->input['canjointournaments']);
 	$updated_group['cancreatetournaments'] = intval($mybb->input['cancreatetournaments']);
+	$updated_group['maxtournamentsday'] = intval($mybb->input['maxtournamentsday']);
 }
 
 // Rebuild arcade caches in Admin CP
