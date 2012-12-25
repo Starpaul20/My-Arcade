@@ -76,7 +76,6 @@ function get_tournament($tid, $recache = false)
  * Log any actions in the arcade.
  *
  * @param array The data of the action.
- * @param array Game ID.
  * @param string The message to enter for the action performed.
  */
 function log_arcade_action($data, $action="")
@@ -205,34 +204,22 @@ function get_rank($uid, $gid, $sortby)
  *  Build a comma separated list of the categories this user cannot view
  * 
  *  @param int The primary group ID
- *	@param int Any additional group IDs
  *  @return string return a CSV list of categories user cannot view or play games in
  */
-function get_unviewable_categories($primary, $additional="0")
+function get_unviewable_categories($usergroup)
 {
 	global $db, $lang, $mybb;
 
 	$categories = array();
 
-	$usergroup = "'{$primary}'";
-	if(!empty($additional))
-	{
-		$extra_groups = explode(",", $additional);
-
-		foreach($extra_groups as $extra_group)
-		{
-			$usergroup[] = $extra_group;
-		}
-	}
-
 	switch($db->type)
 	{
 		case "pgsql":
 		case "sqlite":
-			$query = $db->simple_select("arcadecategories", "cid", "','||groups||',' NOT LIKE '%,$primary,%' AND ','||groups||',' NOT LIKE '%,-1,%'");
+			$query = $db->simple_select("arcadecategories", "cid", "','||groups||',' NOT LIKE '%,$usergroup,%' AND ','||groups||',' NOT LIKE '%,-1,%'");
 			break;
 		default:
-			$query = $db->simple_select("arcadecategories", "cid", "CONCAT(',',groups,',') NOT LIKE '%,$primary,%' AND CONCAT(',',groups,',') NOT LIKE '%,-1,%'");
+			$query = $db->simple_select("arcadecategories", "cid", "CONCAT(',',groups,',') NOT LIKE '%,$usergroup,%' AND CONCAT(',',groups,',') NOT LIKE '%,-1,%'");
 	}
 
 	while($category = $db->fetch_array($query))
@@ -254,7 +241,7 @@ function update_tournaments_stats()
 
 	$query = $db->simple_select("arcadetournaments", "COUNT(tid) AS numwaitingtournaments", "status='1'");
 	$stats['numwaitingtournaments'] = $db->fetch_field($query, 'numwaitingtournaments');
-	
+
 	if(!$stats['numwaitingtournaments'])
 	{
 		$stats['numwaitingtournaments'] = 0;
@@ -262,7 +249,7 @@ function update_tournaments_stats()
 
 	$query = $db->simple_select("arcadetournaments", "COUNT(tid) AS numrunningtournaments", "status='2'");
 	$stats['numrunningtournaments'] = $db->fetch_field($query, 'numrunningtournaments');
-	
+
 	if(!$stats['numrunningtournaments'])
 	{
 		$stats['numrunningtournaments'] = 0;
@@ -270,7 +257,7 @@ function update_tournaments_stats()
 
 	$query = $db->simple_select("arcadetournaments", "COUNT(tid) AS numfinishedtournaments", "status='3'");
 	$stats['numfinishedtournaments'] = $db->fetch_field($query, 'numfinishedtournaments');
-	
+
 	if(!$stats['numfinishedtournaments'])
 	{
 		$stats['numfinishedtournaments'] = 0;
@@ -333,19 +320,6 @@ function user_game_rank($uid, $cat_sql)
 				$users_top[$this_score['gid']] = $this_score['score'];
 				$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
 			}
-/*
-			if(($this_score['score'] > $users_top[$this_score['gid']]) && $this_score['type'] == "desc")
-			{
-				$users_top[$this_score['gid']] = $this_score['score'];
-				$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
-			}
-
-			if((($this_score['score'] < $users_top[$this_score['gid']]) && $this_score['type'] == "asc") || $users_top[$this_score['gid']] == 0)
-			{
-				$users_top[$this_score['gid']] = $this_score['score'];
-				$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
-			}
-*/
 		}
 	}
 
@@ -459,7 +433,7 @@ function whos_online()
 				$loc_image_gid = explode("gid=", $online['location']);
 				$loc_image_gid = explode("&", $loc_image_gid[1]);
 				$loc_image_link = my_substr($online['location'], -strpos(strrev($online['location']), "/"));
-				
+
 				if(isset($loc_image_gid[0]) && isset($game[trim($loc_image_gid[0])]))
 				{
 					$location = "<a href=\"".$loc_image_link."\"><img src=\"arcade/smallimages/".$game[trim($loc_image_gid[0])].".gif\" alt=\"\" /></a> ";
