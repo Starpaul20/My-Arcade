@@ -64,6 +64,7 @@ $l['days_round'] = "Days Per Round";
 $l['tournaments_finished'] = "Tournaments Finished";
 $l['champion'] = "Champion";
 $l['finished_on'] = "Finished On";
+$l['lack_of_players'] = "Cancelled because of lack of players.";
 
 $l['cancel_tournament'] = "Cancel Tournament";
 $l['cancellation_reason'] = "Enter a short reason for cancelling this tournament:";

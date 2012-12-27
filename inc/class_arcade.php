@@ -352,14 +352,14 @@ class Arcade
 		);
 
 		$cancel_tournament = array(
-			"status" => 3,
+			"status" => 4,
 			"finishdateline" => TIME_NOW,
 			"information" => $db->escape_string(serialize($cancel_info))
 		);
 		$db->update_query("arcadetournaments", $cancel_tournament, "tid='{$tid}'");
 
 		$cancel_tournament_players = array(
-			"status" => 3
+			"status" => 4
 		);
 		$db->update_query("arcadetournamentplayers", $cancel_tournament_players, "tid='{$tid}' AND status != '4'");
 		update_tournaments_stats();
@@ -368,7 +368,7 @@ class Arcade
 
 		return true;
 	}
-	
+
 	/**
 	 * Disqualify user from tournament
 	 *

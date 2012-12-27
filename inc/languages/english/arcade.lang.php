@@ -6,13 +6,13 @@
 
 $l['arcade'] = "Arcade";
 $l['arcade_disabled'] = "You cannot use the arcade system as it has been disabled by the Administrator.";
-$l['arcade_task_ran'] = "The arcade task successfully ran.";
+$l['arcade_task_ran'] = "The arcade cleanup task successfully ran.";
 
 // Online activity
 $l['playing_game'] = "Playing Game";
 $l['playing_game2'] = "Playing <a href=\"arcade.php?action=play&gid={1}\">{2}</a>";
 $l['viewing_scores'] = "Viewing Game Scores";
-$l['viewing_scores2'] = "Viewing scores of <a href=\"arcade.php?action=scores&gid={1}\">{2}</a>";
+$l['viewing_scores2'] = "Viewing Scores of <a href=\"arcade.php?action=scores&gid={1}\">{2}</a>";
 $l['viewing_champions'] = "Viewing Arcade <a href=\"arcade.php?action=champions\">Champions</a>";
 $l['viewing_scoreboard'] = "Viewing Arcade <a href=\"arcade.php?action=scoreboard\">Scoreboard</a>";
 $l['viewing_arcade_favorites'] = "Viewing <a href=\"arcade.php?action=favorites\">Arcade Favorites</a>";
@@ -51,7 +51,7 @@ $l['redirect_favoriteadded'] = "The game has been added to your favorites.<br />
 $l['redirect_favoriteremoved'] = "This game has been removed from your favorites.<br />You will now be returned to the location you came from.";
 $l['flash_not_installed'] = "You must have Flash installed in your browser in order to play this game.";
 $l['guest_scoring'] = "You are playing the arcade as a guest, any score submitted will not be saved.";
-$l['error_max_plays_day'] = "You cannot plays more games because you've already used up your allocated quota of playing {1} times in the past 24 hours.";
+$l['error_max_plays_day'] = "You cannot play more games because you've already used up your allocated quota of playing {1} times in the past 24 hours.";
 
 $l['rating'] = "Rating:";
 $l['game_rating'] = "Game Rating:";
@@ -220,7 +220,7 @@ $l['total_scores'] = "Total Scores:";
 $l['out_of'] = "out of";
 $l['no_stats'] = "There are no stats to display.";
 $l['tournament_statistics'] = "Tournament Statistics";
-$l['tournaments_created'] = "Tournament Created:";
+$l['tournaments_created'] = "Tournaments Created:";
 $l['tournaments_won'] = "Tournaments Won:";
 $l['tournaments_entered'] = "Tournaments Entered:";
 

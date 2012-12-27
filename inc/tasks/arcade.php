@@ -288,7 +288,7 @@ function task_arcade($task)
 				$information['reason'] = $lang->lack_of_players;
 
 				$update_tournament = array(
-					"status" => 3,
+					"status" => 4,
 					"finishdateline" => TIME_NOW,
 					"information" => serialize($information)
 				);

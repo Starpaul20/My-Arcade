@@ -342,6 +342,11 @@ if($mybb->input['action'] == "view")
 		$status_message = $lang->tournament_finished;
 	}
 
+	if($tournament['status'] == 4)
+	{
+		$status_message = $lang->tournament_cancelled;
+	}
+
 	// Does the current user have permission to cancel this tournament? Show cancel link
 	if($mybb->usergroup['canmoderategames'] == 1 && $tournament['status'] != 3)
 	{
