@@ -18,7 +18,7 @@ class Arcade
 	 */
 	function submit_score($score, $name, $sid)
 	{
-		global $db, $mybb, $lang, $plugins, $session, $arcade_session;
+		global $db, $mybb, $lang, $plugins, $session, $arcade_session, $Alerts;
 
 		$lang->load("arcade");
 
@@ -204,6 +204,12 @@ class Arcade
 							$emailmessage = $lang->sprintf($lang->champ_email_message, $mybb->user['username'], $game['name'], $score);
 
 							my_mail($champ['email'], $emailsubject, $emailmessage);
+						}
+
+						// MyAlerts support
+						if($db->table_exists("alerts") && $mybb->settings['myalerts_enabled'])
+						{
+							$Alerts->addAlert($champ['uid'], 'arcade_champship', 0, $uid, array('gid' => $game['gid'], 'name' => $game['name']));
 						}
 					}
 

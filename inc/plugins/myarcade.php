@@ -45,6 +45,9 @@ $plugins->add_hook("fetch_wol_activity_end", "myarcade_online_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "myarcade_online_location");
 $plugins->add_hook("datahandler_user_update", "myarcade_user_update");
 
+$plugins->add_hook('myalerts_alerts_output_start', 'myarcade_alerts_output');
+$plugins->add_hook('myalerts_possible_settings', 'myarcade_alerts_setting');
+
 $plugins->add_hook("admin_style_templates_set", "myarcade_templates");
 $plugins->add_hook("admin_user_users_merge_commit", "myarcade_merge");
 $plugins->add_hook("admin_user_users_delete_commit", "myarcade_delete");
@@ -425,6 +428,12 @@ function myarcade_uninstall()
 
 	$db->delete_query("datacache", "title IN('tournaments_stats','arcade_mostonline')");
 	$db->delete_query("templates", "title IN('global_arcade_bit','header_arcade_link','member_profile_arcade','arcade','arcade_categories','arcade_category_bit','arcade_champions','arcade_champions_bit','arcade_edit','arcade_edited','arcade_edit_error','arcade_favorites','arcade_gamebit','arcade_menu','arcade_no_display','arcade_no_games','arcade_online','arcade_online_memberbit','arcade_play_rating','arcade_play','arcade_play_tournament','arcade_rating','arcade_scoreboard','arcade_scoreboard_bit','arcade_scores','arcade_scores_bit','arcade_scores_no_scores','arcade_search','arcade_search_catagory','arcade_search_results','arcade_settings','arcade_settings_gamesselect','arcade_settings_scoreselect','arcade_settings_tournamentnotify','arcade_settings_whosonline','arcade_settings_champpostbit','arcade_statistics','arcade_statistics_bestplayers','arcade_statistics_bestplayers_bit','arcade_statistics_gamebit','arcade_statistics_scorebit','arcade_stats','arcade_stats_bit','arcade_stats_tournaments','arcade_stats_details','arcade_tournaments','arcade_tournaments_create','arcade_tournaments_user','arcade_tournaments_user_game','tournaments_cancel','tournaments_cancelled','tournaments_cancel_error','tournaments_create','tournaments_finished','tournaments_finished_bit','tournaments_no_tournaments','tournaments_running','tournaments_running_bit','tournaments_view','tournaments_view_rounds','tournaments_view_rounds_bit','tournaments_view_rounds_bit_info','tournaments_view_rounds_champion','tournaments_waiting','tournaments_waiting_bit')");
+
+	// MyAlerts support
+	if($db->table_exists("alerts"))
+	{
+		$db->delete_query("alerts", "alert_type IN('arcade_champship','arcade_newround')");
+	}
 }
 
 // This function runs when the plugin is activated.
@@ -476,8 +485,8 @@ function myarcade_activate()
 
 	$insertarray = array(
 		'name' => 'arcade_stats_newgames',
-		'title' => 'New Games/Most Played Games',
-		'description' => 'The number of new games and most played games to show on the statistics box.',
+		'title' => 'Newest Games/Most Played Games',
+		'description' => 'The number of newest games and most played games to show on the statistics box.',
 		'optionscode' => 'text',
 		'value' => 15,
 		'disporder' => 3,
@@ -487,8 +496,8 @@ function myarcade_activate()
 
 	$insertarray = array(
 		'name' => 'arcade_stats_newchamps',
-		'title' => 'Newest Champs',
-		'description' => 'The number of newest champs to show in the statistic box.',
+		'title' => 'Newest Champions',
+		'description' => 'The number of newest champions to show in the statistic box.',
 		'optionscode' => 'text',
 		'value' => 5,
 		'disporder' => 4,
@@ -728,6 +737,17 @@ desc=Descending',
 	$db->insert_query("settings", $insertarray);
 
 	$insertarray = array(
+		'name' => 'myalerts_alert_arcade_champship',
+		'title' => 'Alert on Championship Broken?',
+		'description' => 'Do you wish for users to receive an alert when their championship is broken? This setting only works if you have the <a href="http://mods.mybb.com/view/myalerts">MyAlerts</a> plugin installed.',
+		'optionscode' => 'yesno',
+		'value' => 1,
+		'disporder' => 25,
+		'gid' => intval($gid)
+	);
+	$db->insert_query("settings", $insertarray);
+
+	$insertarray = array(
 		'name' => 'enabletournaments',
 		'title' => 'Enable Tournament Functionality',
 		'description' => 'If you wish to disable the tournament feature on your board, set this option to no.',
@@ -778,6 +798,17 @@ desc=Descending',
 		'optionscode' => 'text',
 		'value' => 90,
 		'disporder' => 5,
+		'gid' => intval($tid)
+	);
+	$db->insert_query("settings", $insertarray);
+
+	$insertarray = array(
+		'name' => 'myalerts_alert_arcade_newround',
+		'title' => 'Alert on New Tournament round?',
+		'description' => 'Do you wish for users to receive an alert when a new tournament round starts? This setting only works if you have the <a href="http://mods.mybb.com/view/myalerts">MyAlerts</a> plugin installed.',
+		'optionscode' => 'yesno',
+		'value' => 1,
+		'disporder' => 6,
 		'gid' => intval($tid)
 	);
 	$db->insert_query("settings", $insertarray);
@@ -887,7 +918,7 @@ td .star_rating {\nmargin: auto;\n}\n
 	// Inserts arcade task
 	require_once MYBB_ROOT."inc/functions_task.php";
 	$arcadetask_insert = array(
-		"title"			=> "Arcade Tasks",
+		"title"			=> "Arcade Cleanup",
 		"description"	=> "Cleans out old arcade sessions and updates tournaments every 6 hours.",
 		"file"			=> "arcade",
 		"minute"		=> "0",
@@ -916,7 +947,7 @@ function myarcade_deactivate()
 	global $db;
 	$db->delete_query("templates", "title IN('arcade','arcade_categories','arcade_category_bit','arcade_champions','arcade_champions_bit','arcade_edit','arcade_edited','arcade_edit_error','arcade_favorites','arcade_gamebit','arcade_menu','arcade_no_display','arcade_no_games','arcade_online','arcade_online_memberbit','arcade_play_rating','arcade_play','arcade_play_tournament','arcade_rating','arcade_scoreboard','arcade_scoreboard_bit','arcade_scores','arcade_scores_bit','arcade_scores_no_scores','arcade_search','arcade_search_catagory','arcade_search_results','arcade_settings','arcade_settings_gamesselect','arcade_settings_scoreselect','arcade_settings_tournamentnotify','arcade_settings_whosonline','arcade_settings_champpostbit','arcade_statistics','arcade_statistics_bestplayers','arcade_statistics_bestplayers_bit','arcade_statistics_gamebit','arcade_statistics_scorebit','arcade_stats','arcade_stats_bit','arcade_stats_tournaments','arcade_stats_details','arcade_tournaments','arcade_tournaments_create','arcade_tournaments_user','arcade_tournaments_user_game','tournaments_cancel','tournaments_cancelled','tournaments_cancel_error','tournaments_create','tournaments_finished','tournaments_finished_bit','tournaments_no_tournaments','tournaments_running','tournaments_running_bit','tournaments_view','tournaments_view_rounds','tournaments_view_rounds_bit','tournaments_view_rounds_bit_info','tournaments_view_rounds_champion','tournaments_waiting','tournaments_waiting_bit') AND sid='-2'");
 	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade')");
-	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime')");
+	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime','myalerts_alert_arcade_newround','myalerts_alert_arcade_champship')");
 	$db->delete_query("settinggroups", "name IN('arcade','tournaments')");
 	rebuild_settings();
 
@@ -1531,6 +1562,43 @@ function myarcade_user_update(&$user)
 		$db->update_query("arcadechampions", $username_update, "uid='{$user->uid}'");
 		$db->update_query("arcadescores", $username_update, "uid='{$user->uid}'");
 		$db->update_query("arcadetournamentplayers", $username_update, "uid='{$user->uid}'");
+	}
+}
+
+// Add MyAlerts alert output
+function myarcade_alerts_output(&$alert)
+{
+	global $mybb, $lang;
+	$lang->load("arcade");
+
+	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
+	{
+		if($alert['alert_type'] == 'arcade_champship' AND $mybb->settings['myalerts_alert_arcade_champship'] AND $mybb->user['myalerts_settings']['arcade_champship'])
+		{
+			$alert['gamelink'] = $mybb->settings['bburl']."/arcade.php?action=scores&gid={$alert['content']['gid']}";
+			$alert['message'] = $lang->sprintf($lang->myalerts_arcade_champship_alert, $alert['user'], $alert['gamelink'], htmlspecialchars_uni($alert['content']['name']), $alert['dateline']);
+			$alert['rowType'] = 'champshipAlert';
+		}
+
+		if($alert['alert_type'] == 'arcade_newround' AND $mybb->settings['myalerts_alert_arcade_newround'] AND $mybb->user['myalerts_settings']['arcade_newround'])
+		{
+			$alert['tournamentlink'] = $mybb->settings['bburl']."/tournaments.php?action=view&tid={$alert['content']['tid']}";
+			$alert['message'] = $lang->sprintf($lang->myalerts_arcade_new_round, $alert['tournamentlink'], htmlspecialchars_uni($alert['content']['name']), $alert['dateline']);
+			$alert['rowType'] = 'roundAlert';
+		}
+	}
+}
+
+// Add MyAlerts settings
+function myarcade_alerts_setting(&$possible_settings)
+{
+	global $mybb, $lang;
+	$lang->load("arcade");
+
+	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
+	{
+		$possible_settings[] = 'arcade_champship';
+		$possible_settings[] = 'arcade_newround';
 	}
 }
 

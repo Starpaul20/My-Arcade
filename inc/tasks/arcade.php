@@ -6,12 +6,19 @@
 
 function task_arcade($task)
 {
-	global $mybb, $db, $lang;
+	global $mybb, $db, $lang, $Alerts;
 	$lang->load("arcade");
 
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 	require_once MYBB_ROOT."inc/class_arcade.php";
 	$arcade = new Arcade;
+
+	// MyAlerts support
+	if($db->table_exists("alerts"))
+	{
+		require_once MYBB_ROOT.'inc/plugins/MyAlerts/Alerts.class.php';
+		$Alerts = new Alerts($mybb, $db);
+	}
 
 	// Delete sessions older than 36 hours
 	$cut = TIME_NOW-(60*60*36);
@@ -93,6 +100,12 @@ function task_arcade($task)
 					$emailmessage = $lang->sprintf($lang->tournament_message, $open['name'], $open['days'], $open['tries']);
 
 					my_mail($player['email'], $emailsubject, $emailmessage);
+				}
+
+				// MyAlerts support
+				if($db->table_exists("alerts") && $mybb->settings['myalerts_enabled'])
+				{
+					$Alerts->addAlert($player['uid'], 'arcade_newround', 0, $open['uid'], array('tid' => $open['tid'], 'name' => $open['name']));
 				}
 			}
 		}
@@ -189,6 +202,12 @@ function task_arcade($task)
 							$emailmessage = $lang->sprintf($lang->tournament_message, $round['name'], $round['days'], $round['tries']);
 
 							my_mail($player['email'], $emailsubject, $emailmessage);
+						}
+
+						// My Alerts support
+						if($db->table_exists("alerts") && $mybb->settings['myalerts_enabled'])
+						{
+							$Alerts->addAlert($player['uid'], 'arcade_newround', 0, $round['uid'], array('tid' => $round['tid'], 'name' => $round['name']));
 						}
 					}
 				}
