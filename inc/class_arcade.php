@@ -1,7 +1,7 @@
 <?php
 /**
  * My Arcade
- * Copyright 2012 Starpaul20
+ * Copyright 2013 Starpaul20
  */
 
 require_once MYBB_ROOT."inc/functions_arcade.php";
