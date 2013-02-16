@@ -354,7 +354,16 @@ if($mybb->input['action'] == "view")
 	}
 	else
 	{
-		$cancel_link = '';
+		$cancel_link = "";
+	}
+
+	if($mybb->usergroup['canmoderategames'] == 1)
+	{
+		$delete_link = " <a href=\"tournaments.php?action=delete&tid={$tid}\" onclick=\"if(confirm(&quot;{$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;\">[{$lang->delete_tournament}]</a>";
+	}
+	else
+	{
+		$delete_link = "";
 	}
 
 	$colspan = $players + 1;
@@ -793,11 +802,36 @@ if($mybb->input['action'] == "disqualify")
 
 	$arcade->disqualify_user($tournament['tid'], $player['uid']);
 	log_arcade_action(array("gid" => $tournament['gid'], "tid" => $tournament['tid'], "uid" => $user['uid'], "username" => $user['username']), $lang->user_disqualified);
-	update_tournaments_stats();
 
 	$plugins->run_hooks("tournaments_disqualify_end");
 
 	redirect("tournaments.php?action=view&tid={$player['tid']}", $lang->redirect_userdisqualified);
+}
+
+// Delete a tournament
+if($mybb->input['action'] == "delete")
+{
+	if($mybb->usergroup['canmoderategames'] == 0)
+	{
+		error_no_permission();
+	}
+
+	$tid = intval($mybb->input['tid']);
+	$tournament = get_tournament($tid);
+
+	$plugins->run_hooks("tournaments_delete_start");
+
+	if(!$tournament['tid'])
+	{
+		error($lang->error_invalidtournament);
+	}
+
+	$arcade->delete_tournament($tournament['tid']);
+	log_arcade_action(array("gid" => $tournament['gid'], "tid" => $tournament['tid']), $lang->tournament_deleted);
+
+	$plugins->run_hooks("tournaments_delete_end");
+
+	redirect("arcade.php", $lang->redirect_tournamentdeleted);
 }
 
 if(!$mybb->input['action'])

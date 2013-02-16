@@ -85,4 +85,9 @@ $l['error_tournamentended'] = "You cannot disqualify this player because the tou
 $l['redirect_userdisqualified'] = "The player has been disqualified.<br />You will now be redirected to the tournament page.";
 $l['disqualify_user_confirm'] = "Are you sure you want to disqualify this user?";
 
+$l['delete_tournament'] = "Delete Tournament";
+$l['tournament_deleted'] = "Tournament Deleted";
+$l['redirect_tournamentdeleted'] = "This tournament has been deleted.<br />You will now be redirected to the arcade main page.";
+$l['delete_tournament_confirm'] = "Are you sure you want to delete this tournament?";
+
 ?>

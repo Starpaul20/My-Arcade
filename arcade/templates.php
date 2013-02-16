@@ -1255,7 +1255,7 @@ $arcade_templates['tournaments_view'] = "<html>
 </tr>
 <tr>
 <td class=\"tcat\" colspan=\"2\" align=\"center\"><strong>{\$status_message}<br />
-{\$tournament_link}{\$cancel_link}</strong></td>
+{\$tournament_link}{\$cancel_link}{\$delete_link}</strong></td>
 </tr>
 </table>
 <br />

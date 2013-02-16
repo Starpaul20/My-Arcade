@@ -408,6 +408,27 @@ class Arcade
 
 		return true;
 	}
+
+	/**
+	 * Delete a Tournament
+	 *
+	 * @param array Tournament ID
+	 * @return boolean true
+	 */
+	function delete_tournament($tid)
+	{
+		global $db, $plugins;
+
+		$tid = intval($tid);
+		$plugins->run_hooks("class_arcade_delete_tournament", $tid);
+
+		$db->delete_query("arcadetournaments", "tid='{$tid}'");
+		$db->delete_query("arcadetournamentplayers", "tid='{$tid}'");
+
+		update_tournaments_stats();
+
+		return true;
+	}
 }
 
 ?>
