@@ -45,8 +45,9 @@ $plugins->add_hook("fetch_wol_activity_end", "myarcade_online_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "myarcade_online_location");
 $plugins->add_hook("datahandler_user_update", "myarcade_user_update");
 
-$plugins->add_hook('myalerts_alerts_output_start', 'myarcade_alerts_output');
-$plugins->add_hook('myalerts_possible_settings', 'myarcade_alerts_setting');
+$plugins->add_hook("myalerts_load_lang", "myarcade_load_lang");
+$plugins->add_hook("myalerts_alerts_output_start", "myarcade_alerts_output");
+$plugins->add_hook("admin_config_plugins_activate_commit", "myarcade_alerts_activate");
 
 $plugins->add_hook("admin_style_templates_set", "myarcade_templates");
 $plugins->add_hook("admin_user_users_merge_commit", "myarcade_merge");
@@ -939,6 +940,20 @@ td .star_rating {\nmargin: auto;\n}\n
 	change_admin_permission('arcade', 'categories');
 	change_admin_permission('arcade', 'scores');
 	change_admin_permission('arcade', 'logs');
+
+	// MyAlerts support
+	if($db->table_exists("alert_settings"))
+	{
+		$insertarray = array(
+			'code'		=>	'arcade_champship'
+		);
+		$db->insert_query("alert_settings", $insertarray);
+
+		$insertarray = array(
+			'code'		=>	'arcade_newround'
+		);
+		$db->insert_query("alert_settings", $insertarray);
+	}
 }
 
 // This function runs when the plugin is deactivated.
@@ -978,6 +993,12 @@ function myarcade_deactivate()
 	change_admin_permission('arcade', 'categories', -1);
 	change_admin_permission('arcade', 'scores', -1);
 	change_admin_permission('arcade', 'logs', -1);
+
+	// MyAlerts support
+	if($db->table_exists("alert_settings"))
+	{
+		$db->delete_query("alert_settings", "code IN('arcade_champship','arcade_newround')");
+	}
 }
 
 // Insert score (for IBProArcade games)
@@ -1565,6 +1586,16 @@ function myarcade_user_update(&$user)
 	}
 }
 
+// Add MyAlerts settings
+function myarcade_load_lang()
+{
+	global $lang;
+	if(!$lang->arcade)
+	{
+		$lang->load('arcade');
+	}
+}
+
 // Add MyAlerts alert output
 function myarcade_alerts_output(&$alert)
 {
@@ -1589,16 +1620,22 @@ function myarcade_alerts_output(&$alert)
 	}
 }
 
-// Add MyAlerts settings
-function myarcade_alerts_setting(&$possible_settings)
+// MyAlerts actvation support - if MyAlerts is added after My Arcade, this will add the settings.
+function myarcade_alerts_activate()
 {
-	global $mybb, $lang;
-	$lang->load("arcade");
+	global $db, $codename;
 
-	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
+	if($codename == 'myalerts')
 	{
-		$possible_settings[] = 'arcade_champship';
-		$possible_settings[] = 'arcade_newround';
+		$insertarray = array(
+			'code'		=>	'arcade_champship'
+		);
+		$db->insert_query("alert_settings", $insertarray);
+
+		$insertarray = array(
+			'code'		=>	'arcade_newround'
+		);
+		$db->insert_query("alert_settings", $insertarray);
 	}
 }
 
