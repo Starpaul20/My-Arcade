@@ -7,8 +7,8 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit";
-$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds";
+$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit,tournaments_view_cancel,tournaments_view_delete";
+$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -304,6 +304,7 @@ if($mybb->input['action'] == "view")
 	$lang->game_tournament_started_on = $lang->sprintf($lang->game_tournament_started_on, $game['name'], $dateline);
 
 	$players = pow(2, $tournament['rounds']);
+	$tournament_link = '';
 
 	if($tournament['status'] == 1)
 	{
@@ -316,7 +317,8 @@ if($mybb->input['action'] == "view")
 		{
 			$remainingspots = $players - $tournament['numplayers'];
 			$lang->join_now = $lang->sprintf($lang->join_now, $remainingspots);
-			$tournament_link = "<a href=\"tournaments.php?action=join&tid={$tid}&my_post_key={$mybb->post_code}\">{$lang->join_now}</a>";
+
+			eval("\$tournament_link = \"".$templates->get("tournaments_view_join")."\";");
 		}
 	}
 
@@ -329,11 +331,7 @@ if($mybb->input['action'] == "view")
 
 		if($player['pid'])
 		{
-			$tournament_link = "<a href=\"arcade.php?action=play&tid={$tid}\">{$lang->play_now}</a>";
-		}
-		else
-		{
-			$tournament_link = "";
+			eval("\$tournament_link = \"".$templates->get("tournaments_view_play")."\";");
 		}
 	}
 
@@ -348,22 +346,17 @@ if($mybb->input['action'] == "view")
 	}
 
 	// Does the current user have permission to cancel this tournament? Show cancel link
-	if($mybb->usergroup['canmoderategames'] == 1 && $tournament['status'] != 3)
+	$cancel_link = '';
+	if($mybb->usergroup['canmoderategames'] == 1 && $tournament['status'] < 3)
 	{
-		$cancel_link = " [<a href=\"javascript:MyBB.popupWindow('tournaments.php?action=cancel&amp;tid={$tid}', 'canceltournament', '400', '300') \">{$lang->cancel_tournament}</a>]";
-	}
-	else
-	{
-		$cancel_link = "";
+		eval("\$cancel_link = \"".$templates->get("tournaments_view_cancel")."\";");
 	}
 
+	// Does the current user have permission to delete this tournament? Show delete link
+	$delete_link = '';
 	if($mybb->usergroup['canmoderategames'] == 1)
 	{
-		$delete_link = " <a href=\"tournaments.php?action=delete&tid={$tid}\" onclick=\"if(confirm(&quot;{$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;\">[{$lang->delete_tournament}]</a>";
-	}
-	else
-	{
-		$delete_link = "";
+		eval("\$delete_link = \"".$templates->get("tournaments_view_delete")."\";");
 	}
 
 	$colspan = $players + 1;
@@ -418,9 +411,10 @@ if($mybb->input['action'] == "view")
 
 			$player['username'] = "<a href=\"{$profilelink}\">{$player['username']}</a>";
 
-			if($mybb->usergroup['canmoderategames'] == 1 && $tournament['status'] != 3)
+			$disqualifylink = '';
+			if($mybb->usergroup['canmoderategames'] == 1 && $tournament['status'] < 3)
 			{
-				$disqualifylink = "<br /><span class=\"smalltext\"><a href=\"tournaments.php?action=disqualify&pid={$player['pid']}\" onclick=\"if(confirm(&quot;{$lang->disqualify_user_confirm}&quot;))window.location=this.href.replace('action=disqualify','action=disqualify');return false;\">[{$lang->disqualify_user}]</a></span>";
+				eval("\$disqualifylink = \"".$templates->get("tournaments_view_rounds_disqualify")."\";");
 			}
 
 			if($tournament['status'] == 3 || $tournament['status'] == 2)
