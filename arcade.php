@@ -8,10 +8,10 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_gamebit,arcade_menu,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,multipage";
-$templatelist .= ",arcade_statistics,arcade_statistics_bestplayers,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_end,multipage_start";
-$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_tournaments";
-$templatelist .= ",arcade_rating,arcade_online_memberbit,arcade_online,arcade_search_catagory,arcade_search,arcade_no_games,arcade_scores,arcade_scores_bit,arcade_no_display,arcade_play,arcade_play_rating,arcade_play_tournament,arcade_favorites,arcade_stats";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_gamebit,arcade_menu,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_tournaments";
+$templatelist .= ",arcade_statistics,arcade_statistics_bestplayers,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage";
+$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_stats,arcade_scores_edit";
+$templatelist .= ",arcade_rating,arcade_online_memberbit,arcade_online,arcade_search_catagory,arcade_search,arcade_no_games,arcade_scores,arcade_scores_bit,arcade_no_display,arcade_play,arcade_play_rating,arcade_play_tournament,arcade_favorites,arcade_scores_delete";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -568,24 +568,18 @@ if($mybb->input['action'] == "scores")
 		}
 
 		// Does the current user have permission to delete this score? Show delete link
+		$delete_link = '';
 		if($mybb->usergroup['canmoderategames'] == 1)
 		{
-			$delete_link = "[<a href=\"arcade.php?action=delete&amp;sid={$score['sid']}&amp;my_post_key={$mybb->post_code}\" onclick=\"if(confirm(&quot;{$lang->delete_score_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;\">{$lang->delete}</a>]";
-		}
-		else
-		{
-			$delete_link = '';
+			eval("\$delete_link = \"".$templates->get("arcade_scores_delete")."\";");
 		}
 
 		// Does the current user have permission to edit this score comment? Show edit link
 		$time = TIME_NOW;
+		$edit_link = '';
 		if($mybb->usergroup['canmoderategames'] == 1 || ($score['uid'] == $mybb->user['uid'] && ($mybb->settings['arcade_editcomment'] == 0 || $score['dateline'] > ($time-($mybb->settings['arcade_editcomment']*60)))))
 		{
-			$edit_link = "[<a href=\"javascript:MyBB.popupWindow('arcade.php?action=edit&amp;sid={$score['sid']}', 'editcomment', '400', '300') \">{$lang->edit}</a>]";
-		}
-		else
-		{
-			$edit_link = '';
+			eval("\$edit_link = \"".$templates->get("arcade_scores_edit")."\";");
 		}
 
 		// Parse smilies and bad words in the score comment
@@ -1884,23 +1878,17 @@ if($mybb->input['action'] == "scoreboard")
 		}
 
 		// Does the current user have permission to delete this score? Show delete link
-		if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
+		$delete_link = '';
+		if($mybb->usergroup['canmoderategames'] == 1)
 		{
-			$delete_link = "[<a href=\"arcade.php?action=delete&amp;sid={$score['sid']}&amp;my_post_key={$mybb->post_code}\" onclick=\"if(confirm(&quot;{$lang->delete_score_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;\">{$lang->delete}</a>]";
-		}
-		else
-		{
-			$delete_link = '';
+			eval("\$delete_link = \"".$templates->get("arcade_scores_delete")."\";");
 		}
 
 		// Does the current user have permission to edit this score's comment? Show edit link
+		$edit_link = '';
 		if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 		{
-			$edit_link = "[<a href=\"javascript:MyBB.popupWindow('arcade.php?action=edit&amp;sid={$score['sid']}', 'editcomment', '400', '300') \">{$lang->edit}</a>]";
-		}
-		else
-		{
-			$edit_link = '';
+			eval("\$edit_link = \"".$templates->get("arcade_scores_edit")."\";");
 		}
 
 		// Parse smilies and bad words in the score comment

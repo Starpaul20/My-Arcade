@@ -607,6 +607,10 @@ $arcade_templates['arcade_scores_bit'] = "<tr>
 {\$ipaddressbit}
 </tr>";
 
+$arcade_templates['arcade_scores_delete'] = "[<a href=\"arcade.php?action=delete&amp;sid={\$score[\'sid\']}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->delete_score_confirm}&quot;))window.location=this.href.replace(\'action=delete\',\'action=delete\');return false;\">{\$lang->delete}</a>]";
+
+$arcade_templates['arcade_scores_edit'] = "[<a href=\"javascript:MyBB.popupWindow(\'arcade.php?action=edit&amp;sid={\$score[\'sid\']}\', \'editcomment\', \'400\', \'300\') \">{\$lang->edit}</a>]";
+
 $arcade_templates['arcade_scores_no_scores'] = "<tr>
 <td class=\"trow1\" colspan=\"7\" align=\"center\">{\$lang->no_game_scores}</td>
 </tr>";
