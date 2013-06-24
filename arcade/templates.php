@@ -1276,7 +1276,7 @@ $arcade_templates['tournaments_view'] = "<html>
 
 $arcade_templates['tournaments_view_cancel'] = "[<a href=\"javascript:MyBB.popupWindow(\'tournaments.php?action=cancel&amp;tid={\$tid}\', \'canceltournament\', \'400\', \'300\') \">{\$lang->cancel_tournament}</a>]";
 
-$arcade_templates['tournaments_view_delete'] = "[<a href=\"tournaments.php?action=delete&tid={\$tid}\" onclick=\"if(confirm(&quot;{\$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace(\'action=delete\',\'action=delete\');return false;\">{\$lang->delete_tournament}</a>]";
+$arcade_templates['tournaments_view_delete'] = "[<a href=\"tournaments.php?action=delete&tid={\$tid}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace(\'action=delete\',\'action=delete\');return false;\">{\$lang->delete_tournament}</a>]";
 
 $arcade_templates['tournaments_view_join'] = "<a href=\"tournaments.php?action=join&tid={\$tid}&my_post_key={\$mybb->post_code}\">{\$lang->join_now}</a>";
 
@@ -1308,7 +1308,7 @@ $arcade_templates['tournaments_view_rounds_champion'] = "<tr>
 </td>
 </tr>";
 
-$arcade_templates['tournaments_view_rounds_disqualify'] = "<br /><span class=\"smalltext\">[<a href=\"tournaments.php?action=disqualify&pid={\$player[\'pid\']}\" onclick=\"if(confirm(&quot;{\$lang->disqualify_user_confirm}&quot;))window.location=this.href.replace(\'action=disqualify\',\'action=disqualify\');return false;\">{\$lang->disqualify_user}</a>]</span>";
+$arcade_templates['tournaments_view_rounds_disqualify'] = "<br /><span class=\"smalltext\">[<a href=\"tournaments.php?action=disqualify&pid={\$player[\'pid\']}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->disqualify_user_confirm}&quot;))window.location=this.href.replace(\'action=disqualify\',\'action=disqualify\');return false;\">{\$lang->disqualify_user}</a>]</span>";
 
 $arcade_templates['tournaments_waiting'] = "<html>
 <head>

@@ -756,6 +756,9 @@ if($mybb->input['action'] == "cancel")
 // Disqualify a user from a tournament
 if($mybb->input['action'] == "disqualify")
 {
+	// Verify incoming POST request
+	verify_post_check($mybb->input['my_post_key']);
+
 	if($mybb->usergroup['canmoderategames'] == 0)
 	{
 		error($lang->error_disqualify_nopermission);
@@ -805,6 +808,9 @@ if($mybb->input['action'] == "disqualify")
 // Delete a tournament
 if($mybb->input['action'] == "delete")
 {
+	// Verify incoming POST request
+	verify_post_check($mybb->input['my_post_key']);
+
 	if($mybb->usergroup['canmoderategames'] == 0)
 	{
 		error_no_permission();
