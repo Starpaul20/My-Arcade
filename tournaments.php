@@ -390,7 +390,7 @@ if($mybb->input['action'] == "view")
 		$query = $db->query("
 			SELECT *
 			FROM ".TABLE_PREFIX."arcadetournamentplayers
-			WHERE tid='{$tid}' AND status !='4' AND round='{$rid}'
+			WHERE tid='{$tid}' AND status !='3' AND round='{$rid}'
 			ORDER BY score {$game['sortby']}, attempts ASC
 		");
 		$players_count = $db->num_rows($query);
@@ -787,7 +787,7 @@ if($mybb->input['action'] == "disqualify")
 		error($lang->error_invalidtournament);
 	}
 
-	if($player['status'] == 4)
+	if($player['status'] == 3)
 	{
 		error($lang->error_alreadydisqualified);
 	}

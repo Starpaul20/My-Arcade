@@ -367,7 +367,7 @@ class Arcade
 		$cancel_tournament_players = array(
 			"status" => 4
 		);
-		$db->update_query("arcadetournamentplayers", $cancel_tournament_players, "tid='{$tid}' AND status != '4'");
+		$db->update_query("arcadetournamentplayers", $cancel_tournament_players, "tid='{$tid}' AND status != '3'");
 		update_tournaments_stats();
 
 		$plugins->run_hooks("class_arcade_cancel_tournament", $tid);
@@ -387,7 +387,7 @@ class Arcade
 		global $db, $plugins;
 
 		$disqualify_user = array(
-			"status" => 4
+			"status" => 3
 		);
 		$db->update_query("arcadetournamentplayers", $disqualify_user, "tid='{$tid}' AND uid='{$uid}'");
 

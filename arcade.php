@@ -2569,7 +2569,7 @@ if(!$mybb->input['action'])
 				FROM ".TABLE_PREFIX."arcadetournamentplayers p
 				LEFT JOIN ".TABLE_PREFIX."arcadetournaments t ON (p.tid=t.tid AND t.round=p.round)
 				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (t.gid=g.gid)
-				WHERE p.uid='{$mybb->user['uid']}' AND t.status IN(1,2) AND p.status !='4' AND g.active='1'{$cat_sql_game}
+				WHERE p.uid='{$mybb->user['uid']}' AND t.status IN(1,2) AND p.status !='3' AND g.active='1'{$cat_sql_game}
 				ORDER BY t.dateline DESC
 			");
 			while($activeenrolled = $db->fetch_array($query))

@@ -312,6 +312,11 @@ function task_arcade($task)
 					"information" => serialize($information)
 				);
 				$db->update_query("arcadetournaments", $update_tournament, "tid='{$cancelled['tid']}'");
+
+				$cancel_tournament_players = array(
+					"status" => 4
+				);
+				$db->update_query("arcadetournamentplayers", $cancel_tournament_players, "tid='{$cancelled['tid']}' AND status != '3'");
 			}
 		}
 	}
