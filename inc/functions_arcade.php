@@ -150,14 +150,15 @@ function update_champion($gid)
 		$db->delete_query("arcadechampions", "gid='{$gid}'");
 	}
 	else
-	$updated_champion = array(
-		"uid" => intval($highestscore['uid']),
-		"username" => $db->escape_string($highestscore['username']),
-		"score" => $db->escape_string($highestscore['score']),
-		"dateline" => intval($highestscore['dateline'])
-	);
-
-	$db->update_query("arcadechampions", $updated_champion, "gid='{$gid}'");
+	{
+		$updated_champion = array(
+			"uid" => intval($highestscore['uid']),
+			"username" => $db->escape_string($highestscore['username']),
+			"score" => $db->escape_string($highestscore['score']),
+			"dateline" => intval($highestscore['dateline'])
+		);
+		$db->update_query("arcadechampions", $updated_champion, "gid='{$gid}'");
+	}
 }
 
 /**
@@ -261,6 +262,14 @@ function update_tournaments_stats()
 	if(!$stats['numfinishedtournaments'])
 	{
 		$stats['numfinishedtournaments'] = 0;
+	}
+
+	$query = $db->simple_select("arcadetournaments", "COUNT(tid) AS numcancelledtournaments", "status='4'");
+	$stats['numcancelledtournaments'] = $db->fetch_field($query, 'numcancelledtournaments');
+
+	if(!$stats['numcancelledtournaments'])
+	{
+		$stats['numcancelledtournaments'] = 0;
 	}
 
 	$cache->update("tournaments_stats", $stats);

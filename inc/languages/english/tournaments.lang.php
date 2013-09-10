@@ -66,6 +66,10 @@ $l['champion'] = "Champion";
 $l['finished_on'] = "Finished On";
 $l['lack_of_players'] = "Cancelled because of lack of players.";
 
+$l['tournaments_cancelled'] = "Tournaments Cancelled";
+$l['created_by'] = "Created By";
+$l['cancelled_on'] = "Cancelled On";
+
 $l['cancel_tournament'] = "Cancel Tournament";
 $l['cancellation_reason'] = "Enter a short reason for cancelling this tournament:";
 $l['error'] = "Error";

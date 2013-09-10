@@ -7,8 +7,9 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit,tournaments_view_cancel,tournaments_view_delete";
-$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify";
+$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit";
+$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify";
+$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_cancel,tournaments_view_delete,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -678,6 +679,57 @@ if($mybb->input['action'] == "finished")
 	output_page($finished);
 }
 
+// Tournaments cancelled
+if($mybb->input['action'] == "cancelled")
+{
+	if($mybb->usergroup['canmoderategames'] == 0)
+	{
+		error_no_permission();
+	}
+
+	add_breadcrumb($lang->tournaments_cancelled, "tournaments.php?action=cancelled");
+
+	$plugins->run_hooks("tournaments_cancelled_start");
+
+	// Fetch the tournaments which will be displayed on this page
+	$query = $db->query("
+		SELECT t.*, g.name, g.active, g.cid, u.username
+		FROM ".TABLE_PREFIX."arcadetournaments t
+		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
+		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=t.uid)
+		WHERE t.status='4' AND g.active='1'{$cat_sql_game}
+	");
+	while($tournament = $db->fetch_array($query))
+	{
+		$tournament['name'] = htmlspecialchars_uni($tournament['name']);
+
+		if($mybb->usergroup['canviewgamestats'] == 1)
+		{
+			$profilelink = "arcade.php?action=stats&uid={$tournament['uid']}";
+		}
+		else
+		{
+			$profilelink = get_profile_link($tournament['uid']);
+		}
+
+		$dateline = my_date($mybb->settings['dateformat'], $tournament['finishdateline']).", ".my_date($mybb->settings['timeformat'], $tournament['finishdateline']);
+
+		$alt_bg = alt_trow();
+		eval("\$tournament_bit .= \"".$templates->get("tournaments_cancelled_bit")."\";");
+	}
+
+	if(!$tournament_bit)
+	{
+		$colspan = "4";
+		eval("\$tournament_bit = \"".$templates->get("tournaments_no_tournaments")."\";");
+	}
+
+	$plugins->run_hooks("tournaments_cancelled_end");
+
+	eval("\$cancelled = \"".$templates->get("tournaments_cancelled")."\";");
+	output_page($cancelled);
+}
+
 // Cancel a specific tournament
 if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 {
@@ -711,7 +763,7 @@ if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 
 	$plugins->run_hooks("tournaments_do_cancel_end");
 
-	eval("\$cancelled = \"".$templates->get("tournaments_cancelled")."\";");
+	eval("\$cancelled = \"".$templates->get("tournaments_cancel_success")."\";");
 	output_page($cancelled);
 }
 

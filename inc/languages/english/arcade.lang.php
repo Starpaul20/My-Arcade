@@ -234,6 +234,7 @@ $l['tournaments'] = "Tournaments";
 $l['tournaments_running'] = "<strong>{1}</strong> running tournaments";
 $l['tournaments_finished'] = "<strong>{1}</strong> finished tournaments";
 $l['tournaments_waiting'] = "<strong>{1}</strong> tournaments waiting for players";
+$l['tournaments_cancelled'] = "<strong>{1}</strong> tournaments cancelled";
 $l['create_a_tournament'] = "Create a New Tournament";
 $l['create_tournament'] = "Create Tournament";
 $l['active_tournament_enrolled'] = "Active Tournaments Enrolled in:";

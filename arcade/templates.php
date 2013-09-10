@@ -1024,11 +1024,14 @@ $arcade_templates['arcade_tournaments'] = "<br />
 {\$tournamentswaiting}<br />
 <a href=\"tournaments.php?action=running\">{\$lang->tournaments_running}</a><br />
 <a href=\"tournaments.php?action=finished\">{\$lang->tournaments_finished}</a>
+{\$tournamentscancelled}
 </td>
 {\$tournamentmember}
 {\$tournamentcreate}
 </tr>
 </table>";
+
+$arcade_templates['arcade_tournaments_cancelled'] = "<br /><a href=\"tournaments.php?action=cancelled\">{\$lang->tournaments_cancelled}</a>";
 
 $arcade_templates['arcade_tournaments_create'] = "<td class=\"trow1\" align=\"center\" style=\"width: 33.33%;\">
 <strong><a href=\"tournaments.php?action=create\">{\$lang->create_a_tournament}</a></strong><br />
@@ -1071,32 +1074,6 @@ $arcade_templates['tournaments_cancel'] = "<html>
 </body>
 </html>";
 
-$arcade_templates['tournaments_cancelled'] = "<html>
-<head>
-<title>{\$mybb->settings[\'bbname\']} - {\$lang->cancel_tournament}</title>
-{\$headerinclude}
-</head>
-<body onunload=\"window.opener.location.reload();\">
-<br />
-<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\">
-<tr>
-<td class=\"trow1\" style=\"padding: 20px\">
-<strong>{\$lang->tournament_cancelled}</strong><br /><br />
-<blockquote>{\$lang->tournament_cancelled_message}</blockquote>
-<br /><br />
-<div style=\"text-align: center;\">
-<script type=\"text/javascript\">
-<!--
-document.write(\'[<a href=\"javascript:window.close();\">{\$lang->close_window}</a>]\');
-// -->
-</script>
-</div>
-</td>
-</tr>
-</table>
-</body>
-</html>";
-
 $arcade_templates['tournaments_cancel_error'] = "<html>
 <head>
 <title>{\$lang->cancel_tournament}</title>
@@ -1127,6 +1104,65 @@ document.write(\'[<a href=\"javascript:window.close();\">{\$lang->close_window}<
 </table>
 </body>
 </html>";
+
+$arcade_templates['tournaments_cancel_success'] = "<html>
+<head>
+<title>{\$mybb->settings[\'bbname\']} - {\$lang->cancel_tournament}</title>
+{\$headerinclude}
+</head>
+<body onunload=\"window.opener.location.reload();\">
+<br />
+<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\">
+<tr>
+<td class=\"trow1\" style=\"padding: 20px\">
+<strong>{\$lang->tournament_cancelled}</strong><br /><br />
+<blockquote>{\$lang->tournament_cancelled_message}</blockquote>
+<br /><br />
+<div style=\"text-align: center;\">
+<script type=\"text/javascript\">
+<!--
+document.write(\'[<a href=\"javascript:window.close();\">{\$lang->close_window}</a>]\');
+// -->
+</script>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>";
+
+$arcade_templates['tournaments_cancelled'] = "<html>
+<head>
+<title>{\$mybb->settings[\'bbname\']} - {\$lang->tournaments_cancelled}</title>
+{\$headerinclude}
+</head>
+<body>
+{\$header}
+{\$menu}
+<br />
+<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\">
+<tr>
+<td class=\"thead\" colspan=\"4\"><strong>{\$lang->tournaments_cancelled}</strong></td>
+</tr>
+<tr>
+<td class=\"tcat\" width=\"50%\" align=\"center\"><span class=\"smalltext\"><strong>{\$lang->name}</strong></span></td>
+<td class=\"tcat\" width=\"20%\" align=\"center\"><span class=\"smalltext\"><strong>{\$lang->created_by}</strong></span></td>
+<td class=\"tcat\" width=\"10%\" align=\"center\"><span class=\"smalltext\"><strong>{\$lang->num_players}</strong></span></td>
+<td class=\"tcat\" width=\"20%\" align=\"center\"><span class=\"smalltext\"><strong>{\$lang->cancelled_on}</strong></span></td>
+</tr>
+{\$tournament_bit}
+</table>
+{\$online}
+{\$footer}
+</body>
+</html>";
+
+$arcade_templates['tournaments_cancelled_bit'] = "<tr>
+<td class=\"{\$alt_bg}\" align=\"center\"><a href=\"tournaments.php?action=view&amp;tid={\$tournament[\'tid\']}\">{\$tournament[\'name\']}</a></td>
+<td class=\"{\$alt_bg}\" align=\"center\"><a href=\"{\$profilelink}\">{\$tournament[\'username\']}</a></td>
+<td class=\"{\$alt_bg}\" align=\"center\">{\$tournament[\'numplayers\']}</td>
+<td class=\"{\$alt_bg}\" align=\"center\">{\$dateline}</td>
+</tr>";
 
 $arcade_templates['tournaments_create'] = "<html>
 <head>
