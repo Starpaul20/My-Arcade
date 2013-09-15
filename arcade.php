@@ -83,6 +83,7 @@ if(!$mybb->settings['gamesorder'])
 }
 
 // Top Menu bar (for members only)
+$menu = "";
 if($mybb->user['uid'] != 0)
 {
 	eval("\$menu = \"".$templates->get("arcade_menu")."\";");
@@ -98,6 +99,7 @@ if($unviewable)
 }
 
 // Build Who's Online box
+$online = "";
 if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'] == 1 && $mybb->user['whosonlinearcade'] == 1)
 {
 	if($mybb->settings['arcade_whosonline'] == 1 && ($mybb->usergroup['canmoderategames'] == 1 || $mybb->usergroup['cancp'] == 1))
@@ -112,10 +114,6 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 	{
 		$online = whos_online();
 	}
-}
-else
-{
-	$online = "";
 }
 
 // V3Arcade insert of a score
@@ -160,13 +158,11 @@ switch($mybb->input['sessdo'])
 
 			$rank = get_rank($mybb->user['uid'], $game['gid'], $game['sortby']);
 			$pagenum = ceil($rank/$perpage);
+
+			$page = "";
 			if($pagenum > 1)
 			{
 				$page = "&page={$pagenum}";
-			}
-			else
-			{
-				$page = "";
 			}
 
 			my_unsetcookie('v3score');
@@ -345,6 +341,7 @@ if($mybb->input['action'] == "play")
 	}
 
 	// Favorite check
+	$add_remove_favorite = '';
 	if($mybb->user['uid'] != 0)
 	{
 		$query = $db->simple_select("arcadefavorites", "gid", "gid='".intval($game['gid'])."' AND uid='".intval($mybb->user['uid'])."'", array('limit' => 1));
@@ -356,10 +353,6 @@ if($mybb->input['action'] == "play")
 		{
 			$add_remove_favorite = "<a href=\"arcade.php?action=addfavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a><br />";
 		}
-	}
-	else
-	{
-		$add_remove_favorite = '';
 	}
 
 	// Work out the rating for this game.
@@ -399,13 +392,10 @@ if($mybb->input['action'] == "play")
 
 	$lang->object_of_game = $lang->sprintf($lang->object_of_game, $game['name']);
 
+	$guestmessage = "";
 	if($mybb->user['uid'] == 0)
 	{
 		$guestmessage = "<span class=\"smalltext\">{$lang->guest_scoring}</span><br /><br />";
-	}
-	else
-	{
-		$guestmessage = "";
 	}
 
 	// Increment play views, last play time and last play uid.
@@ -490,6 +480,7 @@ if($mybb->input['action'] == "scores")
 	$multipage = multipage($result, $perpage, $page, "arcade.php?action=scores&gid={$gid}");
 
 	// Favorite check
+	$add_remove_favorite = '';
 	if($mybb->user['uid'] != 0)
 	{
 		$query = $db->simple_select("arcadefavorites", "gid", "gid='".intval($gid)."' AND uid='".intval($mybb->user['uid'])."'", array('limit' => 1));
@@ -501,10 +492,6 @@ if($mybb->input['action'] == "scores")
 		{
 			$add_remove_favorite = "<a href=\"arcade.php?action=addfavorite&gid={$gid}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a><br />";
 		}
-	}
-	else
-	{
-		$add_remove_favorite = '';
 	}
 
 	// Work out the rating for this game.
@@ -1095,6 +1082,7 @@ if($mybb->input['action'] == "favorites")
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		$lastplayedby = "";
 		if($game['lastplayeduid'])
 		{
 			if($mybb->usergroup['canviewgamestats'] == 1)
@@ -1108,10 +1096,6 @@ if($mybb->input['action'] == "favorites")
 
 			$playedby = "<a href=\"{$profilelink}\">{$game['user_name']}</a>";
 			$lastplayedby = $lang->sprintf($lang->by_user, $playedby);
-		}
-		else
-		{
-			$lastplayedby = "";
 		}
 
 		if($game['lastplayed'] && $game['lastplayeduid'])
@@ -1165,25 +1149,19 @@ if($mybb->input['action'] == "favorites")
 			$your_score = "<li>{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>";
 		}
 
+		$tournament = "";
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
 			$tournament = "<li><a href=\"tournaments.php?action=create&gid={$game['gid']}\">{$lang->create_tournament}</a></li>";
-		}
-		else
-		{
-			$tournament = "";
 		}
 
 		// Is this a new game?
 		$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
 
+		$new = "";
 		if($game['dateline'] >= $time)
 		{
 			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
-		}
-		else
-		{
-			$new = "";
 		}
 
 		$add_remove_favorite = "<li><a href=\"arcade.php?action=removefavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->remove_from_favorites}</a></li>";
@@ -1419,13 +1397,10 @@ if($mybb->input['action'] == "stats")
 	$lang->arcade_stats_for = $lang->sprintf($lang->arcade_stats_for, $user['username']);
 	$lang->player_details = $lang->sprintf($lang->player_details, $user['username']);
 
+	$userinput = "";
 	if($mybb->input['uid'])
 	{
 		$userinput = "<input type=\"hidden\" name=\"uid\" value=\"{$mybb->input['uid']}\" />";
-	}
-	else
-	{
-		$userinput = "";
 	}
 
 	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
@@ -2149,6 +2124,7 @@ if($mybb->input['action'] == "results")
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		$lastplayedby = "";
 		if($game['lastplayeduid'])
 		{
 			if($mybb->usergroup['canviewgamestats'] == 1)
@@ -2162,10 +2138,6 @@ if($mybb->input['action'] == "results")
 
 			$playedby = "<a href=\"{$profilelink}\">{$game['user_name']}</a>";
 			$lastplayedby = $lang->sprintf($lang->by_user, $playedby);
-		}
-		else
-		{
-			$lastplayedby = "";
 		}
 
 		if($game['lastplayed'])
@@ -2219,28 +2191,23 @@ if($mybb->input['action'] == "results")
 			$your_score = "<li>{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>";
 		}
 
+		$tournament = "";
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
 			$tournament = "<li><a href=\"tournaments.php?action=create&gid={$game['gid']}\">{$lang->create_tournament}</a></li>";
-		}
-		else
-		{
-			$tournament = "";
 		}
 
 		// Is this a new game?
 		$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
 
+		$new = "";
 		if($game['dateline'] >= $time)
 		{
 			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
 		}
-		else
-		{
-			$new = "";
-		}
 
 		// Favorite check
+		$add_remove_favorite = '';
 		if($mybb->user['uid'] != 0)
 		{
 			if($game['favorite'])
@@ -2251,10 +2218,6 @@ if($mybb->input['action'] == "results")
 			{
 				$add_remove_favorite = "<li><a href=\"arcade.php?action=addfavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a></li>";
 			}
-		}
-		else
-		{
-			$add_remove_favorite = '';
 		}
 
 		// Work out the rating for this game.
@@ -2300,6 +2263,7 @@ if($mybb->input['action'] == "results")
 // Arcade home page
 if(!$mybb->input['action'])
 {
+	$where_cat = $catinput = "";
 	if($mybb->input['cid'])
 	{
 		$cid = intval($mybb->input['cid']);
@@ -2326,11 +2290,6 @@ if(!$mybb->input['action'])
 
 		$catinput = "<input type=\"hidden\" name=\"cid\" value=\"{$cid}\" />";
 		$where_cat = " AND g.cid='{$cid}'";
-	}
-	else
-	{
-		$where_cat ="";
-		$catinput = "";
 	}
 
 	// Stats box
@@ -2531,13 +2490,10 @@ if(!$mybb->input['action'])
 		$value = 100/$mybb->settings['arcade_category_number'];
 		$category['name'] = htmlspecialchars_uni($category['name']);
 
+		$image = "";
 		if(is_file($category['image']))
 		{
 			$image = "<img src=\"{$category['image']}\" alt=\"{$category['name']}\">&nbsp;";
-		}
-		else
-		{
-			$image = "";
 		}
 
 		eval("\$categorybit .= \"".$templates->get('arcade_category_bit')."\";");
@@ -2549,6 +2505,7 @@ if(!$mybb->input['action'])
 	}
 
 	// Tournaments box
+	$tournaments = "";
 	if($mybb->settings['enabletournaments'] == 1 && $mybb->usergroup['canviewtournaments'] == 1)
 	{
 		$tournaments_stats = $cache->read("tournaments_stats");
@@ -2561,6 +2518,7 @@ if(!$mybb->input['action'])
 		$lang->tournaments_waiting = $lang->sprintf($lang->tournaments_waiting, $tournaments_stats['numwaitingtournaments']);
 
 		// Display cancelled tournament stats to arcade moderators
+		$tournamentscancelled = "";
 		if($mybb->usergroup['canmoderategames'] == 1)
 		{
 			$tournaments_stats['numcancelledtournaments'] = my_number_format($tournaments_stats['numcancelledtournaments']);
@@ -2617,6 +2575,7 @@ if(!$mybb->input['action'])
 	}
 
 	// Search box
+	$search = "";
 	if($mybb->settings['arcade_searching'] == 1 && $mybb->usergroup['cansearchgames'] == 1)
 	{
 		$searchcategorycount = 0;
@@ -2760,6 +2719,7 @@ if(!$mybb->input['action'])
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		$lastplayedby = "";
 		if($game['lastplayeduid'])
 		{
 			if($mybb->usergroup['canviewgamestats'] == 1)
@@ -2773,10 +2733,6 @@ if(!$mybb->input['action'])
 
 			$playedby = "<a href=\"{$profilelink}\">{$game['user_name']}</a>";
 			$lastplayedby = $lang->sprintf($lang->by_user, $playedby);
-		}
-		else
-		{
-			$lastplayedby = "";
 		}
 
 		if($game['lastplayed'])
@@ -2830,28 +2786,23 @@ if(!$mybb->input['action'])
 			$your_score = "<li>{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>";
 		}
 
+		$tournament = "";
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
 			$tournament = "<li><a href=\"tournaments.php?action=create&gid={$game['gid']}\">{$lang->create_tournament}</a></li>";
-		}
-		else
-		{
-			$tournament = "";
 		}
 
 		// Is this a new game?
 		$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
 
+		$new = "";
 		if($game['dateline'] >= $time)
 		{
 			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
 		}
-		else
-		{
-			$new = "";
-		}
 
 		// Favorite check
+		$add_remove_favorite = '';
 		if($mybb->user['uid'] != 0)
 		{
 			if($game['favorite'])
@@ -2862,10 +2813,6 @@ if(!$mybb->input['action'])
 			{
 				$add_remove_favorite = "<li><a href=\"arcade.php?action=addfavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a></li>";
 			}
-		}
-		else
-		{
-			$add_remove_favorite = '';
 		}
 
 		// Work out the rating for this game.

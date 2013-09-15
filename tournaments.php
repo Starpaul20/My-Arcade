@@ -44,12 +44,14 @@ $plugins->run_hooks("tournaments_start");
 add_breadcrumb($lang->arcade, "arcade.php");
 
 // Top Menu bar (for members only)
+$menu = "";
 if($mybb->user['uid'] != 0)
 {
 	eval("\$menu = \"".$templates->get("arcade_menu")."\";");
 }
 
 // Build Who's Online box
+$online = "";
 if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'] == 1 && $mybb->user['whosonlinearcade'] == 1)
 {
 	if($mybb->settings['arcade_whosonline'] == 1 && ($mybb->usergroup['canmoderategames'] == 1 || $mybb->usergroup['cancp'] == 1))
@@ -64,10 +66,6 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 	{
 		$online = whos_online();
 	}
-}
-else
-{
-	$online = "";
 }
 
 // Gets only games this user can view (based on category group permission)
@@ -215,7 +213,9 @@ if($mybb->input['action'] == "create")
 				$round = $lang->sprintf($lang->games_rounds, $val, $players);
 			}
 			else
-			$round = $lang->sprintf($lang->games_round, $players);
+			{
+				$round = $lang->sprintf($lang->games_round, $players);
+			}
 
 			$roundoptions .= "<option value=\"$val\">".$round."</option>\n";
 		}
@@ -233,7 +233,9 @@ if($mybb->input['action'] == "create")
 				$tries = $lang->sprintf($lang->games_tries, $val);
 			}
 			else
-			$tries = $lang->games_try;
+			{
+				$tries = $lang->games_try;
+			}
 
 			$triesoptions .= "<option value=\"$val\">".$tries."</option>\n";
 		}
@@ -251,7 +253,10 @@ if($mybb->input['action'] == "create")
 				$days = $lang->sprintf($lang->games_days, $val);
 			}
 			else
-			$days = $lang->games_day;
+			{
+				$days = $lang->games_day;
+			}
+
 			$daysoptions .= "<option value=\"$val\">".$days."</option>\n";
 		}
 	}
