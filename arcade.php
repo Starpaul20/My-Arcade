@@ -8,11 +8,11 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit";
-$templatelist .= ",arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage";
-$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_gamebit_tournaments";
+$templatelist .= ",arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_favorite";
+$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_menu";
 $templatelist .= ",arcade_rating,arcade_online_memberbit,arcade_online,arcade_search_catagory,arcade_search,arcade_no_games,arcade_scores,arcade_scores_bit,arcade_no_display,arcade_play,arcade_play_rating,arcade_play_tournament";
-$templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats,arcade_stats_bit,arcade_favorites,arcade_gamebit,arcade_menu";
+$templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats,arcade_stats_bit,arcade_favorites,arcade_gamebit,arcade_gamebit_favorite";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -347,12 +347,16 @@ if($mybb->input['action'] == "play")
 		$query = $db->simple_select("arcadefavorites", "gid", "gid='".intval($game['gid'])."' AND uid='".intval($mybb->user['uid'])."'", array('limit' => 1));
 		if($db->fetch_field($query, 'gid'))
 		{
-			$add_remove_favorite = "<a href=\"arcade.php?action=removefavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->remove_from_favorites}</a><br />";
+			$add_remove_favorite_type = 'remove';
+			$add_remove_favorite_text = $lang->remove_from_favorites;
 		}
 		else
 		{
-			$add_remove_favorite = "<a href=\"arcade.php?action=addfavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a><br />";
+			$add_remove_favorite_type = 'add';
+			$add_remove_favorite_text = $lang->add_to_favorites;
 		}
+
+		eval("\$add_remove_favorite = \"".$templates->get("arcade_favorite")."\";");
 	}
 
 	// Work out the rating for this game.
@@ -486,12 +490,16 @@ if($mybb->input['action'] == "scores")
 		$query = $db->simple_select("arcadefavorites", "gid", "gid='".intval($gid)."' AND uid='".intval($mybb->user['uid'])."'", array('limit' => 1));
 		if($db->fetch_field($query, 'gid'))
 		{
-			$add_remove_favorite = "<a href=\"arcade.php?action=removefavorite&gid={$gid}&my_post_key={$mybb->post_code}\">{$lang->remove_from_favorites}</a><br />";
+			$add_remove_favorite_type = 'remove';
+			$add_remove_favorite_text = $lang->remove_from_favorites;
 		}
 		else
 		{
-			$add_remove_favorite = "<a href=\"arcade.php?action=addfavorite&gid={$gid}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a><br />";
+			$add_remove_favorite_type = 'add';
+			$add_remove_favorite_text = $lang->add_to_favorites;
 		}
+
+		eval("\$add_remove_favorite = \"".$templates->get("arcade_favorite")."\";");
 	}
 
 	// Work out the rating for this game.
@@ -1152,7 +1160,7 @@ if($mybb->input['action'] == "favorites")
 		$tournament = "";
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
-			$tournament = "<li><a href=\"tournaments.php?action=create&gid={$game['gid']}\">{$lang->create_tournament}</a></li>";
+			eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
 		}
 
 		// Is this a new game?
@@ -1164,7 +1172,9 @@ if($mybb->input['action'] == "favorites")
 			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
 		}
 
-		$add_remove_favorite = "<li><a href=\"arcade.php?action=removefavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->remove_from_favorites}</a></li>";
+		$add_remove_favorite_type = 'remove';
+		$add_remove_favorite_text = $lang->remove_from_favorites;
+		eval("\$add_remove_favorite = \"".$templates->get("arcade_gamebit_favorite")."\";");
 
 		// Work out the rating for this game.
 		$rating = '';
@@ -2194,7 +2204,7 @@ if($mybb->input['action'] == "results")
 		$tournament = "";
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
-			$tournament = "<li><a href=\"tournaments.php?action=create&gid={$game['gid']}\">{$lang->create_tournament}</a></li>";
+			eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
 		}
 
 		// Is this a new game?
@@ -2212,12 +2222,16 @@ if($mybb->input['action'] == "results")
 		{
 			if($game['favorite'])
 			{
-				$add_remove_favorite = "<li><a href=\"arcade.php?action=removefavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->remove_from_favorites}</a></li>";
+				$add_remove_favorite_type = 'remove';
+				$add_remove_favorite_text = $lang->remove_from_favorites;
 			}
 			else
 			{
-				$add_remove_favorite = "<li><a href=\"arcade.php?action=addfavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a></li>";
+				$add_remove_favorite_type = 'add';
+				$add_remove_favorite_text = $lang->add_to_favorites;
 			}
+
+			eval("\$add_remove_favorite = \"".$templates->get("arcade_gamebit_favorite")."\";");
 		}
 
 		// Work out the rating for this game.
@@ -2789,7 +2803,7 @@ if(!$mybb->input['action'])
 		$tournament = "";
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
-			$tournament = "<li><a href=\"tournaments.php?action=create&gid={$game['gid']}\">{$lang->create_tournament}</a></li>";
+			eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
 		}
 
 		// Is this a new game?
@@ -2807,12 +2821,16 @@ if(!$mybb->input['action'])
 		{
 			if($game['favorite'])
 			{
-				$add_remove_favorite = "<li><a href=\"arcade.php?action=removefavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->remove_from_favorites}</a></li>";
+				$add_remove_favorite_type = 'remove';
+				$add_remove_favorite_text = $lang->remove_from_favorites;
 			}
 			else
 			{
-				$add_remove_favorite = "<li><a href=\"arcade.php?action=addfavorite&gid={$game['gid']}&my_post_key={$mybb->post_code}\">{$lang->add_to_favorites}</a></li>";
+				$add_remove_favorite_type = 'add';
+				$add_remove_favorite_text = $lang->add_to_favorites;
 			}
+
+			eval("\$add_remove_favorite = \"".$templates->get("arcade_gamebit_favorite")."\";");
 		}
 
 		// Work out the rating for this game.

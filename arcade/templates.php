@@ -229,6 +229,8 @@ document.write(\'[<a href=\"javascript:window.close();\">{\$lang->close_window}<
 </body>
 </html>";
 
+$arcade_templates['arcade_favorite'] = "<a href=\"arcade.php?action={\$add_remove_favorite_type}favorite&amp;gid={\$game[\'gid\']}&amp;my_post_key={\$mybb->post_code}\">{\$add_remove_favorite_text}</a><br />";
+
 $arcade_templates['arcade_favorites'] = "<html>
 <head>
 <title>{\$lang->arcade} - {\$lang->favorite_games}</title>
@@ -303,6 +305,10 @@ $arcade_templates['arcade_gamebit'] = "<tr>
 {\$champion}
 </td>
 </tr>";
+
+$arcade_templates['arcade_gamebit_favorite'] = "<li><a href=\"arcade.php?action={\$add_remove_favorite_type}favorite&amp;gid={\$game[\'gid\']}&amp;my_post_key={\$mybb->post_code}\">{\$add_remove_favorite_text}</a></li>";
+
+$arcade_templates['arcade_gamebit_tournaments'] = "<li><a href=\"tournaments.php?action=create&amp;gid={\$game[\'gid\']}\">{\$lang->create_tournament}</a></li>";
 
 $arcade_templates['arcade_menu'] = "<br />
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\">
