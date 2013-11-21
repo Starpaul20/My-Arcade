@@ -990,7 +990,7 @@ if($mybb->input['action'] == "favorites")
 		$mybb->input['order'] = $mybb->settings['gamesorder'];
 	}
 
-	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
 
 	$order_select = '';
 	switch($mybb->input['order'])
@@ -1011,7 +1011,7 @@ if($mybb->input['action'] == "favorites")
 		$mybb->input['sortby'] = $mybb->settings['gamessortby'];
 	}
 
-	$mybb->input['sortby'] = htmlspecialchars($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -1413,7 +1413,7 @@ if($mybb->input['action'] == "stats")
 		$userinput = "<input type=\"hidden\" name=\"uid\" value=\"{$mybb->input['uid']}\" />";
 	}
 
-	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -1430,7 +1430,7 @@ if($mybb->input['action'] == "stats")
 	}
 
 	// Sort by which field?
-	$mybb->input['sortby'] = htmlspecialchars($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -1604,7 +1604,7 @@ if($mybb->input['action'] == "champions")
 
 	$plugins->run_hooks("arcade_champions_start");
 
-	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -1621,7 +1621,7 @@ if($mybb->input['action'] == "champions")
 	}
 
 	// Sort by which field?
-	$mybb->input['sortby'] = htmlspecialchars($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -1752,7 +1752,7 @@ if($mybb->input['action'] == "scoreboard")
 
 	$plugins->run_hooks("arcade_scoreboard_start");
 
-	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -1769,7 +1769,7 @@ if($mybb->input['action'] == "scoreboard")
 	}
 
 	// Sort by which field?
-	$mybb->input['sortby'] = htmlspecialchars($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -2034,7 +2034,7 @@ if($mybb->input['action'] == "results")
 		$mybb->input['order'] = $mybb->settings['gamesorder'];
 	}
 
-	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -2056,7 +2056,7 @@ if($mybb->input['action'] == "results")
 		$mybb->input['sortby'] = $mybb->settings['gamessortby'];
 	}
 
-	$mybb->input['sortby'] = htmlspecialchars($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -2615,7 +2615,7 @@ if(!$mybb->input['action'])
 		$mybb->input['order'] = $mybb->settings['gamesorder'];
 	}
 
-	$mybb->input['order'] = htmlspecialchars($mybb->input['order']);
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -2637,7 +2637,7 @@ if(!$mybb->input['action'])
 		$mybb->input['sortby'] = $mybb->settings['gamessortby'];
 	}
 
-	$mybb->input['sortby'] = htmlspecialchars($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
