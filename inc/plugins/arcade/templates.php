@@ -308,6 +308,8 @@ $arcade_templates['arcade_gamebit'] = "<tr>
 
 $arcade_templates['arcade_gamebit_favorite'] = "<li><a href=\"arcade.php?action={\$add_remove_favorite_type}favorite&amp;gid={\$game[\'gid\']}&amp;my_post_key={\$mybb->post_code}\">{\$add_remove_favorite_text}</a></li>";
 
+$arcade_templates['arcade_gamebit_score'] = "<li>{\$lang->your_high_score} <strong>{\$game[\'your_score\']}</strong></li>";
+
 $arcade_templates['arcade_gamebit_tournaments'] = "<li><a href=\"tournaments.php?action=create&amp;gid={\$game[\'gid\']}\">{\$lang->create_tournament}</a></li>";
 
 $arcade_templates['arcade_menu'] = "<br />
