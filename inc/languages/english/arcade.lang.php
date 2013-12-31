@@ -16,9 +16,9 @@ $l['myalerts_arcade_new_round'] = "A new tournament round has started for \"<a h
 
 // Online activity
 $l['playing_game'] = "Playing Game";
-$l['playing_game2'] = "Playing <a href=\"arcade.php?action=play&gid={1}\">{2}</a>";
+$l['playing_game2'] = "Playing <a href=\"arcade.php?action=play&amp;gid={1}\">{2}</a>";
 $l['viewing_scores'] = "Viewing Game Scores";
-$l['viewing_scores2'] = "Viewing Scores of <a href=\"arcade.php?action=scores&gid={1}\">{2}</a>";
+$l['viewing_scores2'] = "Viewing Scores of <a href=\"arcade.php?action=scores&amp;gid={1}\">{2}</a>";
 $l['viewing_champions'] = "Viewing Arcade <a href=\"arcade.php?action=champions\">Champions</a>";
 $l['viewing_scoreboard'] = "Viewing Arcade <a href=\"arcade.php?action=scoreboard\">Scoreboard</a>";
 $l['viewing_arcade_favorites'] = "Viewing <a href=\"arcade.php?action=favorites\">Arcade Favorites</a>";

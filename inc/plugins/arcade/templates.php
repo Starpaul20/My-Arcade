@@ -448,11 +448,11 @@ $arcade_templates['arcade_play_rating'] = "<tr>
 <div style=\"vertical-align: middle;\">
 <ul class=\"star_rating{\$not_rated}\" id=\"rating_game_{\$game[\'gid\']}\">
 <li style=\"width: {\$game[\'rating_width\']}%\" class=\"current_rating\" id=\"current_rating_{\$game[\'gid\']}\">{\$ratingvotesav}</li>
-<li><a class=\"one_star\" title=\"{\$lang->one_star}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=1&amp;my_post_key={\$mybb->post_code}\">1</a></li>
-<li><a class=\"two_stars\" title=\"{\$lang->two_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=2&amp;my_post_key={\$mybb->post_code}\">2</a></li>
-<li><a class=\"three_stars\" title=\"{\$lang->three_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=3&amp;my_post_key={\$mybb->post_code}\">3</a></li>
-<li><a class=\"four_stars\" title=\"{\$lang->four_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=4&amp;my_post_key={\$mybb->post_code}\">4</a></li>
-<li><a class=\"five_stars\" title=\"{\$lang->five_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=5&amp;my_post_key={\$mybb->post_code}\">5</a></li>
+<li><a class=\"one_star\" title=\"{\$lang->one_star}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=1&amp;my_post_key={\$mybb->post_code}\">1</a></li>
+<li><a class=\"two_stars\" title=\"{\$lang->two_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=2&amp;my_post_key={\$mybb->post_code}\">2</a></li>
+<li><a class=\"three_stars\" title=\"{\$lang->three_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=3&amp;my_post_key={\$mybb->post_code}\">3</a></li>
+<li><a class=\"four_stars\" title=\"{\$lang->four_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=4&amp;my_post_key={\$mybb->post_code}\">4</a></li>
+<li><a class=\"five_stars\" title=\"{\$lang->five_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=5&amp;my_post_key={\$mybb->post_code}\">5</a></li>
 </ul>
 </div>
 <div id=\"success_rating_{\$game[\'gid\']}\" style=\"vertical-align: middle; padding-top: 2px; padding-right: 10px;\"></div>
@@ -473,11 +473,11 @@ $arcade_templates['arcade_rating'] = "<script type=\"text/javascript\" src=\"jsc
 <div class=\"inline_rating\">
 <ul class=\"star_rating{\$not_rated}\" id=\"rating_game_{\$game[\'gid\']}\">
 <li style=\"width: {\$game[\'width\']}%\" class=\"current_rating\" id=\"current_rating_{\$game[\'gid\']}\">{\$ratingvotesav}</li>
-<li><a class=\"one_star\" title=\"{\$lang->one_star}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=1&amp;my_post_key={\$mybb->post_code}\">1</a></li>
-<li><a class=\"two_stars\" title=\"{\$lang->two_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=2&amp;my_post_key={\$mybb->post_code}\">2</a></li>
-<li><a class=\"three_stars\" title=\"{\$lang->three_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=3&amp;my_post_key={\$mybb->post_code}\">3</a></li>
-<li><a class=\"four_stars\" title=\"{\$lang->four_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=4&amp;my_post_key={\$mybb->post_code}\">4</a></li>
-<li><a class=\"five_stars\" title=\"{\$lang->five_stars}\" href=\"./arcade.php?action=rate&gid={\$game[\'gid\']}&amp;rating=5&amp;my_post_key={\$mybb->post_code}\">5</a></li>
+<li><a class=\"one_star\" title=\"{\$lang->one_star}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=1&amp;my_post_key={\$mybb->post_code}\">1</a></li>
+<li><a class=\"two_stars\" title=\"{\$lang->two_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=2&amp;my_post_key={\$mybb->post_code}\">2</a></li>
+<li><a class=\"three_stars\" title=\"{\$lang->three_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=3&amp;my_post_key={\$mybb->post_code}\">3</a></li>
+<li><a class=\"four_stars\" title=\"{\$lang->four_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=4&amp;my_post_key={\$mybb->post_code}\">4</a></li>
+<li><a class=\"five_stars\" title=\"{\$lang->five_stars}\" href=\"./arcade.php?action=rate&amp;gid={\$game[\'gid\']}&amp;rating=5&amp;my_post_key={\$mybb->post_code}\">5</a></li>
 </ul>
 </div><div id=\"success_rating_{\$game[\'gid\']}\" style=\"float: left; padding-top: 2px; padding-right: 10px;\">&nbsp;</div>";
 
@@ -1320,11 +1320,11 @@ $arcade_templates['tournaments_view'] = "<html>
 
 $arcade_templates['tournaments_view_cancel'] = "[<a href=\"javascript:MyBB.popupWindow(\'tournaments.php?action=cancel&amp;tid={\$tid}\', \'canceltournament\', \'400\', \'300\') \">{\$lang->cancel_tournament}</a>]";
 
-$arcade_templates['tournaments_view_delete'] = "[<a href=\"tournaments.php?action=delete&tid={\$tid}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace(\'action=delete\',\'action=delete\');return false;\">{\$lang->delete_tournament}</a>]";
+$arcade_templates['tournaments_view_delete'] = "[<a href=\"tournaments.php?action=delete&amp;tid={\$tid}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace(\'action=delete\',\'action=delete\');return false;\">{\$lang->delete_tournament}</a>]";
 
-$arcade_templates['tournaments_view_join'] = "<a href=\"tournaments.php?action=join&tid={\$tid}&my_post_key={\$mybb->post_code}\">{\$lang->join_now}</a>";
+$arcade_templates['tournaments_view_join'] = "<a href=\"tournaments.php?action=join&amp;tid={\$tid}&amp;my_post_key={\$mybb->post_code}\">{\$lang->join_now}</a>";
 
-$arcade_templates['tournaments_view_play'] = "<a href=\"arcade.php?action=play&tid={\$tid}\">{\$lang->play_now}</a>";
+$arcade_templates['tournaments_view_play'] = "<a href=\"arcade.php?action=play&amp;tid={\$tid}\">{\$lang->play_now}</a>";
 
 $arcade_templates['tournaments_view_rounds'] = "<tr>
 <td class=\"tcat\" align=\"center\" width=\"1\" valign=\"right\"><strong>{\$rid}</strong></td>
@@ -1352,7 +1352,7 @@ $arcade_templates['tournaments_view_rounds_champion'] = "<tr>
 </td>
 </tr>";
 
-$arcade_templates['tournaments_view_rounds_disqualify'] = "<br /><span class=\"smalltext\">[<a href=\"tournaments.php?action=disqualify&pid={\$player[\'pid\']}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->disqualify_user_confirm}&quot;))window.location=this.href.replace(\'action=disqualify\',\'action=disqualify\');return false;\">{\$lang->disqualify_user}</a>]</span>";
+$arcade_templates['tournaments_view_rounds_disqualify'] = "<br /><span class=\"smalltext\">[<a href=\"tournaments.php?action=disqualify&amp;pid={\$player[\'pid\']}&amp;my_post_key={\$mybb->post_code}\" onclick=\"if(confirm(&quot;{\$lang->disqualify_user_confirm}&quot;))window.location=this.href.replace(\'action=disqualify\',\'action=disqualify\');return false;\">{\$lang->disqualify_user}</a>]</span>";
 
 $arcade_templates['tournaments_waiting'] = "<html>
 <head>
