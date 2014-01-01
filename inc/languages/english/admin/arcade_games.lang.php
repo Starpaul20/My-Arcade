@@ -1,7 +1,7 @@
 <?php
 /**
  * My Arcade
- * Copyright 2013 Starpaul20
+ * Copyright 2014 Starpaul20
  */
 
 $l['games'] = "Games";
