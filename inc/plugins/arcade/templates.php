@@ -78,6 +78,8 @@ $arcade_templates['arcade_categories'] = "<br />
 
 $arcade_templates['arcade_category_bit'] = "<li style=\"width:{\$value}%;\"><a href=\"arcade.php?cid={\$category[\'cid\']}\">{\$image}{\$category[\'name\']}</a> ({\$category[\'games\']})</li>";
 
+$arcade_templates['arcade_category_bit_image'] = "<img src=\"{\$category[\'image\']}\" alt=\"{\$category[\'name\']}\">&nbsp;";
+
 $arcade_templates['arcade_champions'] = "<html>
 <head>
 <title>{\$lang->arcade} - {\$lang->arcade_champions}</title>
@@ -308,6 +310,8 @@ $arcade_templates['arcade_gamebit'] = "<tr>
 
 $arcade_templates['arcade_gamebit_favorite'] = "<li><a href=\"arcade.php?action={\$add_remove_favorite_type}favorite&amp;gid={\$game[\'gid\']}&amp;my_post_key={\$mybb->post_code}\">{\$add_remove_favorite_text}</a></li>";
 
+$arcade_templates['arcade_gamebit_new'] = "<img src=\"images/arcade/new.png\" alt=\"{\$lang->new}\" />";
+
 $arcade_templates['arcade_gamebit_score'] = "<li>{\$lang->your_high_score} <strong>{\$game[\'your_score\']}</strong></li>";
 
 $arcade_templates['arcade_gamebit_tournaments'] = "<li><a href=\"tournaments.php?action=create&amp;gid={\$game[\'gid\']}\">{\$lang->create_tournament}</a></li>";
@@ -440,6 +444,8 @@ $arcade_templates['arcade_play'] = "<html>
 {\$footer}
 </body>
 </html>";
+
+$arcade_templates['arcade_play_guest'] = "<span class=\"smalltext\">{\$lang->guest_scoring}</span><br /><br />";
 
 $arcade_templates['arcade_play_rating'] = "<tr>
 <td class=\"trow2\" align=\"center\">

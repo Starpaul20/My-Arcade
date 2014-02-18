@@ -8,11 +8,12 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_gamebit_tournaments";
-$templatelist .= ",arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_favorite";
-$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_menu";
-$templatelist .= ",arcade_rating,arcade_online_memberbit,arcade_online,arcade_search_catagory,arcade_search,arcade_no_games,arcade_scores,arcade_scores_bit,arcade_no_display,arcade_play,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score";
-$templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats,arcade_stats_bit,arcade_favorites,arcade_gamebit,arcade_gamebit_favorite";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_search,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit";
+$templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_rating,arcade_no_games,arcade_online_memberbit,arcade_online";
+$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
+$templatelist .= ",arcade_play,arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites";
+$templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats,arcade_stats_bit,arcade_scores,arcade_scores_bit";
+$templatelist .= ",arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_no_display,arcade_favorite"
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -399,7 +400,7 @@ if($mybb->input['action'] == "play")
 	$guestmessage = "";
 	if($mybb->user['uid'] == 0)
 	{
-		$guestmessage = "<span class=\"smalltext\">{$lang->guest_scoring}</span><br /><br />";
+		eval("\$guestmessage = \"".$templates->get("arcade_play_guest")."\";");
 	}
 
 	// Increment play views, last play time and last play uid.
@@ -1170,7 +1171,7 @@ if($mybb->input['action'] == "favorites")
 		$new = "";
 		if($game['dateline'] >= $time)
 		{
-			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
+			eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
 		}
 
 		$add_remove_favorite_type = 'remove';
@@ -2215,7 +2216,7 @@ if($mybb->input['action'] == "results")
 		$new = "";
 		if($game['dateline'] >= $time)
 		{
-			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
+			eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
 		}
 
 		// Favorite check
@@ -2509,7 +2510,7 @@ if(!$mybb->input['action'])
 		$image = "";
 		if(is_file($category['image']))
 		{
-			$image = "<img src=\"{$category['image']}\" alt=\"{$category['name']}\">&nbsp;";
+			eval("\$image = \"".$templates->get('arcade_category_bit_image')."\";");
 		}
 
 		eval("\$categorybit .= \"".$templates->get('arcade_category_bit')."\";");
@@ -2815,7 +2816,7 @@ if(!$mybb->input['action'])
 		$new = "";
 		if($game['dateline'] >= $time)
 		{
-			$new = " <img src=\"images/arcade/new.png\" alt=\"{$lang->new}\" />";
+			eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
 		}
 
 		// Favorite check
