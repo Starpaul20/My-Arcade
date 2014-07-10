@@ -442,55 +442,38 @@ function myarcade_uninstall()
 function myarcade_activate()
 {
 	global $db;
+	require_once MYBB_ROOT."inc/class_xml.php";
 
-	// Insert setting groups
-	$insertarray = array(
-		'name'			=> 'arcade',
-		'title'			=> 'Arcade Settings',
-		'description'	=> 'This section allows you to control various aspects of the arcade (arcade.php), such as how many games to show per page, and which features to enable or disable.',
-		'disporder'		=> 70,
-		'isdefault'		=> 0
-	);
-	$gid = $db->insert_query('settinggroups', $insertarray);
-
-	$insertarray = array(
-		'name'			=> 'tournaments',
-		'title'			=> 'Tournament Settings',
-		'description'	=> 'Various options with relation to the Arcade tournament system (tournaments.php) can be managed and set here.',
-		'disporder'		=> 71,
-		'isdefault'		=> 0
-	);
-	$tid = $db->insert_query('settinggroups', $insertarray);
+	$settings = @file_get_contents(MYBB_ROOT.'inc/plugins/arcade/settings.xml');
+	$parser = new XMLParser($settings);
+	$parser->collapse_dups = 0;
+	$tree = $parser->get_tree();
 
 	// Insert settings
-	require_once MYBB_ROOT."inc/plugins/arcade/settings.php";
-
-	foreach($arcade_settings as $key => $setting)
+	foreach($tree['settings'][0]['settinggroup'] as $settinggroup)
 	{
-		$insert_array = array(
-			'name' => $setting['name'],
-			'title' => $setting['title'],
-			'description' => $setting['description'],
-			'optionscode' => $setting['optionscode'],
-			'value' => $setting['value'],
-			'disporder' => $setting['disporder'],
-			'gid' => intval($gid)
+		$groupdata = array(
+			'name' => $db->escape_string($settinggroup['attributes']['name']),
+			'title' => $db->escape_string($settinggroup['attributes']['title']),
+			'description' => $db->escape_string($settinggroup['attributes']['description']),
+			'disporder' => intval($settinggroup['attributes']['disporder']),
+			'isdefault' => $settinggroup['attributes']['isdefault'],
 		);
-		$db->insert_query("settings", $insert_array);
-	}
-
-	foreach($tournament_settings as $key => $setting)
-	{
-		$insert_array = array(
-			'name' => $setting['name'],
-			'title' => $setting['title'],
-			'description' => $setting['description'],
-			'optionscode' => $setting['optionscode'],
-			'value' => $setting['value'],
-			'disporder' => $setting['disporder'],
-			'gid' => intval($tid)
-		);
-		$db->insert_query("settings", $insert_array);
+		$gid = $db->insert_query('settinggroups', $groupdata);
+		foreach($settinggroup['setting'] as $setting)
+		{
+			$settingdata = array(
+				'name' => $db->escape_string($setting['attributes']['name']),
+				'title' => $db->escape_string($setting['title'][0]['value']),
+				'description' => $db->escape_string($setting['description'][0]['value']),
+				'optionscode' => $db->escape_string($setting['optionscode'][0]['value']),
+				'value' => $db->escape_string($setting['settingvalue'][0]['value']),
+				'disporder' => intval($setting['disporder'][0]['value']),
+				'gid' => $gid,
+				'isdefault' => 0
+			);
+			$db->insert_query('settings', $settingdata);
+		}
 	}
 
 	rebuild_settings();
@@ -509,18 +492,48 @@ function myarcade_activate()
 	$db->insert_query("templategroups", $insertarray);
 
 	// Inserts templates (arcade)
-	require_once MYBB_ROOT."inc/plugins/arcade/templates.php";
+	$contents = @file_get_contents(MYBB_ROOT.'inc/plugins/arcade/templates.xml');
 
-	foreach($arcade_templates as $title => $template)
+	$parser = new XMLParser($contents);
+	$tree = $parser->get_tree();
+
+	if(!is_array($tree) || !is_array($tree['theme']))
 	{
-		$template_insert = array(
-			'title'		=> $title,
-			'template'	=> $template,
-			'sid'		=> '-2',
-			'version'	=> '1000',
-			'dateline'	=> TIME_NOW
+		return -1;
+	}
+
+	$theme = $tree['theme'];
+
+	$templates = $theme['templates']['template'];
+	if(is_array($templates))
+	{
+		// Theme only has one custom template
+		if(array_key_exists("attributes", $templates))
+		{
+			$templates = array($templates);
+		}
+	}
+
+	foreach($templates as $template)
+	{
+		// PostgreSQL causes apache to stop sending content sometimes and
+		// causes the page to stop loading during many queries all at one time
+		if($db->engine == "pgsql")
+		{
+			echo " ";
+			flush();
+		}
+
+		$db->delete_query("templates", "title='{$template['attributes']['name']}'");
+
+		$new_template = array(
+			"title" => $db->escape_string($template['attributes']['name']),
+			"template" => $db->escape_string($template['value']),
+			"sid" => -2,
+			"version" => $db->escape_string($template['attributes']['version']),
+			"dateline" => TIME_NOW
 		);
-		$db->insert_query("templates", $template_insert);
+		$db->insert_query("templates", $new_template);
 	}
 
 	// Insert templates (global)

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings version="1600" exported="1178692706">
+	<settinggroup name="arcade" title="Arcade Settings" description="This section allows you to control various aspects of the arcade (arcade.php), such as how many games to show per page, and which features to enable or disable." disporder="70" isdefault="0">
+		<setting name="enablearcade">
+			<title>Enable Arcade Functionality</title>
+			<description><![CDATA[If you wish to disable the arcade on your board, set this option to no.]]></description>
+			<disporder>1</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_stats">
+			<title>Show Statistic Box</title>
+			<description><![CDATA[Allows you to set whether or not the statistic box will be shown at the top of the arcade home page.]]></description>
+			<disporder>2</disporder>
+			<optionscode><![CDATA[onoff]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_stats_newgames">
+			<title>Newest Games/Most Played Games</title>
+			<description><![CDATA[The number of newest games and most played games to show on the statistics box.]]></description>
+			<disporder>3</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[15]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_stats_newchamps">
+			<title>Newest Champions</title>
+			<description><![CDATA[The number of newest champions to show in the statistic box.]]></description>
+			<disporder>4</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[5]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_stats_newscores">
+			<title>Latest Scores</title>
+			<description><![CDATA[Number of latest scores to show in the statistic box.]]></description>
+			<disporder>5</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[5]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_stats_bestplayers">
+			<title>Show Best Players</title>
+			<description><![CDATA[Do you wish to show a box of the three best players in the statistic box?]]></description>
+			<disporder>6</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_stats_avatar">
+			<title>Show Avatar</title>
+			<description><![CDATA[Do you wish to show the user's avatar on the Best Players section?]]></description>
+			<disporder>7</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="gamesperpage">
+			<title>Games Per Page</title>
+			<description><![CDATA[The number of games to show per page on the arcade page.]]></description>
+			<disporder>8</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[10]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="gamessortby">
+			<title>Default Sort Games By</title>
+			<description><![CDATA[Select the field that you want games to be sorted by default.]]></description>
+			<disporder>9</disporder>
+			<optionscode><![CDATA[select
+name=Name
+date=Date Added
+plays=Times Played
+lastplayed=Date Last Played
+rating=Rating]]></optionscode>
+			<settingvalue><![CDATA[name]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="gamesorder">
+			<title>Default Game Ordering</title>
+			<description><![CDATA[Select the order that you want games to be sorted by default.<br />Ascending: A-Z / beginning-end<br />Descending: Z-A / end-beginning]]></description>
+			<disporder>10</disporder>
+			<optionscode><![CDATA[select
+asc=Ascending
+desc=Descending]]></optionscode>
+			<settingvalue><![CDATA[asc]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_category_number">
+			<title>Number Of Categories Per Row</title>
+			<description><![CDATA[The number of categories to display on a single row of the category table. It is recommended that this value be no higher than 10.]]></description>
+			<disporder>11</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[5]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_newgame">
+			<title>Days For New Game</title>
+			<description><![CDATA[The number of days a game will be marked as new after being added.]]></description>
+			<disporder>12</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[7]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_ratings">
+			<title>Game Ratings</title>
+			<description><![CDATA[Do you wish to allow games to be rated? Group permission can be set on Group Management page.]]></description>
+			<disporder>13</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_searching">
+			<title>Game Searching</title>
+			<description><![CDATA[Do you wish to allow users to search for games based on name, description and category? Group permission can be set on Group Management page.]]></description>
+			<disporder>14</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_whosonline">
+			<title>Who's Online Display</title>
+			<description><![CDATA[Do you wish to show a box of who is online in the arcade and who can view it?]]></description>
+			<disporder>15</disporder>
+			<optionscode><![CDATA[radio
+0=Disabled
+1=Arcade Moderators and Administrators only
+2=Registered Members
+3=Everyone]]></optionscode>
+			<settingvalue><![CDATA[3]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_onlineimage">
+			<title>Online Image</title>
+			<description><![CDATA[Do you wish to show an image of where the user currently is in the arcade?]]></description>
+			<disporder>16</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="scoresperpage">
+			<title>Scores Per Page</title>
+			<description><![CDATA[The number of scores to show per page on the score page.]]></description>
+			<disporder>17</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[10]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_editcomment">
+			<title>Comment Edit Time Limit</title>
+			<description><![CDATA[The number of minutes until regular users cannot edit their own score comments. Enter 0 (zero) for no limit.]]></description>
+			<disporder>18</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[60]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_maxcommentlength">
+			<title>Maximum Score Comment Length</title>
+			<description><![CDATA[The maximum number of characters a score comment can be.]]></description>
+			<disporder>19</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[120]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="statsperpage">
+			<title>Stats Per Page</title>
+			<description><![CDATA[The number of games to show per page on the stats page. It is recommended this be no higher than 15.]]></description>
+			<disporder>20</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[10]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="gamesperpageoptions">
+			<title>User Selectable Games Per Page</title>
+			<description><![CDATA[If you would like to allow users to select how many games per page are shown in the arcade, enter the options they should be able to select separated with commas. If this is left blank they will not be able to choose how many games are shown per page.]]></description>
+			<disporder>21</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[5,10,15,20,25,30,40]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="scoresperpageoptions">
+			<title>User Selectable Scores Per Page</title>
+			<description><![CDATA[If you would like to allow users to select how many scores per page are shown on score pages, enter the options they should be able to select separated with commas. If this is left blank they will not be able to choose how many scores are shown per page.]]></description>
+			<disporder>22</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[5,10,15,20,25,30,40]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_postbit">
+			<title>Display Championships On Postbit</title>
+			<description><![CDATA[Do you wish to display a user's championships on the postbit?]]></description>
+			<disporder>23</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="arcade_postbitlimit">
+			<title>Maximum Championships On Postbit</title>
+			<description><![CDATA[Enter the maximum number of championships that should be shown on the postbit. Enter 0 (zero) for no limit.]]></description>
+			<disporder>24</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[10]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="myalerts_alert_arcade_champship">
+			<title>Alert on Championship Broken?</title>
+			<description><![CDATA[Do you wish for users to receive an alert when their championship is broken? This setting only works if you have the <a href="http://mods.mybb.com/view/myalerts">MyAlerts</a> plugin installed.]]></description>
+			<disporder>25</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+	</settinggroup>
+	<settinggroup name="tournaments" title="Tournament Settings" description="Various options with relation to the Arcade tournament system (tournaments.php) can be managed and set here." disporder="71" isdefault="0">
+		<setting name="enabletournaments">
+			<title>Enable Tournament Functionality</title>
+			<description><![CDATA[If you wish to disable the tournament feature on your board, set this option to no.]]></description>
+			<disporder>1</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="tournaments_numrounds">
+			<title>Number Of Rounds</title>
+			<description><![CDATA[The user selectable number of rounds for a tournament. The higher the number, the more players can participate (2 rounds = 4 players, 4 rounds = 16 players).]]></description>
+			<disporder>2</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[1,2,3,4,5]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="tournaments_numtries">
+			<title>Number Of Tries Per Round</title>
+			<description><![CDATA[The user selectable number of tries a player has to get the best score possible in a round.]]></description>
+			<disporder>3</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[1,2,3,4,5]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="tournaments_numdays">
+			<title>Number Of Days Per Round</title>
+			<description><![CDATA[The user selectable number of days a single round will last.]]></description>
+			<disporder>4</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[1,2,3,4,5,6,7]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="tournaments_canceltime">
+			<title>Tournament Cancel Time</title>
+			<description><![CDATA[The amount of time a tournament has (in days) to get players before it is cancelled.]]></description>
+			<disporder>5</disporder>
+			<optionscode><![CDATA[text]]></optionscode>
+			<settingvalue><![CDATA[90]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+		<setting name="myalerts_alert_arcade_newround">
+			<title>Alert on New Tournament round?</title>
+			<description><![CDATA[Do you wish for users to receive an alert when a new tournament round starts? This setting only works if you have the <a href="http://mods.mybb.com/view/myalerts">MyAlerts</a> plugin installed.]]></description>
+			<disporder>6</disporder>
+			<optionscode><![CDATA[yesno]]></optionscode>
+			<settingvalue><![CDATA[1]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
+	</settinggroup>
+</settings>
