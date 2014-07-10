@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="MyBB Master Style" version="1600">
-<templates>
+	<templates>
 		<template name="arcade" version="1000"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->arcade}</title>
@@ -601,19 +601,19 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <tr>
 <td class="trow1">
 <form action="arcade.php" method="post">
-<div class="float_left">
+<div class="float_left" style="padding-top: 5px;">
 <input type="text" name="keywords" value="{$lang->enter_keywords}" onfocus="if(this.value == '{$lang->enter_keywords}') { this.value = ''; }" onblur="if(this.value=='') { this.value='{$lang->enter_keywords}'; }" class="textbox" size="25" />
 </div>
-<div class="arcade_search">
+<div class="float_left" style="padding-left: 20px;">
 <span class="smalltext">
 <label><input name="name" checked="checked" value="1" type="checkbox"> {$lang->search_by_name}</label><br />
 <label><input name="description" checked="checked" value="1" type="checkbox"> {$lang->search_by_description}</label>
 </span>
 </div>
-<div class="arcade_search">
+<div class="float_left" style="padding-left: 20px;">
 {$categorysearch}
 </div>
-<div class="arcade_search">
+<div class="float_left" style="padding-left: 20px; padding-top: 5px;">
 <input type="hidden" name="action" value="do_search" />
 <input type="submit" class="button" name="submit" value="{$lang->search_arcade}" />
 </div>
@@ -1309,5 +1309,5 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <td class="{$alt_bg}" align="center">{$dateline}</td>
 <td class="{$alt_bg}" align="center"><strong>{$remaining}</strong> {$lang->out_of} {$players}</a></td>
 </tr>]]></template>
-</templates>
+	</templates>
 </theme>

@@ -13,7 +13,7 @@ $templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_n
 $templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
 $templatelist .= ",arcade_play,arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites";
 $templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats,arcade_stats_bit,arcade_scores,arcade_scores_bit";
-$templatelist .= ",arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_no_display,arcade_favorite"
+$templatelist .= ",arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_no_display,arcade_favorite";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";

@@ -593,8 +593,7 @@ td .star_rating {\nmargin: auto;\n}\n
 .star_rating li a.five_stars {\nwidth:100%;\nz-index:2;\n}\n
 .star_rating .current_rating {\nz-index:1;\nbackground-position: left center;\n}\n
 .star_rating_success, .success_message {\ncolor: #00b200;\nfont-weight: bold;\nfont-size: 10px;\nmargin-bottom: 10px;\n}\n
-.inline_rating {\nfloat: left;\nvertical-align: middle;\npadding-right: 5px;\n}\n
-.arcade_search {\nfloat: left;\npadding-left: 10px;\n}",
+.inline_rating {\nfloat: left;\nvertical-align: middle;\npadding-right: 5px;\n}",
 		"cachefile" => "arcade.css",
 		"lastmodified" => TIME_NOW
 	);
