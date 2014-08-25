@@ -1159,6 +1159,10 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 {$footer}
 </body>
 </html>]]></template>
+		<template name="tournaments_create_days" version="1000"><![CDATA[<option value="{$val}">{$days}</option>]]></template>
+		<template name="tournaments_create_game" version="1000"><![CDATA[<option value="{$game['gid']}" {$selected}>{$game['name']}</option>]]></template>
+		<template name="tournaments_create_round" version="1000"><![CDATA[<option value="{$val}">{$round}</option>]]></template>
+		<template name="tournaments_create_tries" version="1000"><![CDATA[<option value="{$val}">{$tries}</option>]]></template>
 		<template name="tournaments_finished" version="1000"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->tournaments_finished}</title>

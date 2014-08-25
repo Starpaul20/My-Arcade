@@ -7,9 +7,9 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit";
-$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify";
-$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_cancel,tournaments_view_delete,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit";
+$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit,tournaments_create_game";
+$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify,tournaments_create_days";
+$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_cancel,tournaments_view_delete,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_create_round";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -190,14 +190,16 @@ if($mybb->input['action'] == "create")
 	}
 
 	$query = $db->simple_select("arcadegames", "gid, name", "active='1' AND tournamentselect='1'{$cat_sql}", array('order_by' => 'name', 'order_dir' => 'asc'));
-	while($games = $db->fetch_array($query))
+	while($game = $db->fetch_array($query))
 	{
 		$selected = "";
-		if($mybb->input['gid'] == $games['gid'])
+		if($mybb->input['gid'] == $game['gid'])
 		{
 			$selected = "selected=\"selected\"";
 		}
-		$gameoptions .= "<option value=\"{$games['gid']}\" $selected>".htmlspecialchars_uni($games['name'])."</option>\n";
+
+		$game['name'] = htmlspecialchars_uni($game['name']);
+		eval("\$gameoptions .= \"".$templates->get("tournaments_create_game")."\";");
 	}
 
 	$explodedrounds = explode(",", $mybb->settings['tournaments_numrounds']);
@@ -217,7 +219,7 @@ if($mybb->input['action'] == "create")
 				$round = $lang->sprintf($lang->games_round, $players);
 			}
 
-			$roundoptions .= "<option value=\"$val\">".$round."</option>\n";
+			eval("\$roundoptions .= \"".$templates->get("tournaments_create_round")."\";");
 		}
 	}
 
@@ -237,7 +239,7 @@ if($mybb->input['action'] == "create")
 				$tries = $lang->games_try;
 			}
 
-			$triesoptions .= "<option value=\"$val\">".$tries."</option>\n";
+			eval("\$triesoptions .= \"".$templates->get("tournaments_create_tries")."\";");
 		}
 	}
 
@@ -257,7 +259,7 @@ if($mybb->input['action'] == "create")
 				$days = $lang->games_day;
 			}
 
-			$daysoptions .= "<option value=\"$val\">".$days."</option>\n";
+			eval("\$daysoptions .= \"".$templates->get("tournaments_create_days")."\";");
 		}
 	}
 
