@@ -33,7 +33,8 @@ if(my_strpos($_SERVER['PHP_SELF'], 'showthread.php'))
 
 // Tell MyBB when to run the hooks
 $plugins->add_hook("index_start", "myarcade_index");
-$plugins->add_hook("global_start", "myarcade_link");
+$plugins->add_hook("global_start", "myarcade_link_cache");
+$plugins->add_hook("global_intermediate", "myarcade_link");
 $plugins->add_hook("showthread_start", "myarcade_categories");
 $plugins->add_hook("postbit", "myarcade_postbit_post");
 $plugins->add_hook("postbit_pm", "myarcade_postbit_other");
@@ -431,7 +432,7 @@ function myarcade_uninstall()
 
 	$db->delete_query("datacache", "title IN('tournaments_stats','arcade_mostonline')");
 	$db->delete_query("templates", "title IN('arcade','arcade_categories','arcade_category_bit','arcade_category_bit_image','arcade_champions','arcade_champions_bit','arcade_edit','arcade_edited','arcade_edit_error','arcade_favorite','arcade_favorites','arcade_gamebit','arcade_gamebit_favorite','arcade_gamebit_new','arcade_gamebit_score','arcade_gamebit_tournaments','arcade_menu','arcade_no_display','arcade_no_games','arcade_online','arcade_online_memberbit','arcade_play_rating','arcade_play','arcade_play_guest','arcade_play_tournament','arcade_rating','arcade_scoreboard','arcade_scoreboard_bit','arcade_scores','arcade_scores_bit','arcade_scores_delete','arcade_scores_edit','arcade_scores_no_scores','arcade_search','arcade_search_catagory','arcade_search_results','arcade_settings','arcade_settings_gamesselect','arcade_settings_scoreselect','arcade_settings_tournamentnotify','arcade_settings_whosonline','arcade_settings_champpostbit','arcade_statistics','arcade_statistics_bestplayers','arcade_statistics_bestplayers_bit','arcade_statistics_gamebit','arcade_statistics_scorebit','arcade_stats','arcade_stats_bit','arcade_stats_tournaments','arcade_stats_details','arcade_tournaments','arcade_tournaments_cancelled','arcade_tournaments_create','arcade_tournaments_user','arcade_tournaments_user_game')");
-	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','tournaments_cancel','tournaments_cancel_error','tournaments_cancel_success','tournaments_cancelled','tournaments_cancelled_bit','tournaments_create','tournaments_create_days','tournaments_create_game','tournaments_create_round','tournaments_create_tries','tournaments_finished','tournaments_finished_bit','tournaments_no_tournaments','tournaments_running','tournaments_running_bit','tournaments_view','tournaments_view_cancel','tournaments_view_delete','tournaments_view_join','tournaments_view_play','tournaments_view_rounds','tournaments_view_rounds_bit','tournaments_view_rounds_bit_info','tournaments_view_rounds_champion','tournaments_view_rounds_disqualify','tournaments_waiting','tournaments_waiting_bit')");
+	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','header_menu_arcade','tournaments_cancel','tournaments_cancel_error','tournaments_cancel_success','tournaments_cancelled','tournaments_cancelled_bit','tournaments_create','tournaments_create_days','tournaments_create_game','tournaments_create_round','tournaments_create_tries','tournaments_finished','tournaments_finished_bit','tournaments_no_tournaments','tournaments_running','tournaments_running_bit','tournaments_view','tournaments_view_cancel','tournaments_view_delete','tournaments_view_join','tournaments_view_play','tournaments_view_rounds','tournaments_view_rounds_bit','tournaments_view_rounds_bit_info','tournaments_view_rounds_champion','tournaments_view_rounds_disqualify','tournaments_waiting','tournaments_waiting_bit')");
 
 	// MyAlerts support
 	if($db->table_exists("alerts"))
@@ -656,12 +657,21 @@ function myarcade_activate()
 	);
 	$db->insert_query("templates", $insert_array);
 
+	$insert_array = array(
+		'title'		=> 'header_menu_arcade',
+		'template'	=> $db->escape_string('<li><a href="{$mybb->settings[\'bburl\']}/arcade.php" style="padding-left: 20px; background-image: url(images/arcade/arcade.png); background-repeat: no-repeat; display: inline-block;">{$lang->arcade}</a></li>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
 	// Update templates
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("member_profile", "#".preg_quote('{$signature}')."#i", '{$signature}{$arcadeprofile}');
 	find_replace_templatesets("postbit", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("postbit_classic", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
-	find_replace_templatesets("header", "#".preg_quote('<ul>')."#i", '<ul>{$arcade}');
+	find_replace_templatesets("header", "#".preg_quote('<ul class="menu top_links">')."#i", '<ul class="menu top_links">{$menu_arcade}');
 
 	// Inserts arcade task
 	require_once MYBB_ROOT."inc/functions_task.php";
@@ -709,7 +719,7 @@ function myarcade_deactivate()
 	global $db;
 	$db->delete_query("templates", "title IN('arcade','arcade_categories','arcade_category_bit','arcade_category_bit_image','arcade_champions','arcade_champions_bit','arcade_edit','arcade_edited','arcade_edit_error','arcade_favorite','arcade_favorites','arcade_gamebit','arcade_gamebit_favorite','arcade_gamebit_new','arcade_gamebit_score','arcade_gamebit_tournaments','arcade_menu','arcade_no_display','arcade_no_games','arcade_online','arcade_online_memberbit','arcade_play_rating','arcade_play','arcade_play_guest','arcade_play_tournament','arcade_rating','arcade_scoreboard','arcade_scoreboard_bit','arcade_scores','arcade_scores_bit','arcade_scores_delete','arcade_scores_edit','arcade_scores_no_scores','arcade_search','arcade_search_catagory','arcade_search_results','arcade_settings','arcade_settings_gamesselect','arcade_settings_scoreselect','arcade_settings_tournamentnotify','arcade_settings_whosonline','arcade_settings_champpostbit','arcade_statistics','arcade_statistics_bestplayers','arcade_statistics_bestplayers_bit','arcade_statistics_gamebit','arcade_statistics_scorebit','arcade_stats','arcade_stats_bit','arcade_stats_tournaments','arcade_stats_details','arcade_tournaments','arcade_tournaments_cancelled','arcade_tournaments_create','arcade_tournaments_user','arcade_tournaments_user_game') AND sid='-2'");
 	$db->delete_query("templates", "title IN('tournaments_cancel','tournaments_cancel_error','tournaments_cancel_success','tournaments_cancelled','tournaments_cancelled_bit','tournaments_create','tournaments_create_days','tournaments_create_game','tournaments_create_round','tournaments_create_tries','tournaments_finished','tournaments_finished_bit','tournaments_no_tournaments','tournaments_running','tournaments_running_bit','tournaments_view','tournaments_view_cancel','tournaments_view_delete','tournaments_view_join','tournaments_view_play','tournaments_view_rounds','tournaments_view_rounds_bit','tournaments_view_rounds_bit_info','tournaments_view_rounds_champion','tournaments_view_rounds_disqualify','tournaments_waiting','tournaments_waiting_bit') AND sid='-2'");
-	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade')");
+	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','header_menu_arcade')");
 	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime','myalerts_alert_arcade_newround','myalerts_alert_arcade_champship')");
 	$db->delete_query("settinggroups", "name IN('arcade','tournaments')");
 	rebuild_settings();
@@ -736,7 +746,7 @@ function myarcade_deactivate()
 	find_replace_templatesets("member_profile", "#".preg_quote('{$arcadeprofile}')."#i", '', 0);
 	find_replace_templatesets("postbit", "#".preg_quote('<br />{$post[\'champions\']}')."#i", '', 0);
 	find_replace_templatesets("postbit_classic", "#".preg_quote('<br />{$post[\'champions\']}')."#i", '', 0);
-	find_replace_templatesets("header", "#".preg_quote('{$arcade}')."#i", '', 0);
+	find_replace_templatesets("header", "#".preg_quote('{$menu_arcade}')."#i", '', 0);
 
 	change_admin_permission('arcade', 'games', -1);
 	change_admin_permission('arcade', 'categories', -1);
@@ -890,15 +900,27 @@ function myarcade_index()
 	}
 }
 
+// Cache the header link template
+function myarcade_link_cache()
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'header_menu_arcade';
+}
+
 // Arcade header link
 function myarcade_link()
 {
-	global $db, $mybb, $templates, $lang, $arcade, $theme;
+	global $db, $mybb, $templates, $lang, $menu_arcade;
 	$lang->load("arcade");
 
+	$menu_arcade = '';
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
 	{
-		$arcade = "<li><a href=\"{$mybb->settings['bburl']}/arcade.php\"><img src=\"images/arcade/arcade.png\" alt=\"\" title=\"\" />{$lang->arcade}</a> </li>";
+		eval('$menu_arcade = "'.$templates->get('header_menu_arcade').'";');
 	}
 }
 
