@@ -1,6 +1,6 @@
 ## INFORMATION ##
 
-My Arcade (1.0 BETA) for MyBB 1.6
+My Arcade (1.0) for MyBB 1.8
 Created by: Starpaul20
 Copyright: ©2014
 License: GPL
@@ -8,6 +8,8 @@ License: GPL
 Adds an arcade to a MyBB board, allowing users to play flash games (currently supports IBProArcade v2, IBProArcade v32 and V3Arcade type games).
 
 This plugin offers full language support.
+
+The 'oldrelease' branch contains the 1.6 version of the plugin.
 
 
 ## INSTALLATION ##
