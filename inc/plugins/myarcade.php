@@ -495,6 +495,8 @@ function myarcade_activate()
 
 	// Inserts templates (arcade)
 	$contents = @file_get_contents(MYBB_ROOT.'inc/plugins/arcade/templates.xml');
+	require_once MYBB_ADMIN_DIR."inc/functions.php";
+	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
 
 	$parser = new XMLParser($contents);
 	$tree = $parser->get_tree();
@@ -538,6 +540,93 @@ function myarcade_activate()
 		$db->insert_query("templates", $new_template);
 	}
 
+	// If we have any stylesheets, process them
+	if(!empty($theme['stylesheets']['stylesheet']) && empty($options['no_stylesheets']))
+	{
+		// Are we dealing with a single stylesheet?
+		if(isset($theme['stylesheets']['stylesheet']['tag']))
+		{
+			// Trick the system into thinking we have a good array =P
+			$theme['stylesheets']['stylesheet'] = array($theme['stylesheets']['stylesheet']);
+		}
+
+		$loop = 1;
+		foreach($theme['stylesheets']['stylesheet'] as $stylesheet)
+		{
+			if(substr($stylesheet['attributes']['name'], -4) != ".css")
+			{
+				continue;
+			}
+
+			if(empty($stylesheet['attributes']['lastmodified']))
+			{
+				$stylesheet['attributes']['lastmodified'] = TIME_NOW;
+			}
+
+			if(empty($stylesheet['attributes']['disporder']))
+			{
+				$stylesheet['attributes']['disporder'] = $loop;
+			}
+
+			if(empty($stylesheet['attributes']['attachedto']))
+			{
+				$stylesheet['attributes']['attachedto'] = '';
+			}
+
+			$new_stylesheet = array(
+				"name" => $db->escape_string($stylesheet['attributes']['name']),
+				"tid" => 1,
+				"attachedto" => $db->escape_string($stylesheet['attributes']['attachedto']),
+				"stylesheet" => $db->escape_string($stylesheet['value']),
+				"lastmodified" => intval($stylesheet['attributes']['lastmodified']),
+				"cachefile" => $db->escape_string($stylesheet['attributes']['name'])
+			);
+			$sid = $db->insert_query("themestylesheets", $new_stylesheet);
+			$css_url = "css.php?stylesheet={$sid}";
+			$cached = cache_stylesheet(1, $stylesheet['attributes']['name'], $stylesheet['value']);
+			if($cached)
+			{
+				$css_url = $cached;
+			}
+
+			$attachedto = $stylesheet['attributes']['attachedto'];
+			if(!$attachedto)
+			{
+				$attachedto = "global";
+			}
+
+			// private.php?compose,folders|usercp.php,global|global
+			$attachedto = explode("|", $attachedto);
+			foreach($attachedto as $attached_file)
+			{
+				$attached_actions = explode(",", $attached_file);
+				$attached_file = array_shift($attached_actions);
+				if(count($attached_actions) == 0)
+				{
+					$attached_actions = array("global");
+				}
+
+				foreach($attached_actions as $action)
+				{
+					$theme_stylesheets[$attached_file][$action][] = $css_url;
+				}
+			}
+
+			++$loop;
+		}
+		// Now we have our list of built stylesheets, save them
+		$updated_theme = array(
+			"stylesheets" => $db->escape_string(serialize($theme_stylesheets))
+		);
+		$db->update_query("themes", $updated_theme, "tid='1'");
+
+		$query = $db->simple_select("themes", "*");
+		while($theme = $db->fetch_array($query))
+		{
+			update_theme_stylesheet_list($theme['tid'], $theme, true);
+		}
+	}
+
 	// Insert templates (global)
 	$insert_array = array(
 		'title'		=> 'global_arcade_bit',
@@ -573,41 +662,6 @@ function myarcade_activate()
 	find_replace_templatesets("postbit", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("postbit_classic", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("header", "#".preg_quote('<ul>')."#i", '<ul>{$arcade}');
-
-	// Inserts arcade stylesheet
-	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
-	$css = array(
-		"name" => "arcade.css",
-		"tid" => 1,
-		"attachedto" => "arcade.php|tournaments.php",
-		"stylesheet" => ".categories ul {\ncolor: #000000;\ntext-align: center;\npadding: 1px;\nlist-style: none;\nmargin: 0;\n}\n
-.categories li {\ndisplay: inline;\nfloat: left;\n}\n
-.star_rating,\n.star_rating li a:hover,\n.star_rating .current_rating {\nbackground: url(images/star_rating.gif) left -1000px repeat-x;\nvertical-align: middle;\n}\n
-.star_rating {\nposition: relative;\nwidth:80px;\nheight:16px;\noverflow: hidden;\nlist-style: none;\nmargin: 0;\npadding: 0;\nbackground-position: left top;\n}\n
-td .star_rating {\nmargin: auto;\n}\n
-.star_rating li {\ndisplay: inline;\n}\n
-.star_rating li a,\n.star_rating .current_rating {\nposition: absolute;\ntext-indent: -1000px;\nheight: 16px;\nline-height: 16px;\noutline: none;\noverflow: hidden;\nborder: none;\ntop:0;\nleft:0;\n}\n
-.star_rating_notrated li a:hover {\nbackground-position: left bottom;\n}\n
-.star_rating li a.one_star {\nwidth:20%;\nz-index:6;\n}\n
-.star_rating li a.two_stars {\nwidth:40%;\nz-index:5;\n}\n
-.star_rating li a.three_stars {\nwidth:60%;\nz-index:4;\n}\n
-.star_rating li a.four_stars {\nwidth:80%;\nz-index:3;\n}\n
-.star_rating li a.five_stars {\nwidth:100%;\nz-index:2;\n}\n
-.star_rating .current_rating {\nz-index:1;\nbackground-position: left center;\n}\n
-.star_rating_success, .success_message {\ncolor: #00b200;\nfont-weight: bold;\nfont-size: 10px;\nmargin-bottom: 10px;\n}\n
-.inline_rating {\nfloat: left;\nvertical-align: middle;\npadding-right: 5px;\n}",
-		"cachefile" => "arcade.css",
-		"lastmodified" => TIME_NOW
-	);
-	$db->insert_query("themestylesheets", $css);
-
-	cache_stylesheet(1, $css['cachefile'], $css['stylesheet']);
-
-	$query = $db->simple_select("themes", "tid");
-	while($row = $db->fetch_array($query))
-	{
-		update_theme_stylesheet_list($row['tid']);
-	}
 
 	// Inserts arcade task
 	require_once MYBB_ROOT."inc/functions_task.php";
@@ -664,11 +718,12 @@ function myarcade_deactivate()
 	$db->delete_query("themestylesheets", "name='arcade.css'");
 	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
 
-	$query = $db->simple_select("themes", "tid");
-	while($row = $db->fetch_array($query))
+	$query = $db->simple_select("themes", "*");
+	while($theme = $db->fetch_array($query))
 	{
-		update_theme_stylesheet_list($row['tid']);
-		@unlink(MYBB_ROOT."cache/themes/theme{$row['tid']}/arcade.css");
+		update_theme_stylesheet_list($theme['tid'], $theme, true);
+		@unlink(MYBB_ROOT."cache/themes/theme{$theme['tid']}/arcade.css");
+		@unlink(MYBB_ROOT."cache/themes/theme{$theme['tid']}/arcade.min.css");
 	}
 
 	$query = $db->simple_select("tasks", "tid", "file='arcade'");
