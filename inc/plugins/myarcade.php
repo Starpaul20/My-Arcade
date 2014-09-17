@@ -92,18 +92,18 @@ function myarcade_install()
 				smallimage varchar(40) NOT NULL default '',
 				largeimage varchar(40) NOT NULL default '',
 				cid smallint(5) unsigned NOT NULL default '0',
-				plays int(10) NOT NULL default '0',
-				lastplayed bigint(30) NOT NULL default '0',
+				plays int(10) unsigned NOT NULL default '0',
+				lastplayed int unsigned NOT NULL default '0',
 				lastplayeduid int(10) unsigned NOT NULL default '0',
-				dateline bigint(30) NOT NULL default '0',
+				dateline int unsigned NOT NULL default '0',
 				bgcolor varchar(6) NOT NULL default '',
 				width varchar(4) NOT NULL default '',
 				height varchar(4) NOT NULL default '',
 				sortby varchar(10) NOT NULL default 'desc',
-				numratings smallint(5) NOT NULL default '0',
-				totalratings smallint(5) NOT NULL default '0',
-				tournamentselect int(1) NOT NULL default '1',
-				active int(1) NOT NULL default '1',
+				numratings smallint(5) unsigned NOT NULL default '0',
+				totalratings smallint(5) unsigned NOT NULL default '0',
+				tournamentselect tinyint(1) NOT NULL default '1',
+				active tinyint(1) NOT NULL default '1',
 				KEY cid (cid),
 				PRIMARY KEY(gid)
 			) ENGINE=MyISAM{$collation}");
@@ -113,7 +113,7 @@ function myarcade_install()
 				name varchar(50) NOT NULL default '',
 				image varchar(200) NOT NULL default '',
 				groups text NOT NULL,
-				active int(1) NOT NULL default '1',
+				active tinyint(1) NOT NULL default '1',
 				PRIMARY KEY(cid)
 			) ENGINE=MyISAM{$collation}");
 
@@ -123,7 +123,7 @@ function myarcade_install()
 				uid int(10) unsigned NOT NULL default '0',
 				username varchar(120) NOT NULL default '',
 				score float NOT NULL,
-				dateline bigint(30) NOT NULL default '0',
+				dateline int unsigned NOT NULL default '0',
 				KEY gid (gid),
 				PRIMARY KEY(cid)
 			) ENGINE=MyISAM{$collation}");
@@ -138,12 +138,12 @@ function myarcade_install()
 
 	$db->write_query("CREATE TABLE ".TABLE_PREFIX."arcadelogs (
 				uid int(10) unsigned NOT NULL default '0',
-				dateline bigint(30) NOT NULL default '0',
+				dateline int unsigned NOT NULL default '0',
 				gid int(10) unsigned NOT NULL default '0',
 				tid int(10) unsigned NOT NULL default '0',
 				action text NOT NULL,
 				data text NOT NULL,
-				ipaddress varchar(50) NOT NULL,
+				ipaddress varbinary(16) NOT NULL,
 				KEY gid (gid)
 			) ENGINE=MyISAM{$collation}");
 
@@ -151,8 +151,8 @@ function myarcade_install()
 				rid int(10) unsigned NOT NULL auto_increment,
 				gid int(10) unsigned NOT NULL default '0',
 				uid int(10) unsigned NOT NULL default '0',
-				rating smallint(5) NOT NULL default '0',
-				ipaddress varchar(30) NOT NULL default '',
+				rating smallint(5) unsigned NOT NULL default '0',
+				ipaddress varbinary(16) NOT NULL default '',
 				KEY gid (gid, uid),
 				PRIMARY KEY(rid)
 			) ENGINE=MyISAM{$collation}");
@@ -163,10 +163,10 @@ function myarcade_install()
 				uid int(10) unsigned NOT NULL default '0',
 				username varchar(120) NOT NULL default '',
 				score float NOT NULL,
-				dateline bigint(30) NOT NULL default '0',
-				timeplayed int(10) NOT NULL default '0',
+				dateline int unsigned NOT NULL default '0',
+				timeplayed int(10) unsigned NOT NULL default '0',
 				comment varchar(200) NOT NULL default '',
-				ipaddress varchar(30) NOT NULL default '',
+				ipaddress varbinary(16) NOT NULL default '',
 				KEY gid (gid),
 				KEY uid (uid),
 				PRIMARY KEY(sid)
@@ -177,12 +177,12 @@ function myarcade_install()
 				uid int(10) unsigned NOT NULL default '0',
 				gid int(10) unsigned NOT NULL default '0',
 				tid int(10) unsigned NOT NULL default '0',
-				dateline bigint(30) NOT NULL default '0',
+				dateline int unsigned NOT NULL default '0',
 				randchar1 varchar(100) NOT NULL default '',
 				randchar2 varchar(100) NOT NULL default '',
 				gname varchar(40) NOT NULL default '',
 				gtitle varchar(50) NOT NULL default '',
-				ipaddress varchar(50) NOT NULL default '',
+				ipaddress varbinary(16) NOT NULL default '',
 				KEY uid (uid)
 			) ENGINE=MyISAM{$collation}");
 
@@ -190,15 +190,15 @@ function myarcade_install()
 				tid int(10) unsigned NOT NULL auto_increment,
 				gid int(10) unsigned NOT NULL default '0',
 				uid int(10) unsigned NOT NULL default '0',
-				dateline bigint(30) NOT NULL default '0',
-				status int(1) NOT NULL default '1',
-				rounds int(2) NOT NULL default '0',
-				tries int(2) NOT NULL default '0',
-				numplayers int(4) NOT NULL default '1',
-				days int(1) NOT NULL default '0',
-				round int(2) NOT NULL default '0',
+				dateline int unsigned NOT NULL default '0',
+				status tinyint(1) NOT NULL default '1',
+				rounds tinyint(2) unsigned NOT NULL default '0',
+				tries tinyint(2) unsigned NOT NULL default '0',
+				numplayers smallint(5) unsigned NOT NULL default '1',
+				days tinyint(2) unsigned NOT NULL default '0',
+				round tinyint(2) unsigned NOT NULL default '0',
 				champion int(10) unsigned NOT NULL default '0',
-				finishdateline bigint(30) NOT NULL default '0',
+				finishdateline int unsigned NOT NULL default '0',
 				information text NOT NULL,
 				KEY gid (gid),
 				PRIMARY KEY(tid)
@@ -210,35 +210,35 @@ function myarcade_install()
 				uid int(10) unsigned NOT NULL default '0',
 				username varchar(120) NOT NULL default '',
 				score float NOT NULL,
-				round int(2) NOT NULL default '0',
-				attempts int(5) NOT NULL default '0',
-				scoreattempt int(2) NOT NULL default '0',
-				timeplayed bigint(30) NOT NULL default '0',
-				status int(1) NOT NULL default '1',
+				round tinyint(2) unsigned NOT NULL default '0',
+				attempts smallint(5) unsigned NOT NULL default '0',
+				scoreattempt tinyint(2) unsigned NOT NULL default '0',
+				timeplayed int unsigned NOT NULL default '0',
+				status tinyint(1) NOT NULL default '1',
 				KEY tid (tid),
 				KEY uid (uid),
 				PRIMARY KEY(pid)
 			) ENGINE=MyISAM{$collation}");
 
-	$db->add_column("users", "gamesperpage", "int(3) NOT NULL default '0'");
-	$db->add_column("users", "scoresperpage", "int(3) NOT NULL default '0'");
+	$db->add_column("users", "gamesperpage", "smallint(6) NOT NULL default '0'");
+	$db->add_column("users", "scoresperpage", "smallint(6) NOT NULL default '0'");
 	$db->add_column("users", "gamessortby", "varchar(10) NOT NULL default ''");
 	$db->add_column("users", "gamesorder", "varchar(4) NOT NULL default ''");
-	$db->add_column("users", "whosonlinearcade", "int(1) NOT NULL default '1'");
-	$db->add_column("users", "champdisplaypostbit", "int(1) NOT NULL default '1'");
-	$db->add_column("users", "tournamentnotify", "int(1) NOT NULL default '0'");
-	$db->add_column("users", "champnotify", "int(1) NOT NULL default '0'");
+	$db->add_column("users", "whosonlinearcade", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("users", "champdisplaypostbit", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("users", "tournamentnotify", "tinyint(1) NOT NULL default '0'");
+	$db->add_column("users", "champnotify", "tinyint(1) NOT NULL default '0'");
 
-	$db->add_column("usergroups", "canviewarcade", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "canplayarcade", "int(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "canviewarcade", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "canplayarcade", "tinyint(1) NOT NULL default '1'");
 	$db->add_column("usergroups", "maxplaysday", "int(3) NOT NULL default '25'");
-	$db->add_column("usergroups", "canmoderategames", "int(1) NOT NULL default '0'");
-	$db->add_column("usergroups", "canrategames", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "cansearchgames", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "canviewgamestats", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "canviewtournaments", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "canjointournaments", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "cancreatetournaments", "int(1) NOT NULL default '0'");
+	$db->add_column("usergroups", "canmoderategames", "tinyint(1) NOT NULL default '0'");
+	$db->add_column("usergroups", "canrategames", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "cansearchgames", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "canviewgamestats", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "canviewtournaments", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "canjointournaments", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "cancreatetournaments", "tinyint(1) NOT NULL default '0'");
 	$db->add_column("usergroups", "maxtournamentsday", "int(3) NOT NULL default '2'");
 
 	// Setting some basic arcade permissions...
