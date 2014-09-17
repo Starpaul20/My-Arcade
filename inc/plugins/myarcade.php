@@ -1211,7 +1211,7 @@ function myarcade_online_activity($user_activity)
 
 function myarcade_online_location($plugin_array)
 {
-    global $db, $mybb, $lang, $parameters, $unviewable, $gid_list, $games;
+	global $db, $mybb, $lang, $parameters, $unviewable, $gid_list, $games;
 	$lang->load("arcade");
 
 	if($unviewable)
@@ -1387,7 +1387,7 @@ function myarcade_templates()
 // Merge everything if users are merged
 function myarcade_merge()
 {
-    global $db, $mybb, $source_user, $destination_user;
+	global $db, $mybb, $source_user, $destination_user;
 	$username = array(
 		"username" => $destination_user['username']
 	);
@@ -1492,7 +1492,6 @@ function myarcade_usergroups_graph()
 		$form->generate_check_box("canjointournaments", 1, $lang->can_join_tournaments, array("checked" => $mybb->input['canjointournaments'])),
 		$form->generate_check_box("cancreatetournaments", 1, $lang->can_create_tournaments, array("checked" => $mybb->input['cancreatetournaments'])),
 		"{$lang->max_tournaments_day}:<br /><small>{$lang->max_tournaments_day_desc}</small><br />".$form->generate_text_box('maxtournamentsday', $mybb->input['maxtournamentsday'], array('id' => 'maxtournamentsday', 'class' => 'field50'))
-
 	);
 	$form_container->output_row($lang->tournaments, "", "<div class=\"group_settings_bit\">".implode("</div><div class=\"group_settings_bit\">", $tournaments_options)."</div>");
 
@@ -1571,7 +1570,7 @@ function myarcade_datacache_class()
 // Admin Log display
 function myarcade_admin_adminlog($plugin_array)
 {
-  	global $lang;
+	global $lang;
 	$lang->load("arcade_module_meta");
 
 	if($plugin_array['lang_string'] == admin_log_arcade_scores_prune)
