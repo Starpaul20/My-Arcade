@@ -244,7 +244,7 @@ if(!$mybb->input['action'])
 		$table->construct_cell($logitem['score'], array("class" => "align_center"));
 		$table->construct_cell($logitem['comment']);
 		$table->construct_cell($logitem['dateline'], array("class" => "align_center"));
-		$table->construct_cell($logitem['ipaddress'], array("class" => "align_center"));
+		$table->construct_cell(my_inet_ntop($db->unescape_binary($logitem['ipaddress'])), array("class" => "align_center"));
 		$table->construct_row();
 	}
 

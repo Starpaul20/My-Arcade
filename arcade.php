@@ -180,6 +180,8 @@ if($mybb->input['action'] == "play")
 		error_no_permission();
 	}
 
+	$mybb->binary_fields["arcadesessions"] = array('ipaddress' => true);
+
 	$gid = intval($mybb->input['gid']);
 	$game = get_game($gid);
 
@@ -263,7 +265,7 @@ if($mybb->input['action'] == "play")
 			"dateline" => TIME_NOW,
 			"gname" => $db->escape_string($game['file']),
 			"gtitle" => $db->escape_string($game['name']),
-			"ipaddress" => $db->escape_string($session->ipaddress)
+			"ipaddress" => $db->escape_binary($session->packedip)
 		);
 		$db->insert_query("arcadesessions", $new_session);
 
@@ -287,7 +289,7 @@ if($mybb->input['action'] == "play")
 			"dateline" => TIME_NOW,
 			"gname" => $db->escape_string($game['file']),
 			"gtitle" => $db->escape_string($game['name']),
-			"ipaddress" => $db->escape_string($session->ipaddress)
+			"ipaddress" => $db->escape_binary($session->packedip)
 		);
 		$db->insert_query("arcadesessions", $new_session);
 
@@ -612,6 +614,7 @@ if($mybb->input['action'] == "scores")
 		// Display IP address of scores if user is a mod/admin
 		if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 		{
+			$score['ipaddress'] = my_inet_ntop($db->unescape_binary($score['ipaddress']));
 			$ipaddressbit = "<td class=\"{$alt_bg}\" align=\"center\">{$score['ipaddress']}</td>";
 		}
 
@@ -691,6 +694,8 @@ if($mybb->input['action'] == "rate")
 	}
 	else
 	{
+		$mybb->binary_fields["arcaderatings"] = array('ipaddress' => true);
+
 		$update_game = array(
 			"numratings" => $game['numratings'] + 1,
 			"totalratings" => $game['totalratings'] + $mybb->input['rating']
@@ -701,7 +706,7 @@ if($mybb->input['action'] == "rate")
 			'gid' => $gid,
 			'uid' => intval($mybb->user['uid']),
 			'rating' => $mybb->input['rating'],
-			'ipaddress' => $db->escape_string($session->ipaddress)
+			'ipaddress' => $db->escape_binary($session->packedip)
 		);
 		$db->insert_query("arcaderatings", $insertarray);
 	}
@@ -1896,6 +1901,7 @@ if($mybb->input['action'] == "scoreboard")
 		// Display IP address of scores if user is a mod/admin
 		if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 		{
+			$score['ipaddress'] = my_inet_ntop($db->unescape_binary($score['ipaddress']));
 			$ipaddressbit = "<td class=\"{$alt_bg}\" align=\"center\">{$score['ipaddress']}</td>";
 		}
 
@@ -1989,7 +1995,7 @@ if($mybb->input['action'] == "do_search" && $mybb->request_method == "post")
 		"sid" => $db->escape_string($sid),
 		"uid" => intval($mybb->user['uid']),
 		"dateline" => TIME_NOW,
-		"ipaddress" => $db->escape_string($session->ipaddress),
+		"ipaddress" => $db->escape_binary($session->packedip),
 		"threads" => '',
 		"posts" => '',
 		"resulttype" => "games",

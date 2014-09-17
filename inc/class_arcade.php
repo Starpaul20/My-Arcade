@@ -19,10 +19,10 @@ class Arcade
 	function submit_score($score, $name, $sid)
 	{
 		global $db, $mybb, $lang, $plugins, $session, $arcade_session, $Alerts;
-
 		$lang->load("arcade");
 
 		$uid = intval($mybb->user['uid']);
+		$mybb->binary_fields["arcadescores"] = array('ipaddress' => true);
 
 		if(!$name)
 		{
@@ -53,7 +53,7 @@ class Arcade
 			$gamecheck = $db->fetch_array($query);
 		}
 
-		if($arcade_session['ipaddress'] != $session->ipaddress)
+		if($arcade_session['ipaddress'] != $session->packedip)
 		{
 			error($lang->bad_input);
 		}
@@ -113,7 +113,7 @@ class Arcade
 						"score" => $db->escape_string($score),
 						"dateline" => TIME_NOW,
 						"timeplayed" => intval($timeplayed),
-						"ipaddress" => $db->escape_string($session->ipaddress)
+						"ipaddress" => $db->escape_binary($session->packedip)
 					);
 					$db->update_query("arcadescores", $update_score, "gid='{$game['gid']}' AND uid='{$uid}'");
 
@@ -138,7 +138,7 @@ class Arcade
 					"score" => $db->escape_string($score),
 					"dateline" => TIME_NOW,
 					"timeplayed" => intval($timeplayed),
-					"ipaddress" => $db->escape_string($session->ipaddress)
+					"ipaddress" => $db->escape_binary($session->packedip)
 				);
 				$db->insert_query("arcadescores", $new_score);
 
