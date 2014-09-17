@@ -17,7 +17,7 @@
 .star_rating,
 .star_rating li a:hover,
 .star_rating .current_rating {
-	background: url(images/star_rating.gif) left -1000px repeat-x;
+	background: url(images/star_rating.png) left -1000px repeat-x;
 	vertical-align: middle;
 }
 
@@ -155,7 +155,7 @@ td .star_rating {
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 <tr>
 <td class="thead">
-<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['arcadecat']}.gif" id="arcadecat_img" class="expander" alt="[-]" /></div>
+<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['arcadecat']}.png" id="arcadecat_img" class="expander" alt="[-]" /></div>
 <strong>{$lang->categories}</strong>
 </td>
 </tr>
@@ -424,7 +424,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <thead>
 <tr>
 <td class="thead">
-<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['online']}.gif" id="online_img" class="expander" alt="[-]" /></div>
+<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['online']}.png" id="online_img" class="expander" alt="[-]" /></div>
 <strong>{$lang->whos_online}</strong>
 </td>
 </tr>
@@ -635,7 +635,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <table border="0" width="100%" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 <tr>
 <td class="thead" colspan="3">
-<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['game_info']}.gif" id="game_info_img" class="expander" alt="[-]" /></div>
+<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['game_info']}.png" id="game_info_img" class="expander" alt="[-]" /></div>
 <strong>{$game['name']}</strong>
 </td>
 </tr>
@@ -910,7 +910,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 <tr>
 <td colspan="3" class="thead">
-<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['arcadestats']}.gif" id="arcadestats_img" class="expander" alt="[-]" /></div>
+<div class="expcolimage"><img src="{$theme['imgdir']}/collapse{$collapsedimg['arcadestats']}.png" id="arcadestats_img" class="expander" alt="[-]" /></div>
 <strong>{$lang->arcade_stats}</strong>
 </td>
 </tr>
