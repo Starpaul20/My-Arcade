@@ -4,6 +4,9 @@
  * Copyright 2014 Starpaul20
  */
 
+$l['myarcade_info_name'] = "My Arcade";
+$l['myarcade_info_desc'] = "Adds an arcade to your board.";
+
 $l['arcade'] = "Arcade";
 
 $l['games'] = "Games";

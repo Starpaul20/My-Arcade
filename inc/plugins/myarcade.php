@@ -61,9 +61,12 @@ $plugins->add_hook("admin_tools_get_admin_log_action", "myarcade_admin_adminlog"
 // The information that shows up on the plugin manager
 function myarcade_info()
 {
+	global $lang;
+	$lang->load("arcade_module_meta");
+
 	return array(
-		"name"				=> "My Arcade",
-		"description"		=> "Adds an arcade to your board.",
+		"name"				=> $lang->myarcade_info_name,
+		"description"		=> $lang->myarcade_info_desc,
 		"website"			=> "http://galaxiesrealm.com/index.php",
 		"author"			=> "Starpaul20",
 		"authorsite"		=> "http://galaxiesrealm.com/index.php",
