@@ -551,7 +551,7 @@ if($mybb->input['action'] == "scores")
 	while($score = $db->fetch_array($query))
 	{
 		$score['score'] = my_number_format(floatval($score['score']));
-		$dateline = my_date($mybb->settings['dateformat'], $score['dateline']).", ".my_date($mybb->settings['timeformat'], $score['dateline']);
+		$dateline = my_date('relative', $score['dateline']);
 
 		$plus = ($perpage * $page) - $perpage;
 		$counter++;
@@ -1114,7 +1114,7 @@ if($mybb->input['action'] == "favorites")
 
 		if($game['lastplayed'] && $game['lastplayeduid'])
 		{
-			$lastplayed = my_date($mybb->settings['dateformat'], $game['lastplayed']).", ".my_date($mybb->settings['timeformat'], $game['lastplayed']);
+			$lastplayed = my_date('relative', $game['lastplayed']);
 		}
 		else
 		{
@@ -1542,7 +1542,7 @@ if($mybb->input['action'] == "stats")
 
 		if($score['dateline'])
 		{
-			$dateline = my_date($mybb->settings['dateformat'], $score['dateline']).", ".my_date($mybb->settings['timeformat'], $score['dateline']);
+			$dateline = my_date('relative', $score['dateline']);
 		}
 		else
 		{
@@ -1712,7 +1712,7 @@ if($mybb->input['action'] == "champions")
 		$champ['name'] = htmlspecialchars_uni($champ['name']);
 		$champ['score'] = my_number_format(floatval($champ['score']));
 
-		$dateline = my_date($mybb->settings['dateformat'], $champ['dateline']).", ".my_date($mybb->settings['timeformat'], $champ['dateline']);
+		$dateline = my_date('relative', $champ['dateline']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -1859,7 +1859,7 @@ if($mybb->input['action'] == "scoreboard")
 		$score['name'] = htmlspecialchars_uni($score['name']);
 		$score['score'] = my_number_format(floatval($score['score']));
 
-		$dateline = my_date($mybb->settings['dateformat'], $score['dateline']).", ".my_date($mybb->settings['timeformat'], $score['dateline']);
+		$dateline = my_date('relative', $score['dateline']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -2160,7 +2160,7 @@ if($mybb->input['action'] == "results")
 
 		if($game['lastplayed'])
 		{
-			$lastplayed = my_date($mybb->settings['dateformat'], $game['lastplayed']).", ".my_date($mybb->settings['timeformat'], $game['lastplayed']);
+			$lastplayed = my_date('relative', $game['lastplayed']);
 		}
 		else
 		{
@@ -2372,7 +2372,7 @@ if(!$mybb->input['action'])
 			$score['name'] = htmlspecialchars_uni($score['name']);
 			$score['score'] = my_number_format(floatval($score['score']));
 
-			$dateline = my_date($mybb->settings['dateformat'], $score['dateline']).", ".my_date($mybb->settings['timeformat'], $score['dateline']);
+			$dateline = my_date('relative', $score['dateline']);
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$score['uid']}";
@@ -2413,7 +2413,7 @@ if(!$mybb->input['action'])
 			$score['name'] = htmlspecialchars_uni($score['name']);
 			$score['score'] = my_number_format(floatval($score['score']));
 
-			$dateline = my_date($mybb->settings['dateformat'], $score['dateline']).", ".my_date($mybb->settings['timeformat'], $score['dateline']);
+			$dateline = my_date('relative', $score['dateline']);
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$score['uid']}";
@@ -2760,7 +2760,7 @@ if(!$mybb->input['action'])
 
 		if($game['lastplayed'])
 		{
-			$lastplayed = my_date($mybb->settings['dateformat'], $game['lastplayed']).", ".my_date($mybb->settings['timeformat'], $game['lastplayed']);
+			$lastplayed = my_date('relative', $game['lastplayed']);
 		}
 		else
 		{

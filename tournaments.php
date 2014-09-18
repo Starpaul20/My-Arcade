@@ -308,7 +308,7 @@ if($mybb->input['action'] == "view")
 
 	$information = unserialize($tournament['information']);
 
-	$dateline = my_date($mybb->settings['dateformat'], $tournament['dateline']).", ".my_date($mybb->settings['timeformat'], $tournament['dateline']);
+	$dateline = my_date('relative', $tournament['dateline']);
 	$lang->game_tournament_started_on = $lang->sprintf($lang->game_tournament_started_on, $game['name'], $dateline);
 
 	$players = pow(2, $tournament['rounds']);
@@ -440,7 +440,7 @@ if($mybb->input['action'] == "view")
 
 				if($player['timeplayed'])
 				{
-					$dateline = my_date($mybb->settings['dateformat'], $player['timeplayed']).", ".my_date($mybb->settings['timeformat'], $player['timeplayed']);
+					$dateline = my_date('relative', $player['timeplayed']);
 				}
 				else
 				{
@@ -574,7 +574,7 @@ if($mybb->input['action'] == "waiting")
 	while($tournament = $db->fetch_array($query))
 	{
 		$tournament['name'] = htmlspecialchars_uni($tournament['name']);
-		$dateline = my_date($mybb->settings['dateformat'], $tournament['dateline']).", ".my_date($mybb->settings['timeformat'], $tournament['dateline']);
+		$dateline = my_date('relative', $tournament['dateline']);
 
 		$players = pow(2, $tournament['rounds']);
 		$remaining = $players-$tournament['numplayers'];
@@ -614,7 +614,7 @@ if($mybb->input['action'] == "running")
 		$information = unserialize($tournament['information']);
 
 		$tournament['name'] = htmlspecialchars_uni($tournament['name']);
-		$dateline = my_date($mybb->settings['dateformat'], $information['1']['starttime']).", ".my_date($mybb->settings['timeformat'], $information['1']['starttime']);
+		$dateline = my_date('relative', $information['1']['starttime']);
 
 		$alt_bg = alt_trow();
 		eval("\$tournament_bit .= \"".$templates->get("tournaments_running_bit")."\";");
@@ -650,7 +650,7 @@ if($mybb->input['action'] == "finished")
 	while($tournament = $db->fetch_array($query))
 	{
 		$tournament['name'] = htmlspecialchars_uni($tournament['name']);
-		$dateline = my_date($mybb->settings['dateformat'], $tournament['finishdateline']).", ".my_date($mybb->settings['timeformat'], $tournament['finishdateline']);
+		$dateline = my_date('relative', $tournament['finishdateline']);
 
 		if($tournament['champion'])
 		{
@@ -719,7 +719,7 @@ if($mybb->input['action'] == "cancelled")
 			$profilelink = get_profile_link($tournament['uid']);
 		}
 
-		$dateline = my_date($mybb->settings['dateformat'], $tournament['finishdateline']).", ".my_date($mybb->settings['timeformat'], $tournament['finishdateline']);
+		$dateline = my_date('relative', $tournament['finishdateline']);
 
 		$alt_bg = alt_trow();
 		eval("\$tournament_bit .= \"".$templates->get("tournaments_cancelled_bit")."\";");

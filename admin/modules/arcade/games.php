@@ -764,12 +764,14 @@ if(!$mybb->input['action'])
 	$query = $db->simple_select("arcadegames", "*", "", array('limit_start' => $start, 'limit' => 20, 'order_by' => 'name'));
 	while($arcade_game = $db->fetch_array($query))
 	{
-		if(!$arcade_game['lastplayed'])
+		if($arcade_game['lastplayed'])
+		{
+			$arcade_game['lastplayed'] = my_date('relative', $arcade_game['lastplayed']);
+		}
+		else
 		{
 			$arcade_game['lastplayed'] = $lang->na;
 		}
-		else
-		$arcade_game['lastplayed'] = date("jS M Y, G:i", $arcade_game['lastplayed']);
 		$trow = alt_trow();
 
 		$table->construct_cell("<strong><a href=\"index.php?module=arcade-games&amp;action=edit&amp;gid={$arcade_game['gid']}\">{$arcade_game['name']}</a></strong><br />
