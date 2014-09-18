@@ -952,6 +952,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 {$bestplayers_bit}
 </table>
 </fieldset>]]></template>
+		<template name="arcade_statistics_bestplayers_avatar" version="1000"><![CDATA[<img src="{$useravatar['image']}" alt="{$lang->avatar}" title="{$lang->avatar}" {$useravatar['width_height']} /><br />]]></template>
 		<template name="arcade_statistics_bestplayers_bit" version="1000"><![CDATA[<td width="33%" valign="top">
 <table width="100%">
 <tr>
