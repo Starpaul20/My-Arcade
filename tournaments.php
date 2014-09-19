@@ -7,9 +7,10 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "tournaments_view,tournaments_create,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit,tournaments_create_game";
-$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_rounds,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify,tournaments_create_days";
-$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_cancel,tournaments_view_delete,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_create_round";
+$templatelist = "tournaments_view,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit";
+$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify";
+$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_cancel,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries";
+$templatelist .= ",tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_create,tournaments_view_rounds,tournaments_view_delete";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -751,16 +752,30 @@ if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 	if($mybb->usergroup['canmoderategames'] == 0)
 	{
 		$message = $lang->error_cancel_nopermission;
-		eval("\$error = \"".$templates->get("tournaments_cancel_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	if(!$tournament['tid'])
 	{
 		$message = $lang->error_invalidtournament;
-		eval("\$error = \"".$templates->get("tournaments_cancel_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
@@ -770,8 +785,9 @@ if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 
 	$plugins->run_hooks("tournaments_do_cancel_end");
 
-	eval("\$cancelled = \"".$templates->get("tournaments_cancel_success")."\";");
-	output_page($cancelled);
+	eval("\$cancelsuccess = \"".$templates->get("tournaments_cancel_success", 1, 0)."\";");
+	echo $cancelsuccess;
+	exit;
 }
 
 // Cancel a tournament
@@ -785,31 +801,53 @@ if($mybb->input['action'] == "cancel")
 	if($mybb->usergroup['canmoderategames'] == 0)
 	{
 		$message = $lang->error_cancel_nopermission;
-		eval("\$error = \"".$templates->get("tournaments_cancel_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	if(!$tournament['tid'])
 	{
 		$message = $lang->error_invalidtournament;
-		eval("\$error = \"".$templates->get("tournaments_cancel_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	if($tournament['status'] == 3)
 	{
 		$message = $lang->error_alreadyfinished;
-		eval("\$error = \"".$templates->get("tournaments_cancel_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("tournaments_cancel_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	$plugins->run_hooks("tournaments_cancel_end");
 
-	eval("\$cancel = \"".$templates->get("tournaments_cancel")."\";");
-	output_page($cancel);
+	eval("\$cancel = \"".$templates->get("tournaments_cancel", 1, 0)."\";");
+	echo $cancel;
+	exit;
 }
 
 // Disqualify a user from a tournament

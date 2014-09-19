@@ -1103,90 +1103,59 @@ td .star_rating {
 {$lang->active_tournament_playing} {$activetournaments}
 </td>]]></template>
 		<template name="arcade_tournaments_user_game" version="1000"><![CDATA[<a href="arcade.php?action=play&amp;tid={$activeenrolled['tid']}"><img src="arcade/smallimages/{$activeenrolled['smallimage']}.gif" alt="{$activeenrolled['name']}" title="{$tournament_game}" width="20" height="20" /></a>]]></template>
-		<template name="tournaments_cancel" version="1000"><![CDATA[<html>
-<head>
-<title>{$lang->cancel_tournament}</title>
-{$headerinclude}
-</head>
-<body>
-<br />
-<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-<tr>
-<td class="trow1" style="padding: 20px">
-<strong>{$lang->cancel_tournament}</strong><br />
-<form action="tournaments.php" method="post">
-<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
-<input type="hidden" name="action" value="do_cancel" />
-<input type="hidden" name="tid" value="{$mybb->input['tid']}" />
-<br /><br />
-<span class="smalltext">{$lang->cancellation_reason}</span>
-<br />
-<input type="text" class="textbox" name="cancel_reason" size="35" maxlength="350" value="{$mybb->input['cancel_reason']}" style="width: 95%" />
-<br /><br />
-<div style="text-align: center;">
-<input type="submit" class="button" value="{$lang->cancel_tournament}" />
-</div>
-</form>
-</td>
-</tr>
-</table>
-</body>
-</html>]]></template>
-		<template name="tournaments_cancel_error" version="1000"><![CDATA[<html>
-<head>
-<title>{$lang->cancel_tournament}</title>
-{$headerinclude}
-</head>
-<body>
-<br />
-<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-<tr>
-<td class="trow1" style="padding: 20px">
-<strong>{$lang->error}</strong><br /><br />
-<blockquote>{$message}</blockquote>
-<br /><br />
-<div style="text-align: center;">
-<script type="text/javascript">
-<!--
-var showBack = {$show_back};
-if(showBack == 1)
-{
-document.write('[<a href="javascript:history.go(-1);">{$lang->go_back}</a>]');
-}
-document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]');
-// -->
-</script>
-</div>
-</td>
-</tr>
-</table>
-</body>
-</html>]]></template>
-		<template name="tournaments_cancel_success" version="1000"><![CDATA[<html>
-<head>
-<title>{$mybb->settings['bbname']} - {$lang->cancel_tournament}</title>
-{$headerinclude}
-</head>
-<body onunload="window.opener.location.reload();">
-<br />
-<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-<tr>
-<td class="trow1" style="padding: 20px">
-<strong>{$lang->tournament_cancelled}</strong><br /><br />
-<blockquote>{$lang->tournament_cancelled_message}</blockquote>
-<br /><br />
-<div style="text-align: center;">
-<script type="text/javascript">
-<!--
-document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]');
-// -->
-</script>
-</div>
-</td>
-</tr>
-</table>
-</body>
-</html>]]></template>
+		<template name="tournaments_cancel" version="1000"><![CDATA[<div class="modal">
+	<div style="overflow-y: auto; max-height: 400px;" class="modal_{$tid}">
+		<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+			<tr>
+				<td class="trow1" style="padding: 20px">
+					<strong>{$lang->cancel_tournament}</strong><br />
+					<form action="tournaments.php" method="post" class="tournament_{$tid}" onsubmit="javascript: return Arcade.submitCancelTournament({$tid});">
+						<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+						<input type="hidden" name="action" value="do_cancel" />
+						<input type="hidden" name="tid" value="{$tid}" />
+						<input type="hidden" name="nomodal" value="1" />
+						<br /><br />
+						<span class="smalltext">{$lang->cancellation_reason}</span>
+						<br />
+						<input type="text" class="textbox" name="cancel_reason" size="35" maxlength="350" value="{$mybb->input['cancel_reason']}" style="width: 95%" />
+						<br /><br />
+						<div style="text-align: center;">
+							<input type="submit" class="button" value="{$lang->cancel_tournament}" />
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>]]></template>
+		<template name="tournaments_cancel_error" version="1000"><![CDATA[<div class="modal">
+	<div style="overflow-y: auto; max-height: 400px;">
+		<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+			<tr>
+				<td class="trow1" style="padding: 20px">
+					<strong>{$lang->error}</strong><br /><br />
+					<blockquote>{$message}</blockquote>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>]]></template>
+		<template name="tournaments_cancel_error_nomodal" version="1000"><![CDATA[<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+	<tr>
+		<td class="trow1" style="padding: 20px">
+			<strong>{$lang->error}</strong><br /><br />
+			<blockquote>{$message}</blockquote>
+		</td>
+	</tr>
+</table>]]></template>
+		<template name="tournaments_cancel_success" version="1000"><![CDATA[<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+	<tr>
+		<td class="trow1" style="padding: 20px">
+			<strong>{$lang->tournament_cancelled}</strong><br /><br />
+			<blockquote>{$lang->tournament_cancelled_message}</blockquote>
+		</td>
+	</tr>
+</table>]]></template>
 		<template name="tournaments_cancelled" version="1000"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->tournaments_cancelled}</title>
@@ -1336,6 +1305,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->viewing_tournament}</title>
 {$headerinclude}
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1000"></script>
 </head>
 <body>
 {$header}
@@ -1361,7 +1331,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 {$footer}
 </body>
 </html>]]></template>
-		<template name="tournaments_view_cancel" version="1000"><![CDATA[[<a href="javascript:MyBB.popupWindow('tournaments.php?action=cancel&amp;tid={$tid}', 'canceltournament', '400', '300') ">{$lang->cancel_tournament}</a>]]]></template>
+		<template name="tournaments_view_cancel" version="1000"><![CDATA[[<a href="javascript:Arcade.cancelTournament({$tid});">{$lang->cancel_tournament}</a>]]]></template>
 		<template name="tournaments_view_delete" version="1000"><![CDATA[[<a href="tournaments.php?action=delete&amp;tid={$tid}&amp;my_post_key={$mybb->post_code}" onclick="if(confirm(&quot;{$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;">{$lang->delete_tournament}</a>]]]></template>
 		<template name="tournaments_view_join" version="1000"><![CDATA[<a href="tournaments.php?action=join&amp;tid={$tid}&amp;my_post_key={$mybb->post_code}">{$lang->join_now}</a>]]></template>
 		<template name="tournaments_view_play" version="1000"><![CDATA[<a href="arcade.php?action=play&amp;tid={$tid}">{$lang->play_now}</a>]]></template>
