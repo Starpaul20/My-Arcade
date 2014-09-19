@@ -243,90 +243,59 @@ td .star_rating {
 <td class="{$alt_bg}" align="center">{$champ['score']}</td>
 <td class="{$alt_bg}">{$champ['comment']}</td>
 </tr>]]></template>
-		<template name="arcade_edit" version="1000"><![CDATA[<html>
-<head>
-<title>{$lang->edit_comment}</title>
-{$headerinclude}
-</head>
-<body>
-<br />
-<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-<tr>
-<td class="trow1" style="padding: 20px">
-<strong>{$lang->edit_comment}</strong><br />
-<form action="arcade.php" method="post">
-<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
-<input type="hidden" name="action" value="do_edit" />
-<input type="hidden" name="sid" value="{$mybb->input['sid']}" />
-<br /><br />
-<span class="smalltext">{$lang->update_this_comment}</span>
-<br />
-<input type="text" class="textbox" name="comment" size="35" maxlength="350" value="{$score['comment']}" style="width: 95%" />
-<br /><br />
-<div style="text-align: center;">
-<input type="submit" class="button" value="{$lang->update_comment}" />
-</div>
-</form>
-</td>
-</tr>
-</table>
-</body>
-</html>]]></template>
-		<template name="arcade_edited" version="1000"><![CDATA[<html>
-<head>
-<title>{$mybb->settings['bbname']} - {$lang->edit_comment}</title>
-{$headerinclude}
-</head>
-<body onunload="window.opener.location.reload();">
-<br />
-<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-<tr>
-<td class="trow1" style="padding: 20px">
-<strong>{$lang->comment_updated}</strong><br /><br />
-<blockquote>{$lang->comment_updated_message}</blockquote>
-<br /><br />
-<div style="text-align: center;">
-<script type="text/javascript">
-<!--
-document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]');
-// -->
-</script>
-</div>
-</td>
-</tr>
-</table>
-</body>
-</html>]]></template>
-		<template name="arcade_edit_error" version="1000"><![CDATA[<html>
-<head>
-<title>{$lang->edit_comment}</title>
-{$headerinclude}
-</head>
-<body>
-<br />
-<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-<tr>
-<td class="trow1" style="padding: 20px">
-<strong>{$lang->error}</strong><br /><br />
-<blockquote>{$message}</blockquote>
-<br /><br />
-<div style="text-align: center;">
-<script type="text/javascript">
-<!--
-var showBack = {$show_back};
-if(showBack == 1)
-{
-document.write('[<a href="javascript:history.go(-1);">{$lang->go_back}</a>]');
-}
-document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]');
-// -->
-</script>
-</div>
-</td>
-</tr>
-</table>
-</body>
-</html>]]></template>
+		<template name="arcade_edit" version="1000"><![CDATA[<div class="modal">
+	<div style="overflow-y: auto; max-height: 400px;" class="modal_{$mybb->input['sid']}">
+		<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+			<tr>
+				<td class="trow1" style="padding: 20px">
+					<strong>{$lang->edit_comment}</strong><br />
+					<form action="arcade.php" method="post" class="score_{$mybb->input['sid']}" onsubmit="javascript: return Arcade.submitScoreEdit({$mybb->input['sid']});">
+						<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+						<input type="hidden" name="action" value="do_edit" />
+						<input type="hidden" name="sid" value="{$mybb->input['sid']}" />
+						<input type="hidden" name="nomodal" value="1" />
+						<br /><br />
+						<span class="smalltext">{$lang->update_this_comment}</span>
+						<br />
+						<input type="text" class="textbox" name="comment" size="35" maxlength="350" value="{$score['comment']}" style="width: 95%" />
+						<br /><br />
+						<div style="text-align: center;">
+							<input type="submit" class="button" value="{$lang->update_comment}" />
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>]]></template>
+		<template name="arcade_edit_error" version="1000"><![CDATA[<div class="modal">
+	<div style="overflow-y: auto; max-height: 400px;">
+		<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+			<tr>
+				<td class="trow1" style="padding: 20px">
+					<strong>{$lang->error}</strong><br /><br />
+					<blockquote>{$message}</blockquote>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>]]></template>
+		<template name="arcade_edit_error_nomodal" version="1000"><![CDATA[<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+	<tr>
+		<td class="trow1" style="padding: 20px">
+			<strong>{$lang->error}</strong><br /><br />
+			<blockquote>{$message}</blockquote>
+		</td>
+	</tr>
+</table>]]></template>
+		<template name="arcade_edited" version="1000"><![CDATA[<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+	<tr>
+		<td class="trow1" style="padding: 20px">
+			<strong>{$lang->comment_updated}</strong><br /><br />
+			<blockquote>{$lang->comment_updated_message}</blockquote>
+		</td>
+	</tr>
+</table>]]></template>
 		<template name="arcade_favorite" version="1000"><![CDATA[<a href="arcade.php?action={$add_remove_favorite_type}favorite&amp;gid={$game['gid']}&amp;my_post_key={$mybb->post_code}">{$add_remove_favorite_text}</a><br />]]></template>
 		<template name="arcade_favorites" version="1000"><![CDATA[<html>
 <head>
@@ -575,6 +544,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <head>
 <title>{$lang->arcade} - {$lang->scoreboard}</title>
 {$headerinclude}
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1000"></script>
 </head>
 <body>
 {$header}
@@ -639,6 +609,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 <head>
 <title>{$lang->arcade} - {$lang->highest_scores_of}</title>
 {$headerinclude}
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1000"></script>
 </head>
 <body>
 {$header}
@@ -702,7 +673,7 @@ document.write('[<a href="javascript:window.close();">{$lang->close_window}</a>]
 {$ipaddressbit}
 </tr>]]></template>
 		<template name="arcade_scores_delete" version="1000"><![CDATA[[<a href="arcade.php?action=delete&amp;sid={$score['sid']}&amp;my_post_key={$mybb->post_code}" onclick="if(confirm(&quot;{$lang->delete_score_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;">{$lang->delete}</a>]]]></template>
-		<template name="arcade_scores_edit" version="1000"><![CDATA[[<a href="javascript:MyBB.popupWindow('arcade.php?action=edit&amp;sid={$score['sid']}', 'editcomment', '400', '300') ">{$lang->edit}</a>]]]></template>
+		<template name="arcade_scores_edit" version="1000"><![CDATA[[<a href="javascript:Arcade.editScore({$score['sid']});">{$lang->edit}</a>]]]></template>
 		<template name="arcade_scores_no_scores" version="1000"><![CDATA[<tr>
 <td class="trow1" colspan="7" align="center">{$lang->no_game_scores}</td>
 </tr>]]></template>

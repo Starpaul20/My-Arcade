@@ -818,26 +818,46 @@ if($mybb->input['action'] == "do_edit" && $mybb->request_method == "post")
 	if(!$score['sid'])
 	{
 		$message = $lang->error_invalidscore;
-		eval("\$error = \"".$templates->get("arcade_edit_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	if($mybb->usergroup['canmoderategames'] == 0 && $mybb->usergroup['cancp'] == 0 && $mybb->user['uid'] != $score['uid'])
 	{
 		$message = $lang->edit_nopermission;
-		eval("\$error = \"".$templates->get("arcade_edit_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	// The length of the comment is too long
 	if(my_strlen($mybb->input['comment']) > $mybb->settings['arcade_maxcommentlength'])
 	{
-		$show_back = 1;
 		$message = $lang->sprintf($lang->edit_toolong, $mybb->settings['arcade_maxcommentlength']);
-		eval("\$error = \"".$templates->get("arcade_edit_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
@@ -850,8 +870,9 @@ if($mybb->input['action'] == "do_edit" && $mybb->request_method == "post")
 
 	$plugins->run_hooks("arcade_do_edit_end");
 
-	eval("\$edited = \"".$templates->get("arcade_edited")."\";");
-	output_page($edited);
+	eval("\$edited = \"".$templates->get("arcade_edited", 1, 0)."\";");
+	echo $edited;
+	exit;
 }
 
 // Edit a score comment
@@ -867,31 +888,53 @@ if($mybb->input['action'] == "edit")
 	if(!$score['sid'])
 	{
 		$message = $lang->error_invalidscore;
-		eval("\$error = \"".$templates->get("arcade_edit_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	if($mybb->usergroup['canmoderategames'] == 0 && $mybb->usergroup['cancp'] == 0 && $mybb->user['uid'] != $score['uid'])
 	{
 		$message = $lang->edit_nopermission;
-		eval("\$error = \"".$templates->get("arcade_edit_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	if($mybb->usergroup['canmoderategames'] == 0 && $mybb->usergroup['cancp'] == 0 && ($mybb->settings['arcade_editcomment'] != 0 && $score['dateline'] < ($time-($mybb->settings['arcade_editcomment']*60))))
 	{
 		$message = $lang->sprintf($lang->error_timelimit, $mybb->settings['arcade_editcomment']);
-		eval("\$error = \"".$templates->get("arcade_edit_error")."\";");
-		output_page($error);
+		if($mybb->input['nomodal'])
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error_nomodal", 1, 0)."\";");
+		}
+		else
+		{
+			eval("\$error = \"".$templates->get("arcade_edit_error", 1, 0)."\";");
+		}
+		echo $error;
 		exit;
 	}
 
 	$plugins->run_hooks("arcade_edit_end");
-	
-	eval("\$edit = \"".$templates->get("arcade_edit")."\";");
-	output_page($edit);
+
+	eval("\$edit = \"".$templates->get("arcade_edit", 1, 0)."\";");
+	echo $edit;
+	exit;
 }
 
 // Adding to favorites
