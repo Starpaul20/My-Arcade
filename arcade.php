@@ -132,7 +132,7 @@ switch($mybb->input['sessdo'])
 		echo "&validate=1&microone=$microone&result=OK";
 	break;
 	case 'burn':
-		$perpage = intval($mybb->settings['scoresperpage']);
+		$perpage = (int)$mybb->settings['scoresperpage'];
 
 		$score = $mybb->cookies['v3score'];
 		$name = $mybb->input['id'];
@@ -182,7 +182,7 @@ if($mybb->input['action'] == "play")
 
 	$mybb->binary_fields["arcadesessions"] = array('ipaddress' => true);
 
-	$gid = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 	$game = get_game($gid);
 
 	if($mybb->settings['enabletournaments'] == 1 && $mybb->input['tid'])
@@ -422,7 +422,7 @@ if($mybb->input['action'] == "play")
 // High scores for a game
 if($mybb->input['action'] == "scores")
 {
-	$gid = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -661,7 +661,7 @@ if($mybb->input['action'] == "rate")
 	// Verify incoming POST request
 	verify_post_check($mybb->get_input('my_post_key'));
 
-	$gid = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -777,7 +777,7 @@ if($mybb->input['action'] == "delete")
 	}
 
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$plugins->run_hooks("arcade_delete_start");
 
@@ -808,7 +808,7 @@ if($mybb->input['action'] == "delete")
 if($mybb->input['action'] == "do_edit" && $mybb->request_method == "post")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$query = $db->simple_select("arcadescores", "sid, uid, comment", "sid='".intval($mybb->input['sid'])."'");
 	$score = $db->fetch_array($query);
@@ -941,7 +941,7 @@ if($mybb->input['action'] == "edit")
 if($mybb->input['action'] == "addfavorite")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$server_http_referer = htmlentities($_SERVER['HTTP_REFERER']);
 
@@ -952,7 +952,7 @@ if($mybb->input['action'] == "addfavorite")
 		error_no_permission();
 	}
 
-	$gid = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -995,7 +995,7 @@ if($mybb->input['action'] == "addfavorite")
 if($mybb->input['action'] == "removefavorite")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$server_http_referer = htmlentities($_SERVER['HTTP_REFERER']);
 
@@ -1006,7 +1006,7 @@ if($mybb->input['action'] == "removefavorite")
 		error_no_permission();
 	}
 
-	$gid = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -1295,7 +1295,7 @@ if($mybb->input['action'] == "do_settings" && $mybb->request_method == "post")
 	}
 
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$plugins->run_hooks("arcade_do_settings_start");
 

@@ -34,18 +34,18 @@ if($mybb->input['action'] == 'prune')
 
 	if($mybb->request_method == 'post')
 	{
-		$where = 'dateline < '.(TIME_NOW-(intval($mybb->input['older_than'])*86400));
+		$where = 'dateline < '.(TIME_NOW-((int)$mybb->input['older_than']*86400));
 
 		// Searching for entries by a particular user
 		if($mybb->input['uid'])
 		{
-			$where .= " AND uid='".intval($mybb->input['uid'])."'";
+			$where .= " AND uid='".$mybb->get_input('uid', 1)."'";
 		}
 
 		// Searching for entries for a specific game
 		if($mybb->input['gid'] > 0)
 		{
-			$where .= " AND gid='".intval($mybb->input['gid'])."'";
+			$where .= " AND gid='".$mybb->get_input('gid', 1)."'";
 		}
 
 		$db->delete_query("arcadescores", $where);
@@ -54,7 +54,7 @@ if($mybb->input['action'] == 'prune')
 		$plugins->run_hooks("admin_arcade_scores_prune_commit");
 
 		// Update game champion
-		$query = $db->simple_select("arcadechampions", "gid", "uid='".intval($mybb->input['uid'])."'");
+		$query = $db->simple_select("arcadechampions", "gid", "uid='".(int)$mybb->input['uid']."'");
 		while($champion = $db->fetch_array($query))
 		{
 			update_champion($champion['gid']);
@@ -138,10 +138,15 @@ if(!$mybb->input['action'])
 
 	$page->output_nav_tabs($sub_tabs, 'scores');
 
-	$perpage = intval($mybb->input['perpage']);
+	$perpage = $mybb->get_input('perpage', 1);
 	if(!$perpage)
 	{
-		$perpage = intval($mybb->settings['threadsperpage']);
+		if(!$mybb->settings['threadsperpage'] || (int)$mybb->settings['threadsperpage'] < 1)
+		{
+			$mybb->settings['threadsperpage'] = 20;
+		}
+
+		$perpage = $mybb->settings['threadsperpage'];
 	}
 
 	$where = 'WHERE 1=1';
@@ -149,13 +154,13 @@ if(!$mybb->input['action'])
 	// Searching for entries by a particular user
 	if($mybb->input['uid'])
 	{
-		$where .= " AND s.uid='".intval($mybb->input['uid'])."'";
+		$where .= " AND s.uid='".$mybb->get_input('uid', 1)."'";
 	}
 
 	// Searching for entries for a specific game
 	if($mybb->input['gid'] > 0)
 	{
-		$where .= " AND s.gid='".intval($mybb->input['gid'])."'";
+		$where .= " AND s.gid='".$mybb->get_input('gid', 1)."'";
 	}
 
 	// Order?
@@ -186,10 +191,10 @@ if(!$mybb->input['action'])
 	// Figure out if we need to display multiple pages.
 	if($mybb->input['page'] != "last")
 	{
-		$pagecnt = intval($mybb->input['page']);
+		$pagecnt = $mybb->get_input('page', 1);
 	}
 
-	$postcount = intval($rescount);
+	$postcount = (int)$rescount;
 	$pages = $postcount / $perpage;
 	$pages = ceil($pages);
 

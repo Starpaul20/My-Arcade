@@ -81,7 +81,7 @@ if($unviewable)
 if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$gid = intval($mybb->input['gid']);
 	$game = get_game($gid);
@@ -273,7 +273,7 @@ if($mybb->input['action'] == "create")
 // Viewing a tournament
 if($mybb->input['action'] == "view")
 {
-	$tid = intval($mybb->input['tid']);
+	$tid = $mybb->get_input('tid', 1);
 
 	$query = $db->query("
 		SELECT t.*, u.username
@@ -478,14 +478,14 @@ if($mybb->input['action'] == "view")
 if($mybb->input['action'] == "join")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	if($mybb->usergroup['canjointournaments'] != 1)
 	{
 		error($lang->error_cannotjointournaments);
 	}
 
-	$tid = intval($mybb->input['tid']);
+	$tid = $mybb->get_input('tid', 1);
 	$tournament = get_tournament($tid);
 
 	// Invalid tournament
@@ -742,11 +742,11 @@ if($mybb->input['action'] == "cancelled")
 if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$plugins->run_hooks("tournaments_do_cancel_start");
 
-	$tid = intval($mybb->input['tid']);
+	$tid = $mybb->get_input('tid', 1);
 	$tournament = get_tournament($tid);
 
 	if($mybb->usergroup['canmoderategames'] == 0)
@@ -793,7 +793,7 @@ if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 // Cancel a tournament
 if($mybb->input['action'] == "cancel")
 {
-	$tid = intval($mybb->input['tid']);
+	$tid = $mybb->get_input('tid', 1);
 	$tournament = get_tournament($tid);
 
 	$plugins->run_hooks("tournaments_cancel_start");
@@ -854,7 +854,7 @@ if($mybb->input['action'] == "cancel")
 if($mybb->input['action'] == "disqualify")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	if($mybb->usergroup['canmoderategames'] == 0)
 	{
@@ -906,14 +906,14 @@ if($mybb->input['action'] == "disqualify")
 if($mybb->input['action'] == "delete")
 {
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	if($mybb->usergroup['canmoderategames'] == 0)
 	{
 		error_no_permission();
 	}
 
-	$tid = intval($mybb->input['tid']);
+	$tid = $mybb->get_input('tid', 1);
 	$tournament = get_tournament($tid);
 
 	$plugins->run_hooks("tournaments_delete_start");
