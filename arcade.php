@@ -8,8 +8,8 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_search,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit";
-$templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_rating,arcade_no_games,arcade_online_memberbit,arcade_online";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_search,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,arcade_scores_rating";
+$templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_gamebit_rating,arcade_no_games,arcade_online_memberbit,arcade_online";
 $templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
 $templatelist .= ",arcade_play,arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites,arcade_favorite";
 $templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats,arcade_stats_bit,arcade_scores,arcade_scores_bit";
@@ -506,19 +506,19 @@ if($mybb->input['action'] == "scores")
 	}
 
 	// Work out the rating for this game.
-	$rating = '';
+	$rategame = '';
 	if($mybb->settings['arcade_ratings'] != 0)
 	{
 		if($game['numratings'] <= 0)
 		{
-			$game['width'] = 0;
+			$game['rating_width'] = 0;
 			$game['averagerating'] = 0;
 			$game['numratings'] = 0;
 		}
 		else
 		{
 			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-			$game['width'] = intval(round($game['averagerating']))*20;
+			$game['rating_width'] = intval(round($game['averagerating']))*20;
 			$game['numratings'] = intval($game['numratings']);
 		}
 
@@ -537,7 +537,7 @@ if($mybb->input['action'] == "scores")
 		}
 
 		$ratingvotesav = $lang->sprintf($lang->rating_average, $game['numratings'], $game['averagerating']);
-		eval("\$rategame = \"".$templates->get("arcade_rating")."\";");
+		eval("\$rategame = \"".$templates->get("arcade_scores_rating")."\";");
 	}
 
 	// Fetch the scores which will be displayed on this page
@@ -659,7 +659,7 @@ if($mybb->input['action'] == "rate")
 	}
 
 	// Verify incoming POST request
-	verify_post_check($mybb->input['my_post_key']);
+	verify_post_check($mybb->get_input('my_post_key'));
 
 	$gid = intval($mybb->input['gid']);
 	$game = get_game($gid);
@@ -678,54 +678,79 @@ if($mybb->input['action'] == "rate")
 
 	$plugins->run_hooks("arcade_rate_start");
 
-	$mybb->input['rating'] = intval($mybb->input['rating']);
+	$mybb->input['rating'] = $mybb->get_input('rating', 1);
 	if($mybb->input['rating'] < 1 || $mybb->input['rating'] > 5)
 	{
 		error($lang->error_invalidrating);
 	}
 
 	// Check to see if user has already rated this game
-	$query = $db->simple_select("arcaderatings", "*", "uid='".intval($mybb->user['uid'])."' AND gid='{$gid}'");
+	if($mybb->user['uid'] != 0)
+	{
+		$whereclause = "uid='{$mybb->user['uid']}'";
+	}
+	else
+	{
+		$whereclause = "ipaddress=".$db->escape_binary($session->packedip);
+	}
+	$query = $db->simple_select("arcaderatings", "*", "{$whereclause} AND gid='{$gid}'");
 	$ratecheck = $db->fetch_array($query);
 
-	if($ratecheck['rid'])
+	if($ratecheck['rid'] || isset($mybb->cookies['mybbrategame'][$gid]))
 	{
 		error($lang->error_alreadyratedgame);
 	}
 	else
 	{
 		$mybb->binary_fields["arcaderatings"] = array('ipaddress' => true);
+		$plugins->run_hooks("arcade_rate_process");
 
-		$update_game = array(
-			"numratings" => $game['numratings'] + 1,
-			"totalratings" => $game['totalratings'] + $mybb->input['rating']
-		);
-		$db->update_query("arcadegames", $update_game, "gid='{$gid}'");
-
-		$insertarray = array(
-			'gid' => $gid,
-			'uid' => intval($mybb->user['uid']),
-			'rating' => $mybb->input['rating'],
-			'ipaddress' => $db->escape_binary($session->packedip)
-		);
-		$db->insert_query("arcaderatings", $insertarray);
+		$db->write_query("
+			UPDATE ".TABLE_PREFIX."arcadegames
+			SET numratings=numratings+1, totalratings=totalratings+'{$mybb->input['rating']}'
+			WHERE gid='{$gid}'
+		");
+		if($mybb->user['uid'] != 0)
+		{
+			$insertarray = array(
+				'gid' => $gid,
+				'uid' => $mybb->user['uid'],
+				'rating' => $mybb->input['rating'],
+				'ipaddress' => $db->escape_binary($session->packedip)
+			);
+			$db->insert_query("arcaderatings", $insertarray);
+		}
+		else
+		{
+			$insertarray = array(
+				'gid' => $gid,
+				'rating' => $mybb->input['rating'],
+				'ipaddress' => $db->escape_binary($session->packedip)
+			);
+			$db->insert_query("arcaderatings", $insertarray);
+			$time = TIME_NOW;
+			my_setcookie("mybbrategame[{$gid}]", $mybb->input['rating']);
+		}
 	}
 
-	if($mybb->input['ajax'])
+	if(!empty($mybb->input['ajax']))
 	{
-		echo "<success>{$lang->rating_added}</success>\n";
+		$json = array("success" => $lang->rating_added);
 		$query = $db->simple_select("arcadegames", "totalratings, numratings", "gid='$gid'", array('limit' => 1));
 		$fetch = $db->fetch_array($query);
 		$width = 0;
 		if($fetch['numratings'] >= 0)
 		{
-			$averagerating = floatval(round($fetch['totalratings']/$fetch['numratings'], 2));
-			$width = intval(round($averagerating))*20;
-			$fetch['numratings'] = intval($fetch['numratings']);
+			$averagerating = (float)round($fetch['totalratings']/$fetch['numratings'], 2);
+			$width = (int)round($averagerating)*20;
+			$fetch['numratings'] = (int)$fetch['numratings'];
 			$ratingvotesav = $lang->sprintf($lang->rating_votes_average, $fetch['numratings'], $averagerating);
-			echo "<average>{$ratingvotesav}</average>\n";
+			$json = $json + array("average" => $ratingvotesav);
 		}
-		echo "<width>{$width}</width>";
+		$json = $json + array("width" => $width);
+
+		@header("Content-type: application/json; charset={$lang->settings['charset']}");
+		echo json_encode($json);
 		exit;
 	}
 
@@ -1184,31 +1209,21 @@ if($mybb->input['action'] == "favorites")
 		eval("\$add_remove_favorite = \"".$templates->get("arcade_gamebit_favorite")."\";");
 
 		// Work out the rating for this game.
-		$rating = '';
+		$rategame = '';
 		if($mybb->settings['arcade_ratings'] != 0)
 		{
-			if($game['numratings'] <= 0)
-			{
-				$game['width'] = 0;
-				$game['averagerating'] = 0;
-				$game['numratings'] = 0;
-			}
-			else
-			{
-				$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-				$game['width'] = intval(round($game['averagerating']))*20;
-				$game['numratings'] = intval($game['numratings']);
-			}
+			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
+			$game['rating_width'] = intval(round($game['averagerating']))*20;
+			$game['numratings'] = intval($game['numratings']);
 
 			$not_rated = '';
-			if(!$game['rated'])
+			if(!isset($game['rated']) || empty($game['rated']))
 			{
 				$not_rated = ' star_rating_notrated';
 			}
 
-			$li = "<li>";
-			$ratingvotesav = $lang->sprintf($lang->rating_average, $game['numratings'], $game['averagerating']);
-			eval("\$rategame = \"".$templates->get("arcade_rating")."\";");
+			$ratingvotesav = $lang->sprintf($lang->rating_votes_average, $game['numratings'], $game['averagerating']);
+			eval("\$rategame = \"".$templates->get("arcade_gamebit_rating")."\";");
 		}
 
 		$plugins->run_hooks("arcade_game");
@@ -2244,31 +2259,21 @@ if($mybb->input['action'] == "results")
 		}
 
 		// Work out the rating for this game.
-		$rating = '';
+		$rategame = '';
 		if($mybb->settings['arcade_ratings'] != 0)
 		{
-			if($game['numratings'] <= 0)
-			{
-				$game['width'] = 0;
-				$game['averagerating'] = 0;
-				$game['numratings'] = 0;
-			}
-			else
-			{
-				$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-				$game['width'] = intval(round($game['averagerating']))*20;
-				$game['numratings'] = intval($game['numratings']);
-			}
+			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
+			$game['rating_width'] = intval(round($game['averagerating']))*20;
+			$game['numratings'] = intval($game['numratings']);
 
 			$not_rated = '';
-			if(!$game['rated'])
+			if(!isset($game['rated']) || empty($game['rated']))
 			{
 				$not_rated = ' star_rating_notrated';
 			}
 
-			$li = "<li>";
-			$ratingvotesav = $lang->sprintf($lang->rating_average, $game['numratings'], $game['averagerating']);
-			eval("\$rategame = \"".$templates->get("arcade_rating")."\";");
+			$ratingvotesav = $lang->sprintf($lang->rating_votes_average, $game['numratings'], $game['averagerating']);
+			eval("\$rategame = \"".$templates->get("arcade_gamebit_rating")."\";");
 		}
 
 		$plugins->run_hooks("arcade_game");
@@ -2838,31 +2843,21 @@ if(!$mybb->input['action'])
 		}
 
 		// Work out the rating for this game.
-		$rating = '';
+		$rategame = '';
 		if($mybb->settings['arcade_ratings'] != 0)
 		{
-			if($game['numratings'] <= 0)
-			{
-				$game['width'] = 0;
-				$game['averagerating'] = 0;
-				$game['numratings'] = 0;
-			}
-			else
-			{
-				$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-				$game['width'] = intval(round($game['averagerating']))*20;
-				$game['numratings'] = intval($game['numratings']);
-			}
+			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
+			$game['rating_width'] = intval(round($game['averagerating']))*20;
+			$game['numratings'] = intval($game['numratings']);
 
 			$not_rated = '';
-			if(!$game['rated'])
+			if(!isset($game['rated']) || empty($game['rated']))
 			{
 				$not_rated = ' star_rating_notrated';
 			}
 
-			$li = "<li>";
-			$ratingvotesav = $lang->sprintf($lang->rating_average, $game['numratings'], $game['averagerating']);
-			eval("\$rategame = \"".$templates->get("arcade_rating")."\";");
+			$ratingvotesav = $lang->sprintf($lang->rating_votes_average, $game['numratings'], $game['averagerating']);
+			eval("\$rategame = \"".$templates->get("arcade_gamebit_rating")."\";");
 		}
 
 		$plugins->run_hooks("arcade_game");
