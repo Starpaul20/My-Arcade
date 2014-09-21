@@ -1591,49 +1591,6 @@ function myarcade_datacache_class()
 {
 	global $cache;
 	require_once MYBB_ROOT."inc/functions_arcade.php";
-
-	if(class_exists('MyDatacache'))
-	{
-		class ArcadeDatacache extends MyDatacache
-		{
-			function update_tournaments_stats()
-			{
-				update_tournaments_stats();
-			}
-
-			function reload_arcade_mostonline()
-			{
-				global $db, $cache;
-
-				$query = $db->simple_select("datacache", "title,cache", "title='arcade_mostonline'");
-				$cache->update("arcade_mostonline", @unserialize($db->fetch_field($query, "cache")));
-			}
-		}
-
-		$cache = null;
-		$cache = new ArcadeDatacache;
-	}
-	else
-	{
-		class MyDatacache extends datacache
-		{
-			function update_tournaments_stats()
-			{
-				update_tournaments_stats();
-			}
-
-			function reload_arcade_mostonline()
-			{
-				global $db, $cache;
-
-				$query = $db->simple_select("datacache", "title,cache", "title='arcade_mostonline'");
-				$cache->update("arcade_mostonline", @unserialize($db->fetch_field($query, "cache")));
-			}
-		}
-
-		$cache = null;
-		$cache = new MyDatacache;
-	}
 }
 
 // Admin Log display

@@ -273,6 +273,18 @@ function update_tournaments_stats()
 }
 
 /**
+ * Reload the most online cache
+ *
+ */
+function reload_arcade_mostonline()
+{
+	global $db, $cache;
+
+	$query = $db->simple_select("datacache", "title,cache", "title='arcade_mostonline'");
+	$cache->update("arcade_mostonline", @unserialize($db->fetch_field($query, "cache")));
+}
+
+/**
  * Builds a user's game rankings for the stats page
  *
  *  @param int User ID
