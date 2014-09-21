@@ -1441,8 +1441,8 @@ if($mybb->input['action'] == "settings")
 
 	$plugins->run_hooks("arcade_settings_end");
 
-	eval("\$settings = \"".$templates->get("arcade_settings")."\";");
-	output_page($settings);
+	eval("\$arcadesettings = \"".$templates->get("arcade_settings")."\";");
+	output_page($arcadesettings);
 }
 
 // Stats page
