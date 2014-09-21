@@ -274,7 +274,6 @@ if($mybb->input['action'] == "edit")
 			$group_checked[1] = '';
 			$group_checked[2] = "checked=\"checked\"";
 		}
-		$category_data = $category;
 	}
 
 	$form_container = new FormContainer($lang->edit_category);
