@@ -86,16 +86,15 @@ if($mybb->input['action'] == "add_simple")
 				"file" => $db->escape_string($mybb->input['file']),
 				"smallimage" => $db->escape_string($mybb->input['smallimage']),
 				"largeimage" => $db->escape_string($mybb->input['largeimage']),
-				"cid" => intval($mybb->input['cid']),
+				"cid" => (int)$mybb->input['cid'],
 				"dateline" => TIME_NOW,
 				"bgcolor" => $db->escape_string($mybb->input['bgcolor']),
-				"width" => intval($mybb->input['width']),
-				"height" => intval($mybb->input['height']),
+				"width" => (int)$mybb->input['width'],
+				"height" => (int)$mybb->input['height'],
 				"sortby" => $db->escape_string($mybb->input['sortby']),
-				"tournamentselect" => intval($mybb->input['tournamentselect']),
-				"active" => intval($mybb->input['active'])
+				"tournamentselect" => (int)$mybb->input['tournamentselect'],
+				"active" => (int)$mybb->input['active']
 			);
-
 			$gid = $db->insert_query("arcadegames", $new_game);
 
 			$plugins->run_hooks("admin_arcade_games_add_simple_commit");
@@ -343,16 +342,15 @@ if($mybb->input['action'] == "add_tar")
 						"file" => $db->escape_string($config['gname']),
 						"smallimage" => $db->escape_string($config['gname']."2"),
 						"largeimage" => $db->escape_string($config['gname']."1"),
-						"cid" => intval($mybb->input['cid']),
+						"cid" => (int)$mybb->input['cid'],
 						"dateline" => TIME_NOW,
 						"bgcolor" => $db->escape_string($config['bgcolor']),
-						"width" => intval($config['gwidth']),
-						"height" => intval($config['gheight']),
+						"width" => (int)$config['gwidth'],
+						"height" => (int)$config['gheight'],
 						"sortby" => $db->escape_string($sortby),
-						"tournamentselect" => intval($mybb->input['tournamentselect']),
-						"active" => intval($mybb->input['active'])
+						"tournamentselect" => (int)$mybb->input['tournamentselect'],
+						"active" => (int)$mybb->input['active']
 					);
-
 					$gid = $db->insert_query("arcadegames", $new_game);
 
 					$plugins->run_hooks("admin_arcade_games_add_tar_commit");
@@ -426,7 +424,7 @@ if($mybb->input['action'] == "edit")
 {
 	$plugins->run_hooks("admin_arcade_games_edit");
 
-	$query = $db->simple_select("arcadegames", "*", "gid='".intval($mybb->input['gid'])."'");
+	$query = $db->simple_select("arcadegames", "*", "gid='".(int)$mybb->input['gid']."'");
 	$game = $db->fetch_array($query);
 
 	if(!$game['gid'])
@@ -493,16 +491,15 @@ if($mybb->input['action'] == "edit")
 				"file" => $db->escape_string($mybb->input['file']),
 				"smallimage" => $db->escape_string($mybb->input['smallimage']),
 				"largeimage" => $db->escape_string($mybb->input['largeimage']),
-				"cid" => intval($mybb->input['cid']),
+				"cid" => (int)$mybb->input['cid'],
 				"bgcolor" => $db->escape_string($mybb->input['bgcolor']),
-				"width" => intval($mybb->input['width']),
-				"height" => intval($mybb->input['height']),
+				"width" => (int)$mybb->input['width'],
+				"height" => (int)$mybb->input['height'],
 				"sortby" => $db->escape_string($mybb->input['sortby']),
-				"tournamentselect" => intval($mybb->input['tournamentselect']),
-				"active" => intval($mybb->input['active'])
+				"tournamentselect" => (int)$mybb->input['tournamentselect'],
+				"active" => (int)$mybb->input['active']
 			);
-
-			$db->update_query("arcadegames", $update_game, "gid='".intval($mybb->input['gid'])."'");
+			$db->update_query("arcadegames", $update_game, "gid='{$game['gid']}'");
 
 			$plugins->run_hooks("admin_arcade_games_edit_commit");
 
@@ -617,7 +614,7 @@ if($mybb->input['action'] == "delete")
 {
 	$plugins->run_hooks("admin_arcade_games_delete");
 
-	$query = $db->simple_select("arcadegames", "*", "gid='".intval($mybb->input['gid'])."'");
+	$query = $db->simple_select("arcadegames", "*", "gid='".(int)$mybb->input['gid']."'");
 	$game = $db->fetch_array($query);
 
 	if(!$game['gid'])
@@ -669,7 +666,7 @@ if($mybb->input['action'] == "disable")
 {
 	$plugins->run_hooks("admin_arcade_games_disable");
 
-	$query = $db->simple_select("arcadegames", "*", "gid='".intval($mybb->input['gid'])."'");
+	$query = $db->simple_select("arcadegames", "*", "gid='".(int)$mybb->input['gid']."'");
 	$game = $db->fetch_array($query);
 
 	if(!$game['gid'])
@@ -696,7 +693,7 @@ if($mybb->input['action'] == "enable")
 {
 	$plugins->run_hooks("admin_arcade_games_enable");
 
-	$query = $db->simple_select("arcadegames", "*", "gid='".intval($mybb->input['gid'])."'");
+	$query = $db->simple_select("arcadegames", "*", "gid='".(int)$mybb->input['gid']."'");
 	$game = $db->fetch_array($query);
 
 	if(!$game['gid'])
@@ -743,7 +740,7 @@ if(!$mybb->input['action'])
 
 	$page->output_nav_tabs($sub_tabs, 'games');
 
-	$pagenum = intval($mybb->input['page']);
+	$pagenum = $mybb->get_input('page', 1);
 	if($pagenum)
 	{
 		$start = ($pagenum - 1) * 20;

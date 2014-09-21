@@ -459,7 +459,7 @@ function myarcade_activate()
 			'name' => $db->escape_string($settinggroup['attributes']['name']),
 			'title' => $db->escape_string($settinggroup['attributes']['title']),
 			'description' => $db->escape_string($settinggroup['attributes']['description']),
-			'disporder' => intval($settinggroup['attributes']['disporder']),
+			'disporder' => (int)$settinggroup['attributes']['disporder'],
 			'isdefault' => $settinggroup['attributes']['isdefault'],
 		);
 		$gid = $db->insert_query('settinggroups', $groupdata);
@@ -471,7 +471,7 @@ function myarcade_activate()
 				'description' => $db->escape_string($setting['description'][0]['value']),
 				'optionscode' => $db->escape_string($setting['optionscode'][0]['value']),
 				'value' => $db->escape_string($setting['settingvalue'][0]['value']),
-				'disporder' => intval($setting['disporder'][0]['value']),
+				'disporder' => (int)$setting['disporder'][0]['value'],
 				'gid' => $gid,
 				'isdefault' => 0
 			);
@@ -579,7 +579,7 @@ function myarcade_activate()
 				"tid" => 1,
 				"attachedto" => $db->escape_string($stylesheet['attributes']['attachedto']),
 				"stylesheet" => $db->escape_string($stylesheet['value']),
-				"lastmodified" => intval($stylesheet['attributes']['lastmodified']),
+				"lastmodified" => (int)$stylesheet['attributes']['lastmodified'],
 				"cachefile" => $db->escape_string($stylesheet['attributes']['name'])
 			);
 			$sid = $db->insert_query("themestylesheets", $new_stylesheet);
@@ -777,7 +777,7 @@ function myarcade_index()
 		$mybb->settings['scoresperpage'] = $mybb->user['scoresperpage'];
 	}
 
-	if(!$mybb->settings['scoresperpage'])
+	if(!$mybb->settings['scoresperpage'] || (int)$mybb->settings['scoresperpage'] < 1)
 	{
 		$mybb->settings['scoresperpage'] = 10;
 	}
@@ -798,7 +798,7 @@ function myarcade_index()
 
 	$game_name = $mybb->input['gname'];
 	$game_score = $mybb->input['gscore'];
-	$perpage = intval($mybb->settings['scoresperpage']);
+	$perpage = $mybb->settings['scoresperpage'];
 
 	// IBProArcade v2 insert of a score
 	switch($mybb->input['act'])
@@ -1526,17 +1526,17 @@ function myarcade_usergroups_graph()
 function myarcade_usergroups_commit()
 {
 	global $updated_group, $mybb;
-	$updated_group['canviewarcade'] = intval($mybb->input['canviewarcade']);
-	$updated_group['canplayarcade'] = intval($mybb->input['canplayarcade']);
-	$updated_group['maxplaysday'] = intval($mybb->input['maxplaysday']);
-	$updated_group['canrategames'] = intval($mybb->input['canrategames']);
-	$updated_group['cansearchgames'] = intval($mybb->input['cansearchgames']);
-	$updated_group['canviewgamestats'] = intval($mybb->input['canviewgamestats']);
-	$updated_group['canmoderategames'] = intval($mybb->input['canmoderategames']);
-	$updated_group['canviewtournaments'] = intval($mybb->input['canviewtournaments']);
-	$updated_group['canjointournaments'] = intval($mybb->input['canjointournaments']);
-	$updated_group['cancreatetournaments'] = intval($mybb->input['cancreatetournaments']);
-	$updated_group['maxtournamentsday'] = intval($mybb->input['maxtournamentsday']);
+	$updated_group['canviewarcade'] = (int)$mybb->input['canviewarcade'];
+	$updated_group['canplayarcade'] = (int)$mybb->input['canplayarcade'];
+	$updated_group['maxplaysday'] = (int)$mybb->input['maxplaysday'];
+	$updated_group['canrategames'] = (int)$mybb->input['canrategames'];
+	$updated_group['cansearchgames'] = (int)$mybb->input['cansearchgames'];
+	$updated_group['canviewgamestats'] = (int)$mybb->input['canviewgamestats'];
+	$updated_group['canmoderategames'] = (int)$mybb->input['canmoderategames'];
+	$updated_group['canviewtournaments'] = (int)$mybb->input['canviewtournaments'];
+	$updated_group['canjointournaments'] = (int)$mybb->input['canjointournaments'];
+	$updated_group['cancreatetournaments'] = (int)$mybb->input['cancreatetournaments'];
+	$updated_group['maxtournamentsday'] = (int)$mybb->input['maxtournamentsday'];
 }
 
 // Rebuild arcade caches in Admin CP

@@ -21,7 +21,7 @@ class Arcade
 		global $db, $mybb, $lang, $plugins, $session, $arcade_session, $Alerts;
 		$lang->load("arcade");
 
-		$uid = intval($mybb->user['uid']);
+		$uid = (int)$mybb->user['uid'];
 		$mybb->binary_fields["arcadescores"] = array('ipaddress' => true);
 
 		if(!$name)
@@ -107,12 +107,12 @@ class Arcade
 					$timeplayed = TIME_NOW - $arcade_session['dateline'];
 
 					$update_score = array(
-						"gid" => intval($game['gid']),
-						"uid" => intval($uid),
+						"gid" => (int)$game['gid'],
+						"uid" => (int)$uid,
 						"username" => $db->escape_string($mybb->user['username']),
 						"score" => $db->escape_string($score),
 						"dateline" => TIME_NOW,
-						"timeplayed" => intval($timeplayed),
+						"timeplayed" => (int)$timeplayed,
 						"ipaddress" => $db->escape_binary($session->packedip)
 					);
 					$db->update_query("arcadescores", $update_score, "gid='{$game['gid']}' AND uid='{$uid}'");
@@ -132,12 +132,12 @@ class Arcade
 				$timeplayed = TIME_NOW - $arcade_session['dateline'];
 
 				$new_score = array(
-					"gid" => intval($game['gid']),
-					"uid" => intval($uid),
+					"gid" => (int)$game['gid'],
+					"uid" => (int)$uid,
 					"username" => $db->escape_string($mybb->user['username']),
 					"score" => $db->escape_string($score),
 					"dateline" => TIME_NOW,
-					"timeplayed" => intval($timeplayed),
+					"timeplayed" => (int)$timeplayed,
 					"ipaddress" => $db->escape_binary($session->packedip)
 				);
 				$db->insert_query("arcadescores", $new_score);
@@ -214,7 +214,7 @@ class Arcade
 					}
 
 					$update_champ = array(
-						"uid" => intval($uid),
+						"uid" => (int)$uid,
 						"username" => $db->escape_string($mybb->user['username']),
 						"score" => $db->escape_string($score),
 						"dateline" => TIME_NOW
@@ -228,8 +228,8 @@ class Arcade
 			else
 			{
 				$new_champion = array(
-					"gid" => intval($game['gid']),
-					"uid" => intval($uid),
+					"gid" => (int)$game['gid'],
+					"uid" => (int)$uid,
 					"username" => $db->escape_string($mybb->user['username']),
 					"score" => $db->escape_string($score),
 					"dateline" => TIME_NOW
@@ -268,7 +268,7 @@ class Arcade
 		global $db, $mybb, $lang, $plugins, $arcade_session;
 		$lang->load("arcade");
 
-		$uid = intval($mybb->user['uid']);
+		$uid = (int)$mybb->user['uid'];
 
 		// Submit score to high scores also (also checks for cheating/errors)
 		$this->submit_score($score, $name, $sid);
@@ -331,7 +331,7 @@ class Arcade
 		$arguments = array("sid" => $sid, "gid" => $gid);
 		$plugins->run_hooks("class_arcade_delete_score", $arguments);
 
-		$sid = intval($sid);
+		$sid = (int)$sid;
 		$db->delete_query("arcadescores", "sid='{$sid}'");
 
 		update_champion($gid);
@@ -350,10 +350,10 @@ class Arcade
 	{
 		global $db, $plugins;
 
-		$tid = intval($tid);
+		$tid = (int)$tid;
 
 		$cancel_info = array(
-			'cancel_uid' => intval($mybb->user['uid']),
+			'cancel_uid' => (int)$mybb->user['uid'],
 			'reason' => $cancel_reason
 		);
 
@@ -419,7 +419,7 @@ class Arcade
 	{
 		global $db, $plugins;
 
-		$tid = intval($tid);
+		$tid = (int)$tid;
 		$plugins->run_hooks("class_arcade_delete_tournament", $tid);
 
 		$db->delete_query("arcadetournaments", "tid='{$tid}'");

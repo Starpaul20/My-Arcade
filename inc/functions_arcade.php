@@ -16,13 +16,15 @@ function get_game($gid, $recache = false)
 	global $db;
 	static $game_cache;
 
+	$gid = (int)$gid;
+
 	if(isset($game_cache[$gid]) && !$recache)
 	{
 		return $game_cache[$gid];
 	}
 	else
 	{
-		$query = $db->simple_select("arcadegames", "*", "gid='".intval($gid)."'");
+		$query = $db->simple_select("arcadegames", "*", "gid='{$gid}'");
 		$game = $db->fetch_array($query);
 
 		if($game)
@@ -50,13 +52,15 @@ function get_tournament($tid, $recache = false)
 	global $db;
 	static $tournament_cache;
 
+	$tid = (int)$tid;
+
 	if(isset($tournament_cache[$tid]) && !$recache)
 	{
 		return $tournament_cache[$tid];
 	}
 	else
 	{
-		$query = $db->simple_select("arcadetournaments", "*", "tid='".intval($tid)."'");
+		$query = $db->simple_select("arcadetournaments", "*", "tid='{$tid}'");
 		$tournament = $db->fetch_array($query);
 
 		if($tournament)
@@ -111,10 +115,10 @@ function log_arcade_action($data, $action="")
 	}
 
 	$sql_array = array(
-		"uid" => intval($mybb->user['uid']),
+		"uid" => (int)$mybb->user['uid'],
 		"dateline" => TIME_NOW,
-		"gid" => intval($game),
-		"tid" => intval($tournament),
+		"gid" => (int)$game,
+		"tid" => (int)$tournament,
 		"action" => $db->escape_string($action),
 		"data" => $db->escape_string($data),
 		"ipaddress" => $db->escape_string($session->ipaddress)
@@ -131,14 +135,14 @@ function update_champion($gid)
 {
 	global $db;
 
-	$query = $db->simple_select("arcadegames", "sortby", "gid='".intval($gid)."'");
+	$query = $db->simple_select("arcadegames", "gid, sortby", "gid='".(int)$gid."'");
 	$game = $db->fetch_array($query);
 
 	// Fetch the highest score for this game
 	$query2 = $db->query("
 		SELECT *
 		FROM ".TABLE_PREFIX."arcadescores
-		WHERE gid='{$gid}'
+		WHERE gid='{$game['gid']}'
 		ORDER BY score {$game['sortby']}, dateline ASC
 		LIMIT 0, 1
 	");
@@ -147,17 +151,17 @@ function update_champion($gid)
 	// If no highest score exists, delete champion. Otherwise update
 	if(!$highestscore['sid'])
 	{
-		$db->delete_query("arcadechampions", "gid='{$gid}'");
+		$db->delete_query("arcadechampions", "gid='{$game['gid']}'");
 	}
 	else
 	{
 		$updated_champion = array(
-			"uid" => intval($highestscore['uid']),
+			"uid" => (int)$highestscore['uid'],
 			"username" => $db->escape_string($highestscore['username']),
 			"score" => $db->escape_string($highestscore['score']),
-			"dateline" => intval($highestscore['dateline'])
+			"dateline" => (int)$highestscore['dateline']
 		);
-		$db->update_query("arcadechampions", $updated_champion, "gid='{$gid}'");
+		$db->update_query("arcadechampions", $updated_champion, "gid='{$game['gid']}'");
 	}
 }
 
@@ -284,7 +288,7 @@ function update_tournaments_stats()
 function user_game_rank($uid, $cat_sql)
 {
 	global $mybb, $db, $lang, $theme, $plugins, $templates;
-	$uid = intval($uid);
+	$uid = (int)$uid;
 
 	$firstplacewins = 0;
 	$secondplacewins = 0;
