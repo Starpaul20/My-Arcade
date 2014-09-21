@@ -109,28 +109,29 @@ if($mybb->input['action'] == "add")
 	$form_container = new FormContainer($lang->add_new_category);
 	$form_container->output_row($lang->name." <em>*</em>", "", $form->generate_text_box('name', $mybb->input['name'], array('id' => 'name')), 'name');
 	$form_container->output_row($lang->image, "", $form->generate_text_box('image', $mybb->input['image'], array('id' => 'image')), 'image');
-		$group_select = "<script type=\"text/javascript\">
-		function checkAction(id)
-		{
-			var checked = '';
 
-			$$('.'+id+'s_check').each(function(e)
+	$group_select = "<script type=\"text/javascript\">
+	function checkAction(id)
+	{
+		var checked = '';
+
+		$('.'+id+'s_check').each(function(e, val)
+		{
+			if($(this).prop('checked') == true)
 			{
-     	       if(e.checked == true)
-     	       {
-     	           checked = e.value;
-     	       }
-     	   });
-      	  $$('.'+id+'s').each(function(e)
-     	   {
-     	   	Element.hide(e);
-      	  });
-      	  if($(id+'_'+checked))
-      	  {
-      	      Element.show(id+'_'+checked);
+				checked = $(this).val();
 			}
-		}    
-	</script>
+		});
+		$('.'+id+'s').each(function(e)
+		{
+			$(this).hide();
+		});
+		if($('#'+id+'_'+checked))
+		{
+			$('#'+id+'_'+checked).show();
+		}
+	}
+</script>
 	<dl style=\"margin-top: 0; margin-bottom: 0; width: 100%\">
 	<dt><label style=\"display: block;\"><input type=\"radio\" name=\"group_type\" value=\"1\" {$group_checked[1]} class=\"groups_check\" onclick=\"checkAction('group');\" style=\"vertical-align: middle;\" /> <strong>{$lang->all_groups}</strong></label></dt>
 		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"group_type\" value=\"2\" {$group_checked[2]} class=\"groups_check\" onclick=\"checkAction('group');\" style=\"vertical-align: middle;\" /> <strong>{$lang->select_groups}</strong></label></dt>
@@ -280,28 +281,29 @@ if($mybb->input['action'] == "edit")
 	echo $form->generate_hidden_field("cid", $category['cid']);
 	$form_container->output_row($lang->name." <em>*</em>", "", $form->generate_text_box('name', $mybb->input['name'], array('id' => 'name')), 'name');
 	$form_container->output_row($lang->image, "", $form->generate_text_box('image', $mybb->input['image'], array('id' => 'image')), 'image');
-		$group_select = "<script type=\"text/javascript\">
-		function checkAction(id)
-		{
-			var checked = '';
 
-			$$('.'+id+'s_check').each(function(e)
+	$group_select = "<script type=\"text/javascript\">
+	function checkAction(id)
+	{
+		var checked = '';
+
+		$('.'+id+'s_check').each(function(e, val)
+		{
+			if($(this).prop('checked') == true)
 			{
-     	       if(e.checked == true)
-     	       {
-     	           checked = e.value;
-     	       }
-     	   });
-      	  $$('.'+id+'s').each(function(e)
-     	   {
-     	   	Element.hide(e);
-      	  });
-      	  if($(id+'_'+checked))
-      	  {
-      	      Element.show(id+'_'+checked);
+				checked = $(this).val();
 			}
-		}    
-	</script>
+		});
+		$('.'+id+'s').each(function(e)
+		{
+			$(this).hide();
+		});
+		if($('#'+id+'_'+checked))
+		{
+			$('#'+id+'_'+checked).show();
+		}
+	}
+</script>
 	<dl style=\"margin-top: 0; margin-bottom: 0; width: 100%\">
 	<dt><label style=\"display: block;\"><input type=\"radio\" name=\"group_type\" value=\"1\" {$group_checked[1]} class=\"groups_check\" onclick=\"checkAction('group');\" style=\"vertical-align: middle;\" /> <strong>{$lang->all_groups}</strong></label></dt>
 		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"group_type\" value=\"2\" {$group_checked[2]} class=\"groups_check\" onclick=\"checkAction('group');\" style=\"vertical-align: middle;\" /> <strong>{$lang->select_groups}</strong></label></dt>
@@ -457,11 +459,11 @@ if(!$mybb->input['action'])
 		$arcade_category['name'] = htmlspecialchars_uni($arcade_category['name']);
 		if($arcade_category['active'] == 1)
 		{
-			$icon = "<img src=\"styles/{$page->style}/images/icons/bullet_on.gif\" alt=\"({$lang->alt_enabled})\" title=\"{$lang->alt_enabled}\"  style=\"vertical-align: middle;\" /> ";
+			$icon = "<img src=\"styles/{$page->style}/images/icons/bullet_on.png\" alt=\"({$lang->alt_enabled})\" title=\"{$lang->alt_enabled}\"  style=\"vertical-align: middle;\" /> ";
 		}
 		else
 		{
-			$icon = "<img src=\"styles/{$page->style}/images/icons/bullet_off.gif\" alt=\"({$lang->alt_disabled})\" title=\"{$lang->alt_disabled}\"  style=\"vertical-align: middle;\" /> ";
+			$icon = "<img src=\"styles/{$page->style}/images/icons/bullet_off.png\" alt=\"({$lang->alt_disabled})\" title=\"{$lang->alt_disabled}\"  style=\"vertical-align: middle;\" /> ";
 		}
 		$table->construct_cell("<div>{$icon}<strong><a href=\"index.php?module=arcade-categories&amp;action=edit&amp;cid={$arcade_category['cid']}\">{$arcade_category['name']}</a></strong></div>");
 
