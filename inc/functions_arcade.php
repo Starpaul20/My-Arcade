@@ -85,26 +85,19 @@ function get_tournament($tid, $recache = false)
 function log_arcade_action($data, $action="")
 {
 	global $mybb, $db, $session;
+	$mybb->binary_fields["arcadelogs"] = array('ipaddress' => true);
 
-	// If the Game ID is not set, set it to 0 so MySQL doesn't choke on it.
-	if($data['gid'] == '')
+	$game = 0;
+	if(isset($data['gid']))
 	{
-		$game = 0;
-	}
-	else
-	{
-		$game = $data['gid'];
+		$game = (int)$data['gid'];
 		unset($data['gid']);
 	}
 
-	// If the Tournament ID is not set, set it to 0 so MySQL doesn't choke on it.
-	if($data['tid'] == '')
+	$tournament = 0;
+	if(isset($data['tid']))
 	{
-		$tournament = 0;
-	}
-	else
-	{
-		$tournament = $data['tid'];
+		$tournament = (int)$data['tid'];
 		unset($data['tid']);
 	}
 
@@ -117,11 +110,11 @@ function log_arcade_action($data, $action="")
 	$sql_array = array(
 		"uid" => (int)$mybb->user['uid'],
 		"dateline" => TIME_NOW,
-		"gid" => (int)$game,
-		"tid" => (int)$tournament,
+		"gid" => $game,
+		"tid" => $tournament,
 		"action" => $db->escape_string($action),
 		"data" => $db->escape_string($data),
-		"ipaddress" => $db->escape_string($session->ipaddress)
+		"ipaddress" => $db->escape_binary($session->packedip)
 	);
 	$db->insert_query("arcadelogs", $sql_array);
 }
