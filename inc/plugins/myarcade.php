@@ -640,8 +640,7 @@ function myarcade_activate()
 
 	$insert_array = array(
 		'title'		=> 'member_profile_arcade',
-		'template'	=> $db->escape_string('<br />
-<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
+		'template'	=> $db->escape_string('<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
 <tr>
 <td class="thead"><strong>{$lang->arcade_profile}</strong></td>
 </tr>
@@ -650,7 +649,8 @@ function myarcade_activate()
 {$lang->total_scores} {$score_count}<br />
 <br />{$champ_bit}</td>
 </tr>
-</table>'),
+</table>
+<br />'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
