@@ -45,6 +45,7 @@ $plugins->add_hook("online_start", "myarcade_online_unviewable");
 $plugins->add_hook("fetch_wol_activity_end", "myarcade_online_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "myarcade_online_location");
 $plugins->add_hook("datahandler_user_update", "myarcade_user_update");
+$plugins->add_hook("datahandler_user_delete_content", "myarcade_delete");
 
 $plugins->add_hook("myalerts_load_lang", "myarcade_load_lang");
 $plugins->add_hook("myalerts_alerts_output_start", "myarcade_alerts_output");
@@ -52,7 +53,6 @@ $plugins->add_hook("admin_config_plugins_activate_commit", "myarcade_alerts_acti
 
 $plugins->add_hook("admin_style_templates_set", "myarcade_templates");
 $plugins->add_hook("admin_user_users_merge_commit", "myarcade_merge");
-$plugins->add_hook("admin_user_users_delete_commit", "myarcade_delete");
 $plugins->add_hook("admin_user_groups_edit_graph_tabs", "myarcade_usergroups_permission");
 $plugins->add_hook("admin_user_groups_edit_graph", "myarcade_usergroups_graph");
 $plugins->add_hook("admin_user_groups_edit_commit", "myarcade_usergroups_commit");
@@ -1346,6 +1346,44 @@ function myarcade_user_update(&$user)
 	}
 }
 
+// Delete everything if user is deleted
+function myarcade_delete($delete)
+{
+	global $db;
+	require_once MYBB_ROOT."inc/functions_arcade.php";
+
+	// Update game ratings
+	$query = $db->query("
+		SELECT r.*, g.numratings, g.totalratings
+		FROM ".TABLE_PREFIX."arcaderatings r
+		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=r.gid)
+		WHERE r.uid IN('.$delete->delete_uids.')
+	");
+	while($rating = $db->fetch_array($query))
+	{
+		$update_game = array(
+			"numratings" => $rating['numratings'] - 1,
+			"totalratings" => $rating['totalratings'] - $rating['rating']
+		);
+		$db->update_query("arcadegames", $update_game, "gid='{$rating['gid']}'");
+	}
+
+	$db->delete_query('arcadescores', 'uid IN('.$delete->delete_uids.')');
+	$db->delete_query('arcadefavorites', 'uid IN('.$delete->delete_uids.')');
+	$db->delete_query('arcadesessions', 'uid IN('.$delete->delete_uids.')');
+	$db->delete_query('arcaderatings', 'uid IN('.$delete->delete_uids.')');
+	$db->delete_query('arcadelogs', 'uid IN('.$delete->delete_uids.')');
+
+	// Update game champion
+	$query = $db->simple_select("arcadechampions", "gid", "uid IN('.$delete->delete_uids.')");
+	while($champion = $db->fetch_array($query))
+	{
+		update_champion($champion['gid']);
+	}
+
+	return $delete;
+}
+
 // Add MyAlerts settings
 function myarcade_load_lang()
 {
@@ -1438,42 +1476,6 @@ function myarcade_merge()
 		"champion" => $destination_user['uid']
 	);
 	$db->update_query("arcadetournaments", $champion, "champion='{$source_user['uid']}'");
-}
-
-// Delete everything if user is deleted
-function myarcade_delete()
-{
-	global $db, $mybb, $user;
-	require_once MYBB_ROOT."inc/functions_arcade.php";
-
-	// Update game ratings
-	$query = $db->query("
-		SELECT r.*, g.numratings, g.totalratings
-		FROM ".TABLE_PREFIX."arcaderatings r
-		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=r.gid)
-		WHERE r.uid='{$user['uid']}'
-	");
-	while($rating = $db->fetch_array($query))
-	{
-		$update_game = array(
-			"numratings" => $rating['numratings'] - 1,
-			"totalratings" => $rating['totalratings'] - $rating['rating']
-		);
-		$db->update_query("arcadegames", $update_game, "gid='{$rating['gid']}'");
-	}
-
-	$db->delete_query("arcadescores", "uid='{$user['uid']}'");
-	$db->delete_query("arcadefavorites", "uid='{$user['uid']}'");
-	$db->delete_query("arcadesessions", "uid='{$user['uid']}'");
-	$db->delete_query("arcaderatings", "uid='{$user['uid']}'");
-	$db->delete_query("arcadelogs", "uid='{$user['uid']}'");
-
-	// Update game champion
-	$query = $db->simple_select("arcadechampions", "gid", "uid='{$user['uid']}'");
-	while($champion = $db->fetch_array($query))
-	{
-		update_champion($champion['gid']);
-	}
 }
 
 // Usergroup permissions
