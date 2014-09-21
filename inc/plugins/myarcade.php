@@ -36,6 +36,7 @@ $plugins->add_hook("index_start", "myarcade_index");
 $plugins->add_hook("global_start", "myarcade_link_cache");
 $plugins->add_hook("global_intermediate", "myarcade_link");
 $plugins->add_hook("showthread_start", "myarcade_categories");
+$plugins->add_hook("newreply_do_newreply_start", "myarcade_categories");
 $plugins->add_hook("postbit", "myarcade_postbit_post");
 $plugins->add_hook("postbit_pm", "myarcade_postbit_other");
 $plugins->add_hook("postbit_announcement", "myarcade_postbit_other");
@@ -940,7 +941,7 @@ function myarcade_categories()
 // If get_unviewable_categories function is used here, it would re-quered the database for every post visible
 function myarcade_postbit_post($post)
 {
-	global $db, $mybb, $templates, $lang, $unviewable;
+	global $db, $mybb, $templates, $lang, $unviewable, $champ_cache, $pids, $champnum, $champs;
 	$lang->load("arcade");
 	$usergroup = user_permissions($post['uid']);
 
@@ -953,41 +954,85 @@ function myarcade_postbit_post($post)
 		$champdisplaypostbit = $mybb->user['champdisplaypostbit'];
 	}
 
+	$champnum = 0;
 	$post['champions'] = "";
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
-		if($unviewable)
-		{
-			$cat_sql .= " AND g.cid NOT IN ($unviewable)";
-		}
-
 		// Championship hard limit (to prevent overloading of the postbit)
-		if(!$mybb->settings['arcade_postbitlimit'] || $mybb->settings['arcade_postbitlimit'] > 100)
+		if(!$mybb->settings['arcade_postbitlimit'] || $mybb->settings['arcade_postbitlimit'] > 50)
 		{
-			$mybb->settings['arcade_postbitlimit'] = 100;
+			$mybb->settings['arcade_postbitlimit'] = 50;
 		}
 
-		$query = $db->query("
-			SELECT c.*, g.active, g.name, g.smallimage
-			FROM ".TABLE_PREFIX."arcadechampions c
-			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
-			WHERE g.active ='1' AND c.uid='{$post['uid']}'{$cat_sql}
-			ORDER BY c.dateline DESC
-			LIMIT {$mybb->settings['arcade_postbitlimit']}
-		");
-		while($champ = $db->fetch_array($query))
+		if(!empty($mybb->input['ajax']) || $mybb->input['mode'] == "threaded")
 		{
-			if($mybb->usergroup['canplayarcade'] == 1)
+			if($unviewable)
 			{
-				$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
-			}
-			else
-			{
-				$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
+				$cat_sql .= " AND g.cid NOT IN ($unviewable)";
 			}
 
-			$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
-			eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
+			$query = $db->query("
+				SELECT c.gid, c.uid, g.active, g.name, g.smallimage
+				FROM ".TABLE_PREFIX."arcadechampions c
+				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
+				WHERE g.active ='1' AND c.uid='{$post['uid']}'{$cat_sql}
+				ORDER BY c.dateline DESC
+				LIMIT {$mybb->settings['arcade_postbitlimit']}
+			");
+			while($champ = $db->fetch_array($query))
+			{
+				if($mybb->usergroup['canplayarcade'] == 1)
+				{
+					$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
+				}
+				else
+				{
+					$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
+				}
+
+				$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
+				eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
+			}
+		}
+		else
+		{
+			$categories = explode(",", $unviewable);
+			if(!$champ_cache)
+			{
+				$champ_cache = true;
+
+				$query = $db->query("
+					SELECT p.pid, c.gid, c.uid, g.active, g.name, g.smallimage, g.cid
+					FROM ".TABLE_PREFIX."arcadechampions c
+					LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
+					LEFT JOIN ".TABLE_PREFIX."posts p ON (p.uid=c.uid)
+					WHERE {$pids}
+					ORDER BY c.dateline DESC
+				");
+				while($value = $db->fetch_array($query))
+				{
+					$champs[] = $value;
+				}
+			}
+
+			foreach($champs as $champ)
+			{
+				if($champ['pid'] == $post['pid'] && $champ['active'] == 1 && $champnum < $mybb->settings['arcade_postbitlimit'] && !in_array($champ['cid'], $categories))
+				{
+					if($mybb->usergroup['canplayarcade'] == 1)
+					{
+						$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
+					}
+					else
+					{
+						$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
+					}
+
+					$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
+					eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
+					++$champnum;
+				}
+			}
 		}
 	}
 
@@ -1022,9 +1067,9 @@ function myarcade_postbit_other($post)
 		}
 
 		// Championship hard limit (to prevent overloading of the postbit)
-		if(!$mybb->settings['arcade_postbitlimit'] || $mybb->settings['arcade_postbitlimit'] > 100)
+		if(!$mybb->settings['arcade_postbitlimit'] || $mybb->settings['arcade_postbitlimit'] > 50)
 		{
-			$mybb->settings['arcade_postbitlimit'] = 100;
+			$mybb->settings['arcade_postbitlimit'] = 50;
 		}
 
 		$query = $db->query("
