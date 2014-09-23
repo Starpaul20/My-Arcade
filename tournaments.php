@@ -83,7 +83,7 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 	// Verify incoming POST request
 	verify_post_check($mybb->get_input('my_post_key'));
 
-	$gid = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 	$game = get_game($gid);
 
 	$plugins->run_hooks("tournaments_do_create_start");
@@ -130,12 +130,12 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 
 	$insert_array = array(
 		"gid" => $gid,
-		"uid" => intval($mybb->user['uid']),
+		"uid" => (int)$mybb->user['uid'],
 		"dateline" => TIME_NOW,
 		"status" => 1,
-		"rounds" => intval($mybb->input['rounds']),
-		"tries" => intval($mybb->input['tries']),
-		"days" => intval($mybb->input['days'])
+		"rounds" => $mybb->get_input('rounds', 1),
+		"tries" => $mybb->get_input('tries', 1),
+		"days" => $mybb->get_input('days', 1)
 	);
 	$tid = $db->insert_query("arcadetournaments", $insert_array);
 	update_tournaments_stats();
@@ -143,7 +143,7 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 	// Add creator as first player
 	$insert_player = array(
 		"tid" => $tid,
-		"uid" => intval($mybb->user['uid']),
+		"uid" => (int)$mybb->user['uid'],
 		"username" => $db->escape_string($mybb->user['username']),
 		"round" => 1
 	);
@@ -166,11 +166,11 @@ if($mybb->input['action'] == "create")
 
 	$plugins->run_hooks("tournaments_create_start");
 
-	$mybb->input['gid'] = intval($mybb->input['gid']);
+	$gid = $mybb->get_input('gid', 1);
 
-	if($mybb->input['gid'])
+	if($gid)
 	{
-		$tournament = get_game($mybb->input['gid']);
+		$tournament = get_game($gid);
 
 		if($tournament['tournamentselect'] != 1)
 		{
@@ -193,8 +193,8 @@ if($mybb->input['action'] == "create")
 	$query = $db->simple_select("arcadegames", "gid, name", "active='1' AND tournamentselect='1'{$cat_sql}", array('order_by' => 'name', 'order_dir' => 'asc'));
 	while($game = $db->fetch_array($query))
 	{
-		$selected = "";
-		if($mybb->input['gid'] == $game['gid'])
+		$selected = '';
+		if($gid == $game['gid'])
 		{
 			$selected = "selected=\"selected\"";
 		}
@@ -538,8 +538,8 @@ if($mybb->input['action'] == "join")
 
 	// Insert player
 	$insert_player = array(
-		"tid" => intval($tournament['tid']),
-		"uid" => intval($mybb->user['uid']),
+		"tid" => $tournament['tid'],
+		"uid" => (int)$mybb->user['uid'],
 		"username" => $db->escape_string($mybb->user['username']),
 		"round" => 1
 	);
@@ -861,7 +861,8 @@ if($mybb->input['action'] == "disqualify")
 		error($lang->error_disqualify_nopermission);
 	}
 
-	$query = $db->simple_select("arcadetournamentplayers", "*", "pid='".intval($mybb->input['pid'])."'");
+	$pid = $mybb->get_input('pid', 1);
+	$query = $db->simple_select("arcadetournamentplayers", "*", "pid='{$pid}'");
 	$player = $db->fetch_array($query);
 
 	if(!$player['pid'])
