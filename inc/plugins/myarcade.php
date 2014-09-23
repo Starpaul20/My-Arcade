@@ -31,6 +31,26 @@ if(my_strpos($_SERVER['PHP_SELF'], 'showthread.php'))
 	$templatelist .= 'global_arcade_bit';
 }
 
+if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'global_arcade_bit';
+}
+
+if(my_strpos($_SERVER['PHP_SELF'], 'announcements.php'))
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'global_arcade_bit';
+}
+
 // Tell MyBB when to run the hooks
 $plugins->add_hook("index_start", "myarcade_index");
 $plugins->add_hook("global_start", "myarcade_link_cache");
@@ -632,7 +652,7 @@ function myarcade_activate()
 	// Insert templates (global)
 	$insert_array = array(
 		'title'		=> 'global_arcade_bit',
-		'template'	=> $db->escape_string('<a href="{$gamelink}"><img src="arcade/smallimages/{$champ[\'smallimage\']}.gif" alt="{$champ[\'name\']}" title="{$champion_of}" width="20" height="20" /></a>'),
+		'template'	=> $db->escape_string('<a href="arcade.php?action=scores&gid={$champ[\'gid\']}"><img src="arcade/smallimages/{$champ[\'smallimage\']}.gif" alt="{$champ[\'name\']}" title="{$champion_of}" width="20" height="20" /></a>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -981,15 +1001,6 @@ function myarcade_postbit_post($post)
 			");
 			while($champ = $db->fetch_array($query))
 			{
-				if($mybb->usergroup['canplayarcade'] == 1)
-				{
-					$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
-				}
-				else
-				{
-					$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
-				}
-
 				$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
 				eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
 			}
@@ -1019,15 +1030,6 @@ function myarcade_postbit_post($post)
 			{
 				if($champ['pid'] == $post['pid'] && $champ['active'] == 1 && $champnum < $mybb->settings['arcade_postbitlimit'] && !in_array($champ['cid'], $categories))
 				{
-					if($mybb->usergroup['canplayarcade'] == 1)
-					{
-						$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
-					}
-					else
-					{
-						$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
-					}
-
 					$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
 					eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
 					++$champnum;
@@ -1082,15 +1084,6 @@ function myarcade_postbit_other($post)
 		");
 		while($champ = $db->fetch_array($query))
 		{
-			if($mybb->usergroup['canplayarcade'] == 1)
-			{
-				$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
-			}
-			else
-			{
-				$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
-			}
-
 			$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
 			eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
 		}
@@ -1128,15 +1121,6 @@ function myarcade_profile()
 		");
 		while($champ = $db->fetch_array($query))
 		{
-			if($mybb->usergroup['canplayarcade'] == 1)
-			{
-				$gamelink = "arcade.php?action=play&gid={$champ['gid']}";
-			}
-			else
-			{
-				$gamelink = "arcade.php?action=scores&gid={$champ['gid']}";
-			}
-
 			$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
 			eval("\$champ_bit .= \"".$templates->get("global_arcade_bit")."\";");
 		}

@@ -1058,7 +1058,7 @@ td .star_rating {
 </tr>
 </table>]]></template>
 		<template name="arcade_stats_bit" version="1000"><![CDATA[<tr>
-<td class="{$alt_bg}" align="center"><a href="arcade.php?action=play&amp;gid={$score['gid']}">{$score['name']}</a></td>
+<td class="{$alt_bg}" align="center"><a href="arcade.php?action=scores&amp;gid={$score['gid']}">{$score['name']}</a></td>
 <td class="{$alt_bg}" align="center">{$score['score']}</td>
 <td class="{$alt_bg}" align="center"><strong>{$userrank}</strong> {$lang->out_of} {$score['totalscores']}</a></td>
 <td class="{$alt_bg}" align="center">{$dateline}</td>
