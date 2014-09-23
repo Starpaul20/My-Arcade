@@ -8,12 +8,13 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_search,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,arcade_scores_rating";
-$templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_gamebit_rating,arcade_no_games,arcade_online_memberbit,arcade_online";
-$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_scoreboard,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game,arcade_stats";
-$templatelist .= ",arcade_play,arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites,arcade_favorite";
-$templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats_bit,arcade_scores,arcade_scores_bit,arcade_edit_error_nomodal";
-$templatelist .= ",arcade_settings,arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_no_display,arcade_statistics_bestplayers_avatar";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_search,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit";
+$templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_gamebit_rating,arcade_online_memberbit,arcade_online";
+$templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
+$templatelist .= ",arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites";
+$templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats_bit,arcade_edit_error_nomodal,arcade_stats";
+$templatelist .= ",arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_statistics_bestplayers_avatar";
+$templatelist .= ",arcade_scores_play,arcade_scores_rating,arcade_scores_no_scores,arcade_no_display,arcade_scores,arcade_scores_bit,arcade_favorite,arcade_scoreboard,arcade_no_games,arcade_settings,arcade_play";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -485,6 +486,13 @@ if($mybb->input['action'] == "scores")
 	}
 
 	$multipage = multipage($result, $perpage, $page, "arcade.php?action=scores&gid={$gid}");
+
+	// Play game link
+	$playgame = '';
+	if($mybb->usergroup['canplayarcade'] == 1)
+	{
+		eval("\$playgame = \"".$templates->get("arcade_scores_play")."\";");
+	}
 
 	// Favorite check
 	$add_remove_favorite = '';
@@ -1163,6 +1171,15 @@ if($mybb->input['action'] == "favorites")
 	{
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
+
+		if($mybb->usergroup['canplayarcade'] == 1)
+		{
+			$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+		}
+		else
+		{
+			$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
+		}
 
 		$lastplayedby = "";
 		if($game['lastplayeduid'])
@@ -2200,6 +2217,15 @@ if($mybb->input['action'] == "results")
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		if($mybb->usergroup['canplayarcade'] == 1)
+		{
+			$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+		}
+		else
+		{
+			$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
+		}
+
 		$lastplayedby = "";
 		if($game['lastplayeduid'])
 		{
@@ -2783,6 +2809,15 @@ if(!$mybb->input['action'])
 	{
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
+
+		if($mybb->usergroup['canplayarcade'] == 1)
+		{
+			$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+		}
+		else
+		{
+			$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
+		}
 
 		$lastplayedby = "";
 		if($game['lastplayeduid'])

@@ -345,9 +345,9 @@ td .star_rating {
 </html>]]></template>
 		<template name="arcade_gamebit" version="1000"><![CDATA[<tr>
 <td class="{$alt_bg}" align="center">
-<strong><a href="arcade.php?action=play&amp;gid={$game['gid']}">{$game['name']}</a></strong>{$new}<br />
+<strong><a href="{$gamelink}">{$game['name']}</a></strong>{$new}<br />
 <br />
-<a href="arcade.php?action=play&amp;gid={$game['gid']}"><img src="arcade/largeimages/{$game['largeimage']}.gif" alt="" /></a>
+<a href="{$gamelink}"><img src="arcade/largeimages/{$game['largeimage']}.gif" alt="" /></a>
 </td>
 <td class="{$alt_bg}" align="center">
 {$game['description']}
@@ -625,14 +625,14 @@ td .star_rating {
 </tr>
 <tr style="{$collapsed['game_info_e']}" id="game_info_e">
 <td class="trow1" width="65" align="center">
-<a href="arcade.php?action=play&amp;gid={$game['gid']}"><img src="arcade/largeimages/{$game['largeimage']}.gif" title="{$lang->play_game}" alt="" /></a>
+<img src="arcade/largeimages/{$game['largeimage']}.gif" title="{$game['name']}" alt="" />
 </td>
 <td class="trow2">
 <strong>{$lang->description}:</strong><br />
 {$game['description']}
 </td>
 <td class="trow1" width="250">
-<a href="arcade.php?action=play&amp;gid={$game['gid']}">{$lang->play_game}</a><br />
+{$playgame}
 {$add_remove_favorite}
 <a href="arcade.php">{$lang->arcade_home}</a><br />
 <br />
@@ -677,6 +677,7 @@ td .star_rating {
 		<template name="arcade_scores_no_scores" version="1000"><![CDATA[<tr>
 <td class="trow1" colspan="7" align="center">{$lang->no_game_scores}</td>
 </tr>]]></template>
+		<template name="arcade_scores_play" version="1000"><![CDATA[<a href="arcade.php?action=play&amp;gid={$game['gid']}">{$lang->play_game}</a><br />]]></template>
 		<template name="arcade_scores_rating" version="1000"><![CDATA[<div style="padding-right: 10px;" class="float_left">
 	<script type="text/javascript">
 	<!--
