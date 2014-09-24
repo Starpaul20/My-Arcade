@@ -451,7 +451,9 @@ function myarcade_uninstall()
 
 	$cache->update_usergroups();
 
-	$db->delete_query("datacache", "title IN('tournaments_stats','arcade_mostonline')");
+	$cache->delete('tournaments_stats');
+	$cache->delete('arcade_mostonline');
+
 	$db->delete_query("templates", "title LIKE 'arcade_%'");
 	$db->delete_query("templates", "title LIKE 'tournaments_%'");
 	$db->delete_query("templates", "title='arcade'"); // The wildcard deletion above misses this template
