@@ -107,6 +107,7 @@ $l['no_game_scores'] = "There are no scores for this game.";
 $l['scored'] = "scored";
 $l['playing'] = "playing";
 $l['by_user'] = "by {1}";
+$l['new'] = "New";
 
 $l['arcade_settings'] = "Settings";
 $l['edit_settings'] = "Edit Settings";

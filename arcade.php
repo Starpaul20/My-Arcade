@@ -8,13 +8,14 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_search,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit";
 $templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_gamebit_rating,arcade_online_memberbit,arcade_online";
 $templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
 $templatelist .= ",arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites";
 $templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores_delete,arcade_scores_edit,arcade_statistics,arcade_statistics_bestplayers,arcade_stats_bit,arcade_edit_error_nomodal,arcade_stats";
 $templatelist .= ",arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_statistics_bestplayers_avatar";
 $templatelist .= ",arcade_scores_play,arcade_scores_rating,arcade_scores_no_scores,arcade_no_display,arcade_scores,arcade_scores_bit,arcade_favorite,arcade_scoreboard,arcade_no_games,arcade_settings,arcade_play";
+$templatelist .= ",arcade_gamebit_champ,arcade_settings_gamesselect_option,arcade_settings_scoreselect_option,arcade_statistics_no_games,arcade_statistics_no_champs,arcade_statistics_no_scores,arcade_search";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -1238,7 +1239,7 @@ if($mybb->input['action'] == "favorites")
 				$profilelink = get_profile_link($game['champuid']);
 			}
 
-			$champusername = "<a href=\"{$profilelink}\">{$game['champusername']}</a>";
+			eval("\$champusername = \"".$templates->get("arcade_gamebit_champ")."\";");
 		}
 		else
 		{
@@ -1415,52 +1416,60 @@ if($mybb->input['action'] == "settings")
 	if($mybb->settings['gamesperpageoptions'])
 	{
 		$explodedgames = explode(",", $mybb->settings['gamesperpageoptions']);
-		$gamesoptions = '';
+		$gameperpageoptions = $gamesoptions = '';
 		if(is_array($explodedgames))
 		{
 			foreach($explodedgames as $key => $val)
 			{
 				$val = trim($val);
-				$selected = "";
+				$selected = '';
 				if($user['gamesperpage'] == $val)
 				{
-					$selected = "selected=\"selected\"";
+					$selected = " selected=\"selected\"";
 				}
-				$gamesoptions .= "<option value=\"$val\" $selected>".$lang->sprintf($lang->games_option, $val)."</option>\n";
+
+				$games_option = $lang->sprintf($lang->games_option, $val);
+				eval("\$gamesoptions .= \"".$templates->get("arcade_settings_gamesselect_option")."\";");
 			}
 		}
 		eval("\$gameperpageoptions = \"".$templates->get("arcade_settings_gamesselect")."\";");
 	}
+
 	if($mybb->settings['scoresperpageoptions'])
 	{
 		$explodedscores = explode(",", $mybb->settings['scoresperpageoptions']);
-		$scoreoptions = '';
+		$scoreperpageoptions = $scoreoptions = '';
 		if(is_array($explodedscores))
 		{
 			foreach($explodedscores as $key => $val)
 			{
 				$val = trim($val);
-				$selected = "";
+				$selected = '';
 				if($user['scoresperpage'] == $val)
 				{
-					$selected = "selected=\"selected\"";
+					$selected = " selected=\"selected\"";
 				}
-				$scoreoptions .= "<option value=\"$val\" $selected>".$lang->sprintf($lang->score_option, $val)."</option>\n";
+
+				$score_option = $lang->sprintf($lang->score_option, $val);
+				eval("\$scoreoptions .= \"".$templates->get("arcade_settings_scoreselect_option")."\";");
 			}
 		}
 		eval("\$scoreperpageoptions = \"".$templates->get("arcade_settings_scoreselect")."\";");
 	}
 
+	$whosonlinedisplay = '';
 	if($mybb->settings['arcade_whosonline'] != 0)
 	{
 		eval("\$whosonlinedisplay = \"".$templates->get("arcade_settings_whosonline")."\";");
 	}
 
+	$champdisplaypostbit = '';
 	if($mybb->settings['arcade_postbit'] != 0)
 	{
 		eval("\$champdisplaypostbit = \"".$templates->get("arcade_settings_champpostbit")."\";");
 	}
 
+	$tournamentnotifydisplay = '';
 	if($mybb->usergroup['canjointournaments'] == 1)
 	{
 		eval("\$tournamentnotifydisplay = \"".$templates->get("arcade_settings_tournamentnotify")."\";");
@@ -2282,7 +2291,7 @@ if($mybb->input['action'] == "results")
 				$profilelink = get_profile_link($game['champuid']);
 			}
 
-			$champusername = "<a href=\"{$profilelink}\">{$game['champusername']}</a>";
+			eval("\$champusername = \"".$templates->get("arcade_gamebit_champ")."\";");
 		}
 		else
 		{
@@ -2403,6 +2412,7 @@ if(!$mybb->input['action'])
 	if($mybb->settings['arcade_stats'] == 1)
 	{
 		// Newest Games
+		$newestgames = '';
 		$query = $db->simple_select("arcadegames", "gid, name, dateline, smallimage", "active='1'{$cat_sql}", array('order_by' => 'dateline', 'order_dir' => 'desc', 'limit' => $mybb->settings['arcade_stats_newgames']));
 		while($game = $db->fetch_array($query))
 		{
@@ -2419,10 +2429,11 @@ if(!$mybb->input['action'])
 		}
 		if(!$newestgames)
 		{
-			$newestgames = "<em>{$lang->no_games}</em>";
+			eval("\$newestgames = \"".$templates->get("arcade_statistics_no_games")."\";");
 		}
 
 		// Most played games
+		$mostplayedgames = '';
 		$query2 = $db->simple_select("arcadegames", "gid, name, plays, smallimage", "active='1'{$cat_sql}", array('order_by' => 'plays', 'order_dir' => 'DESC', 'limit' => $mybb->settings['arcade_stats_newgames']));
 		while($game = $db->fetch_array($query2))
 		{
@@ -2439,10 +2450,11 @@ if(!$mybb->input['action'])
 		}
 		if(!$mostplayedgames)
 		{
-			$mostplayedgames = "<em>{$lang->no_games}</em>";
+			eval("\$mostplayedgames = \"".$templates->get("arcade_statistics_no_games")."\";");
 		}
 
 		// Newest Champions
+		$newestchamps = '';
 		$query3 = $db->query("
 			SELECT c.*, g.active, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
@@ -2480,10 +2492,11 @@ if(!$mybb->input['action'])
 		}
 		if(!$newestchamps)
 		{
-			$newestchamps = "<em>{$lang->no_champs}</em>";
+			eval("\$newestchamps = \"".$templates->get("arcade_statistics_no_champs")."\";");
 		}
 
 		// Latest Scores
+		$latestscores = '';
 		$query4 = $db->query("
 			SELECT s.*, g.active, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadescores s
@@ -2521,7 +2534,7 @@ if(!$mybb->input['action'])
 		}
 		if(!$latestscores)
 		{
-			$latestscores = "<em>{$lang->no_scores}</em>";
+			eval("\$latestscores = \"".$templates->get("arcade_statistics_no_scores")."\";");
 		}
 
 		// Best Players
@@ -2567,7 +2580,7 @@ if(!$mybb->input['action'])
 
 			if(!$bestplayers_bit)
 			{
-				$bestplayers_bit = "<em>{$lang->no_champs}</em>";
+				eval("\$bestplayers_bit = \"".$templates->get("arcade_statistics_no_champs")."\";");
 			}
 
 			eval("\$bestplayers = \"".$templates->get("arcade_statistics_bestplayers")."\";");
@@ -2883,7 +2896,7 @@ if(!$mybb->input['action'])
 				$profilelink = get_profile_link($game['champuid']);
 			}
 
-			$champusername = "<a href=\"{$profilelink}\">{$game['champusername']}</a>";
+			eval("\$champusername = \"".$templates->get("arcade_gamebit_champ")."\";");
 		}
 		else
 		{

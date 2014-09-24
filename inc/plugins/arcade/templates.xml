@@ -370,8 +370,10 @@ td .star_rating {
 {$champion}
 </td>
 </tr>]]></template>
+		<template name="arcade_gamebit_champ" version="1000"><![CDATA[<a href="{$profilelink}">{$game['champusername']}</a>]]></template>
 		<template name="arcade_gamebit_favorite" version="1000"><![CDATA[<li><a href="arcade.php?action={$add_remove_favorite_type}favorite&amp;gid={$game['gid']}&amp;my_post_key={$mybb->post_code}">{$add_remove_favorite_text}</a></li>]]></template>
-		<template name="arcade_gamebit_new" version="1000"><![CDATA[<img src="images/arcade/new.png" alt="{$lang->new}" />]]></template>
+		<template name="arcade_gamebit_new" version="1000"><![CDATA[<img src="images/arcade/new.png" alt="{$lang->new}" title="{$lang->new}" />]]></template>
+		<template name="arcade_gamebit_playedby" version="1000"><![CDATA[<a href="{$profilelink}">{$game['user_name']}</a>]]></template>
 		<template name="arcade_gamebit_rating" version="1000"><![CDATA[<li>
 <script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1000"></script>
 <span style="float: left; padding-right: 5px;">{$lang->rating}</span>
@@ -879,6 +881,7 @@ td .star_rating {
 </select>
 </td>
 </tr>]]></template>
+		<template name="arcade_settings_gamesselect_option" version="1000"><![CDATA[<option value="{$val}"{$selected}>{$games_option}</option>]]></template>
 		<template name="arcade_settings_scoreselect" version="1000"><![CDATA[<tr>
 <td colspan="2"><span class="smalltext">{$lang->scores_per_page}</span></td>
 </tr>
@@ -890,6 +893,7 @@ td .star_rating {
 </select>
 </td>
 </tr>]]></template>
+		<template name="arcade_settings_scoreselect_option" version="1000"><![CDATA[<option value="{$val}"{$selected}>{$score_option}</option>]]></template>
 		<template name="arcade_settings_tournamentnotify" version="1000"><![CDATA[<tr>
 <td colspan="2"><span class="smalltext"><label for="tournamentnotify">{$lang->tournament_notify}</label></span></td>
 </tr>
@@ -973,6 +977,9 @@ td .star_rating {
 </table>
 </td>]]></template>
 		<template name="arcade_statistics_gamebit" version="1000"><![CDATA[<a href="{$gamelink}"><img src="arcade/smallimages/{$game['smallimage']}.gif" alt="" /> <strong>{$game['name']}</strong></a><br />]]></template>
+		<template name="arcade_statistics_no_champs" version="1000"><![CDATA[<em>{$lang->no_champs}</em>]]></template>
+		<template name="arcade_statistics_no_games" version="1000"><![CDATA[<em>{$lang->no_games}</em>]]></template>
+		<template name="arcade_statistics_no_scores" version="1000"><![CDATA[<em>{$lang->no_scores}</em>]]></template>
 		<template name="arcade_statistics_scorebit" version="1000"><![CDATA[<tr>
 <td width="75%">
 <img src="arcade/smallimages/{$score['smallimage']}.gif" alt="" /> <strong><a href="{$profilelink}">{$score['username']}</a></strong> {$lang->scored} <strong>{$score['score']}</strong> {$lang->playing} <a href="{$gamelink}"><strong>{$score['name']}</strong></a>
