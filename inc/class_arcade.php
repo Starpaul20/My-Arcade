@@ -160,43 +160,18 @@ class Arcade
 					if($current_champion['uid'] != $mybb->user['uid'])
 					{
 						$champ = get_user($current_champion['uid']);
-						if($champ['champnotify'] == 1 && $mybb->settings['enablepms'] == 1 && $champ['receivepms'] != 0)
+						if($champ['champnotify'] == 1)
 						{
-							// Bring up the PM handler
-							require_once MYBB_ROOT."inc/datahandlers/pm.php";
-							$pmhandler = new PMDataHandler();
-
-							$pm_subject = $lang->sprintf($lang->champ_subject, $game['name']);
-							$pm_message = $lang->sprintf($lang->champ_pm_message, $mybb->user['username'], $game['name'], $score);
-
-							$pm = array(
-								"subject" => $pm_subject,
-								"message" => $pm_message,
-								"fromid" => $uid,
-								"toid" => array($champ['uid'])
+							$champ_pm = array(
+								'subject' => array('champ_subject', $game['name']),
+								'message' => array('champ_pm_message', $mybb->user['username'], $game['name'], $score),
+								'touid' => $champ['uid'],
+								'receivepms' => (int)$champ['receivepms'],
+								'language' => $champ['language'],
+								'language_file' => 'arcade'
 							);
 
-							$pm['options'] = array(
-								"signature" => 1,
-								"disablesmilies" => 0,
-								"savecopy" => 1,
-								"readreceipt" => 0
-							);
-
-							$pmhandler->set_data($pm);
-
-							// Now let the pm handler do all the hard work.
-							if(!$pmhandler->validate_pm())
-							{
-								$pm_errors = $pmhandler->get_friendly_errors();
-								{
-									$errors = $pm_errors;
-								}
-							}
-							else
-							{
-								$pminfo = $pmhandler->insert_pm();
-							}
+							send_pm($champ_pm);
 						}
 						else if($champ['champnotify'] == 2)
 						{

@@ -55,43 +55,18 @@ function task_arcade($task)
 			");
 			while($player = $db->fetch_array($query))
 			{
-				if($player['tournamentnotify'] == 1 && $mybb->settings['enablepms'] == 1 && $player['receivepms'] != 0)
+				if($player['tournamentnotify'] == 1)
 				{
-					// Bring up the PM handler
-					require_once MYBB_ROOT."inc/datahandlers/pm.php";
-					$pmhandler = new PMDataHandler();
-
-					$pm_subject = $lang->sprintf($lang->tournament_subject, $mybb->settings['bbname']);
-					$pm_message = $lang->sprintf($lang->tournament_message, $open['name'], $open['days'], $open['tries']);
-
-					$pm = array(
-						"subject" => $pm_subject,
-						"message" => $pm_message,
-						"fromid" => $open['uid'],
-						"toid" => array($player['uid'])
+					$player_pm = array(
+						'subject' => 'tournament_subject',
+						'message' => array('tournament_message', $open['name'], $open['days'], $open['tries']),
+						'touid' => $player['uid'],
+						'receivepms' => (int)$player['receivepms'],
+						'language' => $player['language'],
+						'language_file' => 'arcade'
 					);
 
-					$pm['options'] = array(
-						"signature" => 1,
-						"disablesmilies" => 0,
-						"savecopy" => 1,
-						"readreceipt" => 0
-					);
-
-					$pmhandler->set_data($pm);
-
-					// Now let the pm handler do all the hard work.
-					if(!$pmhandler->validate_pm())
-					{
-						$pm_errors = $pmhandler->get_friendly_errors();
-						{
-							$errors = $pm_errors;
-						}
-					}
-					else
-					{
-						$pminfo = $pmhandler->insert_pm();
-					}
+					send_pm($player_pm, $open['uid']);
 				}
 
 				else if($player['tournamentnotify'] == 2)
@@ -157,43 +132,18 @@ function task_arcade($task)
 						);
 						$db->insert_query("arcadetournamentplayers", $insert_player);
 
-						if($player['tournamentnotify'] == 1 && $mybb->settings['enablepms'] == 1 && $player['receivepms'] != 0)
+						if($player['tournamentnotify'] == 1)
 						{
-							// Bring up the PM handler
-							require_once MYBB_ROOT."inc/datahandlers/pm.php";
-							$pmhandler = new PMDataHandler();
-
-							$pm_subject = $lang->sprintf($lang->tournament_subject, $mybb->settings['bbname']);
-							$pm_message = $lang->sprintf($lang->tournament_message, $round['name'], $round['days'], $round['tries']);
-
-							$pm = array(
-								"subject" => $pm_subject,
-								"message" => $pm_message,
-								"fromid" => $round['uid'],
-								"toid" => array($player['uid'])
+							$round_pm = array(
+								'subject' => 'tournament_subject',
+								'message' => array('tournament_message', $round['name'], $round['days'], $round['tries']),
+								'touid' => $player['uid'],
+								'receivepms' => (int)$player['receivepms'],
+								'language' => $player['language'],
+								'language_file' => 'arcade'
 							);
 
-							$pm['options'] = array(
-								"signature" => 1,
-								"disablesmilies" => 0,
-								"savecopy" => 1,
-								"readreceipt" => 0
-							);
-
-							$pmhandler->set_data($pm);
-
-							// Now let the pm handler do all the hard work.
-							if(!$pmhandler->validate_pm())
-							{
-								$pm_errors = $pmhandler->get_friendly_errors();
-								{
-									$errors = $pm_errors;
-								}
-							}
-							else
-							{
-								$pminfo = $pmhandler->insert_pm();
-							}
+							send_pm($round_pm, $round['uid']);
 						}
 
 						else if($player['tournamentnotify'] == 2)
