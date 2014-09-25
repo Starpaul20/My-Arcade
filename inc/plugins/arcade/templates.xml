@@ -123,6 +123,7 @@ td .star_rating {
 {$search}
 <br />
 {$multipage}
+{$arcaderating}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 <tr>
 <td colspan="4" class="thead"><strong>{$lang->arcade}</strong></td>
@@ -307,6 +308,7 @@ td .star_rating {
 {$menu}
 <br />
 {$multipage}
+{$arcaderating}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 <tr>
 <td colspan="4" class="thead"><strong>{$lang->favorite_games}</strong></td>
@@ -374,18 +376,17 @@ td .star_rating {
 		<template name="arcade_gamebit_favorite" version="1000"><![CDATA[<li><a href="arcade.php?action={$add_remove_favorite_type}favorite&amp;gid={$game['gid']}&amp;my_post_key={$mybb->post_code}">{$add_remove_favorite_text}</a></li>]]></template>
 		<template name="arcade_gamebit_new" version="1000"><![CDATA[<img src="images/arcade/new.png" alt="{$lang->new}" title="{$lang->new}" />]]></template>
 		<template name="arcade_gamebit_playedby" version="1000"><![CDATA[<a href="{$profilelink}">{$game['user_name']}</a>]]></template>
-		<template name="arcade_gamebit_rating" version="1000"><![CDATA[<li>
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1000"></script>
-<span style="float: left; padding-right: 5px;">{$lang->rating}</span>
-<div class="inline_rating_main">
-<ul class="star_rating{$not_rated}" id="rating_game_{$game['gid']}">
-<li style="width: {$game['rating_width']}%" class="current_rating" id="current_rating_{$game['gid']}">{$ratingvotesav}</li>
-<li><a class="one_star" title="{$lang->one_star}" href="./arcade.php?action=rate&amp;gid={$game['gid']}&amp;rating=1&amp;my_post_key={$mybb->post_code}">1</a></li>
-<li><a class="two_stars" title="{$lang->two_stars}" href="./arcade.php?action=rate&amp;gid={$game['gid']}&amp;rating=2&amp;my_post_key={$mybb->post_code}">2</a></li>
-<li><a class="three_stars" title="{$lang->three_stars}" href="./arcade.php?action=rate&amp;gid={$game['gid']}&amp;rating=3&amp;my_post_key={$mybb->post_code}">3</a></li>
-<li><a class="four_stars" title="{$lang->four_stars}" href="./arcade.php?action=rate&amp;gid={$game['gid']}&amp;rating=4&amp;my_post_key={$mybb->post_code}">4</a></li>
-<li><a class="five_stars" title="{$lang->five_stars}" href="./arcade.php?action=rate&amp;gid={$game['gid']}&amp;rating=5&amp;my_post_key={$mybb->post_code}">5</a></li>
-</ul>
+		<template name="arcade_gamebit_rating" version="1000"><![CDATA[<li style="float: left;">
+  <div id="rating_table_{$game['gid']}">
+    <ul class="star_rating{$not_rated}" id="rating_game_{$game['gid']}">
+		<li style="width: {$game['rating_width']}%" class="current_rating" id="current_rating_{$game['gid']}">{$ratingvotesav}</li>
+	</ul>
+	<script type="text/javascript">
+	<!--
+		Rating.build_gamebit({$game['gid']}, { width: '{$game['rating_width']}', extra_class: '{$not_rated}', current_average: '{$ratingvotesav}' });
+	// -->
+	</script>
+  </div>
 </li>]]></template>
 		<template name="arcade_gamebit_score" version="1000"><![CDATA[<li>{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>]]></template>
 		<template name="arcade_gamebit_tournaments" version="1000"><![CDATA[<li><a href="tournaments.php?action=create&amp;gid={$game['gid']}">{$lang->create_tournament}</a></li>]]></template>
@@ -542,6 +543,18 @@ td .star_rating {
 {$lang->highest_tournament_score} {$hightournamentscore}
 </td>
 </tr>]]></template>
+		<template name="arcade_rating" version="1000"><![CDATA[<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1000"></script>
+<script type="text/javascript">
+	<!--
+		lang.stars = new Array();
+		lang.stars[1] = "{$lang->one_star}";
+		lang.stars[2] = "{$lang->two_stars}";
+		lang.stars[3] = "{$lang->three_stars}";
+		lang.stars[4] = "{$lang->four_stars}";
+		lang.stars[5] = "{$lang->five_stars}";
+		lang.ratings_update_error = "{$lang->ratings_update_error}";
+	// -->
+</script>]]></template>
 		<template name="arcade_scoreboard" version="1000"><![CDATA[<html>
 <head>
 <title>{$lang->arcade} - {$lang->scoreboard}</title>
@@ -741,6 +754,7 @@ td .star_rating {
 {$menu}
 <br />
 {$multipage}
+{$arcaderating}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 <tr>
 <td colspan="4" class="thead"><strong>{$lang->search_results}</strong></td>

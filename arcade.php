@@ -8,7 +8,7 @@ define("IN_MYBB", 1);
 define("IGNORE_CLEAN_VARS", "sid");
 define('THIS_SCRIPT', 'arcade.php');
 
-$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit";
+$templatelist = "arcade,arcade_categories,arcade_category_bit,arcade_category_bit_image,arcade_search_catagory,arcade_statistics_bestplayers_bit,arcade_statistics_gamebit,arcade_statistics_scorebit,arcade_rating";
 $templatelist .= ",arcade_menu,multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,arcade_gamebit_rating,arcade_online_memberbit,arcade_online";
 $templatelist .= ",arcade_champions,arcade_champions_bit,arcade_scoreboard_bit,arcade_stats_details,arcade_stats_tournaments,arcade_tournaments_create,arcade_tournaments_user,arcade_tournaments_user_game";
 $templatelist .= ",arcade_play_guest,arcade_play_rating,arcade_play_tournament,arcade_gamebit_score,arcade_gamebit_new,arcade_gamebit,arcade_gamebit_favorite,arcade_gamebit_tournaments,arcade_favorites";
@@ -1166,9 +1166,18 @@ if($mybb->input['action'] == "favorites")
 
 	$multipage = multipage($page_count, $perpage, $page, $page_url);
 
+	switch($db->type)
+	{
+		case "pgsql":
+			$ratingadd = "CASE WHEN g.numratings=0 THEN 0 ELSE g.totalratings/g.numratings::numeric END AS averagerating, ";
+			break;
+		default:
+			$ratingadd = "(g.totalratings/g.numratings) AS averagerating, ";
+	}
+
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT f.*, g.*, u.username AS user_name, s.score AS your_score, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT f.*, g.*, {$ratingadd}u.username AS user_name, s.score AS your_score, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadefavorites f
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=f.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (f.gid=s.gid AND s.uid='{$mybb->user['uid']}')
@@ -1284,9 +1293,9 @@ if($mybb->input['action'] == "favorites")
 		$rategame = '';
 		if($mybb->settings['arcade_ratings'] != 0)
 		{
-			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-			$game['rating_width'] = intval(round($game['averagerating']))*20;
-			$game['numratings'] = intval($game['numratings']);
+			$game['averagerating'] = (float)round($game['averagerating'], 2);
+			$game['rating_width'] = (int)round($game['averagerating'])*20;
+			$game['numratings'] = (int)$game['numratings'];
 
 			$not_rated = '';
 			if(!isset($game['rated']) || empty($game['rated']))
@@ -1307,6 +1316,12 @@ if($mybb->input['action'] == "favorites")
 	if(!$game_bit)
 	{
 		eval("\$game_bit = \"".$templates->get("arcade_no_games")."\";");
+	}
+
+	$arcaderating = '';
+	if($mybb->settings['arcade_ratings'] != 0)
+	{
+		eval("\$arcaderating = \"".$templates->get("arcade_rating")."\";");
 	}
 
 	$plugins->run_hooks("arcade_favorites_end");
@@ -2216,11 +2231,21 @@ if($mybb->input['action'] == "results")
 	{
 		$upper = $game_count;
 	}
+
 	$multipage = multipage($game_count['total'], $perpage, $page, "arcade.php?action=results&amp;sid=".htmlspecialchars_uni($mybb->input['sid'])."&amp;sortby={$mybb->input['sortby']}&amp;order={$mybb->input['order']}");
+
+	switch($db->type)
+	{
+		case "pgsql":
+			$ratingadd = "CASE WHEN g.numratings=0 THEN 0 ELSE g.totalratings/g.numratings::numeric END AS averagerating, ";
+			break;
+		default:
+			$ratingadd = "(g.totalratings/g.numratings) AS averagerating, ";
+	}
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT g.*, u.username AS user_name, s.score AS your_score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT g.*, {$ratingadd}u.username AS user_name, s.score AS your_score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (g.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (g.gid=c.gid)
@@ -2350,9 +2375,9 @@ if($mybb->input['action'] == "results")
 		$rategame = '';
 		if($mybb->settings['arcade_ratings'] != 0)
 		{
-			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-			$game['rating_width'] = intval(round($game['averagerating']))*20;
-			$game['numratings'] = intval($game['numratings']);
+			$game['averagerating'] = (float)round($game['averagerating'], 2);
+			$game['rating_width'] = (int)round($game['averagerating'])*20;
+			$game['numratings'] = (int)$game['numratings'];
 
 			$not_rated = '';
 			if(!isset($game['rated']) || empty($game['rated']))
@@ -2368,6 +2393,12 @@ if($mybb->input['action'] == "results")
 
 		$alt_bg = alt_trow();
 		eval("\$game_bit .= \"".$templates->get("arcade_gamebit")."\";");
+	}
+
+	$arcaderating = '';
+	if($mybb->settings['arcade_ratings'] != 0)
+	{
+		eval("\$arcaderating = \"".$templates->get("arcade_rating")."\";");
 	}
 
 	$plugins->run_hooks("arcade_results_end");
@@ -2823,9 +2854,18 @@ if(!$mybb->input['action'])
 
 	$multipage = multipage($page_count, $perpage, $page, $page_url);
 
+	switch($db->type)
+	{
+		case "pgsql":
+			$ratingadd = "CASE WHEN g.numratings=0 THEN 0 ELSE g.totalratings/g.numratings::numeric END AS averagerating, ";
+			break;
+		default:
+			$ratingadd = "(g.totalratings/g.numratings) AS averagerating, ";
+	}
+
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT g.*, u.username AS user_name, s.score AS your_score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT g.*, {$ratingadd}u.username AS user_name, s.score AS your_score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (g.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (g.gid=c.gid)
@@ -2955,9 +2995,9 @@ if(!$mybb->input['action'])
 		$rategame = '';
 		if($mybb->settings['arcade_ratings'] != 0)
 		{
-			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-			$game['rating_width'] = intval(round($game['averagerating']))*20;
-			$game['numratings'] = intval($game['numratings']);
+			$game['averagerating'] = (float)round($game['averagerating'], 2);
+			$game['rating_width'] = (int)round($game['averagerating'])*20;
+			$game['numratings'] = (int)$game['numratings'];
 
 			$not_rated = '';
 			if(!isset($game['rated']) || empty($game['rated']))
@@ -2978,6 +3018,12 @@ if(!$mybb->input['action'])
 	if(!$game_bit)
 	{
 		eval("\$game_bit = \"".$templates->get("arcade_no_games")."\";");
+	}
+
+	$arcaderating = '';
+	if($mybb->settings['arcade_ratings'] != 0)
+	{
+		eval("\$arcaderating = \"".$templates->get("arcade_rating")."\";");
 	}
 
 	$plugins->run_hooks("arcade_end");
