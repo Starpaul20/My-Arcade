@@ -1032,13 +1032,16 @@ function myarcade_postbit_post($post)
 				}
 			}
 
-			foreach($champs as $champ)
+			if(is_array($champs))
 			{
-				if($champ['pid'] == $post['pid'] && $champ['active'] == 1 && $champnum < $mybb->settings['arcade_postbitlimit'] && !in_array($champ['cid'], $categories))
+				foreach($champs as $champ)
 				{
-					$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
-					eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
-					++$champnum;
+					if($champ['pid'] == $post['pid'] && $champ['active'] == 1 && $champnum < $mybb->settings['arcade_postbitlimit'] && !in_array($champ['cid'], $categories))
+					{
+						$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
+						eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
+						++$champnum;
+					}
 				}
 			}
 		}
