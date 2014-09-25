@@ -335,10 +335,10 @@ if($mybb->input['action'] == "view")
 	{
 		$status_message = $lang->tournament_active;
 
-		$query = $db->simple_select("arcadetournamentplayers", "pid", "tid='{$tid}' AND round='{$tournament['round']}' AND uid='{$mybb->user['uid']}'");
+		$query = $db->simple_select("arcadetournamentplayers", "pid, attempts", "tid='{$tid}' AND round='{$tournament['round']}' AND uid='{$mybb->user['uid']}'");
 		$player = $db->fetch_array($query);
 
-		if($player['pid'])
+		if($player['pid'] && $player['attempts'] < $tournament['tries'])
 		{
 			eval("\$tournament_link = \"".$templates->get("tournaments_view_play")."\";");
 		}
