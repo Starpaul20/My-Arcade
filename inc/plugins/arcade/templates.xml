@@ -729,9 +729,7 @@ td .star_rating {
 <label><input name="description" checked="checked" value="1" type="checkbox"> {$lang->search_by_description}</label>
 </span>
 </div>
-<div class="float_left" style="padding-left: 20px;">
 {$categorysearch}
-</div>
 <div class="float_left" style="padding-left: 20px; padding-top: 5px;">
 <input type="hidden" name="action" value="do_search" />
 <input type="submit" class="button" name="submit" value="{$lang->search_arcade}" />
@@ -740,10 +738,12 @@ td .star_rating {
 </td>
 </tr>
 </table>]]></template>
-		<template name="arcade_search_catagory" version="1000"><![CDATA[<select name="cid">
+		<template name="arcade_search_catagory" version="1000"><![CDATA[<div class="float_left" style="padding-left: 20px; padding-top: 5px;">
+<select name="cid">
 <option value="all">{$lang->search_all_categories}</option>
 {$categoryoptions}
-</select>]]></template>
+</select>
+</div>]]></template>
 		<template name="arcade_search_results" version="1000"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->search_results}</title>
