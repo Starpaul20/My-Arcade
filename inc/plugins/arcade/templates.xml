@@ -183,7 +183,7 @@ td .star_rating {
 	</tbody>
 </table>]]></template>
 		<template name="arcade_category_bit" version="1000"><![CDATA[<li style="width:{$value}%;"><a href="arcade.php?cid={$category['cid']}">{$image}{$category['name']}</a> ({$category['games']})</li>]]></template>
-		<template name="arcade_category_bit_image" version="1000"><![CDATA[<img src="{$category['image']}" alt="{$category['name']}">&nbsp;]]></template>
+		<template name="arcade_category_bit_image" version="1000"><![CDATA[<img src="{$category['image']}" alt="{$category['name']}" title="{$category['name']}" />&nbsp;]]></template>
 		<template name="arcade_champions" version="1000"><![CDATA[<html>
 <head>
 <title>{$lang->arcade} - {$lang->arcade_champions}</title>
@@ -351,7 +351,7 @@ td .star_rating {
 	<td class="{$alt_bg}" align="center">
 		<strong><a href="{$gamelink}">{$game['name']}</a></strong>{$new}<br />
 		<br />
-		<a href="{$gamelink}"><img src="arcade/largeimages/{$game['largeimage']}.gif" alt="" /></a>
+		<a href="{$gamelink}"><img src="arcade/largeimages/{$game['largeimage']}.gif" alt="{$game['name']}" title="{$game['name']}" /></a>
 	</td>
 	<td class="{$alt_bg}" align="center">
 		{$game['description']}
@@ -364,12 +364,12 @@ td .star_rating {
 			<li>{$lang->last_played} {$lastplayed} {$lastplayedby}</li>
 			{$add_remove_favorite}
 			{$tournament}
-			{$li}{$rategame}</li>
+			{$rategame}
 		</ul>
 		<br />
 	</td>
 	<td class="{$alt_bg}" align="center">
-		<img src="images/arcade/champ.png" alt="" /><br />
+		<img src="images/arcade/champ.png" alt="{$lang->champion}" title="{$lang->champion}" /><br />
 		<strong>{$champusername}</strong><br />
 		{$champion}
 	</td>
@@ -454,28 +454,28 @@ td .star_rating {
 		<td class="trow1" align="center">
 			{$guestmessage}
 			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" width="{$game['width']}" height="{$game['height']}">
-			<param name="movie" value="./arcade/swf/{$game['file']}.swf?ibpro_gameid={$game['gid']}" />
-			<param name="type" value="application/x-shockwave-flash" />
-			<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer/" />
-			<param name="bgcolor" value="#{$game['bgcolor']}" />
-			<param name="quality" value="high" />
-			<param name="menu" value="false" />
-			<param name="width" value="{$game['width']}" />
-			<param name="height" value="{$game['height']}" />
-			<embed src="./arcade/swf/{$game['file']}.swf?ibpro_gameid={$game['gid']}" width="{$game['width']}" height="{$game['height']}" quality="high" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" menu="false"></embed>
-			<noembed>{$lang->flash_not_installed}</noembed>
+				<param name="movie" value="./arcade/swf/{$game['file']}.swf?ibpro_gameid={$game['gid']}" />
+				<param name="type" value="application/x-shockwave-flash" />
+				<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer/" />
+				<param name="bgcolor" value="#{$game['bgcolor']}" />
+				<param name="quality" value="high" />
+				<param name="menu" value="false" />
+				<param name="width" value="{$game['width']}" />
+				<param name="height" value="{$game['height']}" />
+				<embed src="./arcade/swf/{$game['file']}.swf?ibpro_gameid={$game['gid']}" width="{$game['width']}" height="{$game['height']}" quality="high" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" menu="false"></embed>
+				<noembed>{$lang->flash_not_installed}</noembed>
 			</object>
 		</td>
 		<td class="trow1" valign="top" align="left" width="300">
 			<table border="0" cellpadding="5" width="100%">
 				<tr>
 					<td class="trow1" align="center">
-						<img src="arcade/largeimages/{$game['largeimage']}.gif" alt="" />
+						<img src="arcade/largeimages/{$game['largeimage']}.gif" alt="{$game['name']}" title="{$game['name']}" />
 					</td>
 				</tr>
 				<tr>
 					<td class="trow2" align="center">
-						<img src="images/arcade/champ.png" alt="" /><br />
+						<img src="images/arcade/champ.png" alt="{$lang->champion}" title="{$lang->champion}" /><br />
 						<strong>{$champusername}</strong><br />
 						{$lang->current_champion}
 					</td>
@@ -645,7 +645,7 @@ td .star_rating {
 		<tbody style="{$collapsed['game_info_e']}" id="game_info_e">
 			<tr>
 				<td class="trow1" width="65" align="center">
-					<img src="arcade/largeimages/{$game['largeimage']}.gif" title="{$game['name']}" alt="" />
+					<img src="arcade/largeimages/{$game['largeimage']}.gif" alt="{$game['name']}" title="{$game['name']}" />
 				</td>
 				<td class="trow2">
 					<strong>{$lang->description}:</strong><br />
@@ -988,7 +988,7 @@ td .star_rating {
 	<table width="100%">
 		<tr>
 			<td class="tcat" align="center">
-				<strong><img src="images/arcade/{$rank}.gif" alt="" title="{$rank}"> {$bestplayer_rank_lang}</strong>
+				<strong><img src="images/arcade/{$rank}.gif" alt="{$rank}" title="{$rank}" /> {$bestplayer_rank_lang}</strong>
 			</td>
 		</tr>
 		<tr>
@@ -999,13 +999,13 @@ td .star_rating {
 		</tr>
 	</table>
 </td>]]></template>
-		<template name="arcade_statistics_gamebit" version="1000"><![CDATA[<a href="{$gamelink}"><img src="arcade/smallimages/{$game['smallimage']}.gif" alt="" /> <strong>{$game['name']}</strong></a><br />]]></template>
+		<template name="arcade_statistics_gamebit" version="1000"><![CDATA[<a href="{$gamelink}"><img src="arcade/smallimages/{$game['smallimage']}.gif" alt="{$game['name']}" title="{$game['name']}" /> <strong>{$game['name']}</strong></a><br />]]></template>
 		<template name="arcade_statistics_no_champs" version="1000"><![CDATA[<em>{$lang->no_champs}</em>]]></template>
 		<template name="arcade_statistics_no_games" version="1000"><![CDATA[<em>{$lang->no_games}</em>]]></template>
 		<template name="arcade_statistics_no_scores" version="1000"><![CDATA[<em>{$lang->no_scores}</em>]]></template>
 		<template name="arcade_statistics_scorebit" version="1000"><![CDATA[<tr>
 	<td width="75%">
-		<img src="arcade/smallimages/{$score['smallimage']}.gif" alt="" /> <strong><a href="{$profilelink}">{$score['username']}</a></strong> {$lang->scored} <strong>{$score['score']}</strong> {$lang->playing} <a href="{$gamelink}"><strong>{$score['name']}</strong></a>
+		<img src="arcade/smallimages/{$score['smallimage']}.gif" alt="{$score['name']}" title="{$score['name']}" /> <strong><a href="{$profilelink}">{$score['username']}</a></strong> {$lang->scored} <strong>{$score['score']}</strong> {$lang->playing} <a href="{$gamelink}"><strong>{$score['name']}</strong></a>
 	</td>
 	<td align="right" width="25%">
 		{$dateline}
@@ -1381,7 +1381,7 @@ td .star_rating {
 		<template name="tournaments_view_rounds_champion" version="1000"><![CDATA[<tr>
 	<td class="tcat" align="center" width="1" valign="right"><strong>#</strong></td>
 	<td colspan="{$players}" class="trow1 tournaments" width="100%" align="center" valign="middle">
-		<img src="images/arcade/champ.png" alt="" /><br />
+		<img src="images/arcade/champ.png" alt="{$lang->champion}" title="{$lang->champion}" /><br />
 		<span class="largetext"><strong>{$champion}</strong></span>
 	</td>
 </tr>]]></template>
