@@ -22,6 +22,28 @@ $l['can_manage_logs'] = "Can manage arcade logs?";
 $l['group_arcade'] = "Arcade";
 $l['group_tournament'] = "Arcade Tournament";
 
+// User settings
+$l['games_scores_options'] = "Games and Scores Options";
+$l['general_options'] = "General Options";
+$l['games_per_page'] = "Games Per Page";
+$l['scores_per_page'] = "Scores Per Page";
+$l['name'] = "Name";
+$l['date_added'] = "Date Added";
+$l['times_played'] = "Times Played";
+$l['last_played'] = "Last Played";
+$l['rating'] = "Rating";
+$l['ascending'] = "Ascending";
+$l['descending'] = "Descending";
+$l['sort_games_by'] = "Sort Games By";
+$l['sort_order'] = "Sort Order";
+$l['whos_online_arcade'] = "Display Who's Online on Arcade pages";
+$l['champ_display_postbit'] = "Display Championships on Postbit";
+$l['do_not_notify'] = "Do Not Notify";
+$l['notify_via_pm'] = "Notify via PM";
+$l['notify_via_email'] = "Notify via Email";
+$l['champ_notify'] = "Notify user whenever one of their championships is broken?";
+$l['tournament_notify'] = "Notify user whenever a new tournament round in which they're playing in starts?";
+
 // Usergroup permissions
 $l['general_arcade'] = "Arcade General";
 $l['tournaments'] = "Tournaments";

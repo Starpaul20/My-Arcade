@@ -74,6 +74,9 @@ $plugins->add_hook("admin_config_plugins_activate_commit", "myarcade_alerts_acti
 
 $plugins->add_hook("admin_style_templates_set", "myarcade_templates");
 $plugins->add_hook("admin_user_users_merge_commit", "myarcade_merge");
+$plugins->add_hook("admin_user_users_edit_graph_tabs", "myarcade_user_options");
+$plugins->add_hook("admin_user_users_edit_graph", "myarcade_user_graph");
+$plugins->add_hook("admin_user_users_edit_commit_start", "myarcade_user_commit");
 $plugins->add_hook("admin_user_groups_edit_graph_tabs", "myarcade_usergroups_permission");
 $plugins->add_hook("admin_user_groups_edit_graph", "myarcade_usergroups_graph");
 $plugins->add_hook("admin_user_groups_edit_commit", "myarcade_usergroups_commit");
@@ -1514,6 +1517,108 @@ function myarcade_merge()
 		"champion" => $destination_user['uid']
 	);
 	$db->update_query("arcadetournaments", $champion, "champion='{$source_user['uid']}'");
+}
+
+// Edit user options in Admin CP
+function myarcade_user_options($tabs)
+{
+	global $lang;
+	$lang->load("arcade_module_meta");
+
+	$tabs['arcade'] = $lang->arcade;
+	return $tabs;
+}
+
+function myarcade_user_graph()
+{
+	global $lang, $form, $mybb, $plugins;
+	$lang->load("arcade_module_meta");
+
+	echo "<div id=\"tab_arcade\">";
+	$form_container = new FormContainer($lang->arcade);
+
+	$gpp_options = array($lang->use_default);
+	if($mybb->settings['gamesperpageoptions'])
+	{
+		$explodedgames = explode(",", $mybb->settings['gamesperpageoptions']);
+		if(is_array($explodedgames))
+		{
+			foreach($explodedgames as $gpp)
+			{
+				if($gpp <= 0) continue;
+				$gpp_options[$gpp] = $gpp;
+			}
+		}
+	}
+
+	$spp_options = array($lang->use_default);
+	if($mybb->settings['scoresperpageoptions'])
+	{
+		$explodedgames = explode(",", $mybb->settings['scoresperpageoptions']);
+		if(is_array($explodedgames))
+		{
+			foreach($explodedgames as $spp)
+			{
+				if($spp <= 0) continue;
+				$spp_options[$spp] = $spp;
+			}
+		}
+	}
+
+	$game_sort_options = array(
+		'' => $lang->use_default,
+		'name' => $lang->name,
+		'date' => $lang->date_added,
+		'plays' => $lang->times_played,
+		'lastplayed' => $lang->last_played,
+		'rating' => $lang->rating
+	);
+
+	$game_order_options = array(
+		'' => $lang->use_default,
+		'asc' => $lang->ascending,
+		'desc' => $lang->descending
+	);
+
+	$games_scores_options = array(
+		"<label for=\"gamesperpage\">{$lang->games_per_page}:</label><br />".$form->generate_select_box("gamesperpage", $gpp_options, $mybb->input['gamesperpage'], array('id' => 'gamesperpage')),
+		"<label for=\"scoresperpage\">{$lang->scores_per_page}:</label><br />".$form->generate_select_box("scoresperpage", $spp_options, $mybb->input['scoresperpage'], array('id' => 'scoresperpage')),
+		"<label for=\"gamessortby\">{$lang->sort_games_by}:</label><br />".$form->generate_select_box("gamessortby", $game_sort_options, $mybb->input['gamessortby'], array('id' => 'gamessortby')),
+		"<label for=\"gamesorder\">{$lang->sort_order}:</label><br />".$form->generate_select_box("gamesorder", $game_order_options, $mybb->input['gamesorder'], array('id' => 'gamesorder'))
+	);
+	$form_container->output_row($lang->games_scores_options, "", "<div class=\"user_settings_bit\">".implode("</div><div class=\"user_settings_bit\">", $games_scores_options)."</div>");
+
+	$notify_options = array(
+		0 => $lang->do_not_notify,
+		1 => $lang->notify_via_pm,
+		2 => $lang->notify_via_email
+	);
+
+	$general_options = array(
+		$form->generate_check_box("whosonlinearcade", 1, $lang->whos_online_arcade, array("checked" => $mybb->input['whosonlinearcade'])),
+		$form->generate_check_box("champdisplaypostbit", 1, $lang->champ_display_postbit, array("checked" => $mybb->input['champdisplaypostbit'])),
+		"<label for=\"champnotify\">{$lang->champ_notify}</label><br />".$form->generate_select_box("champnotify", $notify_options, $mybb->input['champnotify'], array('id' => 'champnotify')),
+		"<label for=\"tournamentnotify\">{$lang->tournament_notify}</label><br />".$form->generate_select_box("tournamentnotify", $notify_options, $mybb->input['tournamentnotify'], array('id' => 'tournamentnotify'))
+	);
+	$form_container->output_row($lang->general_options, "", "<div class=\"user_settings_bit\">".implode("</div><div class=\"user_settings_bit\">", $general_options)."</div>");
+
+	$plugins->run_hooks("admin_user_users_edit_arcade", $form_container);
+
+	$form_container->end();
+	echo "</div>";
+}
+
+function myarcade_user_commit()
+{
+	global $db, $extra_user_updates, $mybb;
+	$extra_user_updates['gamesperpage'] = (int)$mybb->input['gamesperpage'];
+	$extra_user_updates['scoresperpage'] = (int)$mybb->input['scoresperpage'];
+	$extra_user_updates['gamessortby'] = $db->escape_string($mybb->input['gamessortby']);
+	$extra_user_updates['gamesorder'] = $db->escape_string($mybb->input['gamesorder']);
+	$extra_user_updates['whosonlinearcade'] = (int)$mybb->input['whosonlinearcade'];
+	$extra_user_updates['champdisplaypostbit'] = (int)$mybb->input['champdisplaypostbit'];
+	$extra_user_updates['champnotify'] = (int)$mybb->input['champnotify'];
+	$extra_user_updates['tournamentnotify'] = (int)$mybb->input['tournamentnotify'];
 }
 
 // Usergroup permissions
