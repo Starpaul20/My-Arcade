@@ -1531,11 +1531,11 @@ function myarcade_user_options($tabs)
 
 function myarcade_user_graph()
 {
-	global $lang, $form, $mybb, $plugins;
+	global $lang, $form, $mybb, $plugins, $user;
 	$lang->load("arcade_module_meta");
 
 	echo "<div id=\"tab_arcade\">";
-	$form_container = new FormContainer($lang->arcade);
+	$form_container = new FormContainer($lang->arcade.": {$user['username']}");
 
 	$gpp_options = array($lang->use_default);
 	if($mybb->settings['gamesperpageoptions'])
