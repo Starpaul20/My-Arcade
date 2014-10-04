@@ -38,5 +38,6 @@ $l['order'] = "order";
 $l['results_per_page'] = "Results Per Page:";
 
 $l['success_pruned_arcade_logs'] = "The arcade logs have been pruned successfully.";
+$l['note_logs_locked'] = "For security reasons, logs less than 24 hours old cannot be pruned.";
 
 ?>

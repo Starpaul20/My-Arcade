@@ -35,5 +35,6 @@ $l['order'] = "order";
 $l['results_per_page'] = "Results Per Page:";
 
 $l['success_pruned_scores'] = "The arcade scores have been pruned successfully.";
+$l['note_scores_locked'] = "For security reasons, scores less than 24 hours old cannot be pruned.";
 
 ?>
