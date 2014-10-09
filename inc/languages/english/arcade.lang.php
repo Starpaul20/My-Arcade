@@ -59,7 +59,7 @@ $l['flash_not_installed'] = "You must have Flash installed in your browser in or
 $l['guest_scoring'] = "You are playing the arcade as a guest, any score submitted will not be saved.";
 $l['error_max_plays_day'] = "You cannot play more games because you've already used up your allocated quota of playing {1} times in the past 24 hours.";
 
-$l['rating'] = "Rating:";
+$l['rating'] = "Rating";
 $l['game_rating'] = "Game Rating:";
 $l['object_of_game'] = "The Object of {1}";
 $l['keys'] = "The Keys";

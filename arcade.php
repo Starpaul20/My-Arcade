@@ -1190,6 +1190,8 @@ if($mybb->input['action'] == "favorites")
 	");
 	while($game = $db->fetch_array($query))
 	{
+		$alt_bg = alt_trow();
+
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
@@ -1309,7 +1311,6 @@ if($mybb->input['action'] == "favorites")
 
 		$plugins->run_hooks("arcade_game");
 
-		$alt_bg = alt_trow();
 		eval("\$game_bit .= \"".$templates->get("arcade_gamebit")."\";");
 	}
 
@@ -2258,6 +2259,8 @@ if($mybb->input['action'] == "results")
 	");
 	while($game = $db->fetch_array($query))
 	{
+		$alt_bg = alt_trow();
+
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
@@ -2391,7 +2394,6 @@ if($mybb->input['action'] == "results")
 
 		$plugins->run_hooks("arcade_game");
 
-		$alt_bg = alt_trow();
 		eval("\$game_bit .= \"".$templates->get("arcade_gamebit")."\";");
 	}
 
@@ -2878,6 +2880,8 @@ if(!$mybb->input['action'])
 	");
 	while($game = $db->fetch_array($query))
 	{
+		$alt_bg = alt_trow();
+
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
@@ -3011,7 +3015,6 @@ if(!$mybb->input['action'])
 
 		$plugins->run_hooks("arcade_game");
 
-		$alt_bg = alt_trow();
 		eval("\$game_bit .= \"".$templates->get("arcade_gamebit")."\";");
 	}
 
