@@ -106,6 +106,51 @@ td .star_rating {
 	float: left;
 	vertical-align: middle;
 	padding-right: 5px;
+}
+
+ul.game_tools,
+ul.game_tools li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul.game_tools li {
+	padding-left: 24px;
+	padding-bottom: 4px;
+	margin-bottom: 3px;
+	font-size: 11px;
+	background-image: url(images/arcade/arcade_sprite.png);
+	background-repeat: no-repeat;
+    white-space: nowrap;
+}
+
+ul.game_tools li.scores {
+	background-position: 0 0;
+}
+
+ul.game_tools li.yourscore {
+	background-position: 0 -20px;
+}
+
+ul.game_tools li.plays {
+	background-position: 0 -40px;
+}
+
+ul.game_tools li.lastplay {
+	background-position: 0 -60px;
+}
+
+ul.game_tools li.addfavorite {
+	background-position: 0 -80px;
+}
+
+ul.game_tools li.removefavorite {
+	background-position: 0 -100px;
+}
+
+ul.game_tools li.tournaments {
+	background-position: 0 -120px;
 }]]></stylesheet>
 	</stylesheets>
 	<templates>
@@ -358,14 +403,13 @@ td .star_rating {
 	</td>
 	<td class="{$alt_bg}">
 		<ul class="game_tools">
-			<li><strong><a href="arcade.php?action=scores&amp;gid={$game['gid']}">{$lang->view_high_scores}</a></strong></li>
+			<li class="scores"><strong><a href="arcade.php?action=scores&amp;gid={$game['gid']}">{$lang->view_high_scores}</a></strong></li>
 			{$your_score}
-			<li>{$lang->times_played} {$game['plays']}</li>
-			<li>{$lang->last_played} {$lastplayed} {$lastplayedby}</li>
+			<li class="plays">{$lang->times_played} {$game['plays']}</li>
+			<li class="lastplay">{$lang->last_played} {$lastplayed} {$lastplayedby}</li>
 			{$add_remove_favorite}
 			{$tournament}
 		</ul>
-		<br />
 	</td>
 	{$rategame}
 	<td class="{$alt_bg}" align="center">
@@ -375,7 +419,7 @@ td .star_rating {
 	</td>
 </tr>]]></template>
 		<template name="arcade_gamebit_champ" version="1000"><![CDATA[<a href="{$profilelink}">{$game['champusername']}</a>]]></template>
-		<template name="arcade_gamebit_favorite" version="1000"><![CDATA[<li><a href="arcade.php?action={$add_remove_favorite_type}favorite&amp;gid={$game['gid']}&amp;my_post_key={$mybb->post_code}">{$add_remove_favorite_text}</a></li>]]></template>
+		<template name="arcade_gamebit_favorite" version="1000"><![CDATA[<li class="{$add_remove_favorite_type}favorite"><a href="arcade.php?action={$add_remove_favorite_type}favorite&amp;gid={$game['gid']}&amp;my_post_key={$mybb->post_code}">{$add_remove_favorite_text}</a></li>]]></template>
 		<template name="arcade_gamebit_new" version="1000"><![CDATA[<img src="images/arcade/new.png" alt="{$lang->new}" title="{$lang->new}" />]]></template>
 		<template name="arcade_gamebit_playedby" version="1000"><![CDATA[<a href="{$profilelink}">{$game['user_name']}</a>]]></template>
 		<template name="arcade_gamebit_rating" version="1000"><![CDATA[<td align="center" class="{$alt_bg}" id="rating_table_{$game['gid']}">
@@ -388,8 +432,8 @@ td .star_rating {
 	// -->
 	</script>
 </td>]]></template>
-		<template name="arcade_gamebit_score" version="1000"><![CDATA[<li>{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>]]></template>
-		<template name="arcade_gamebit_tournaments" version="1000"><![CDATA[<li><a href="tournaments.php?action=create&amp;gid={$game['gid']}">{$lang->create_tournament}</a></li>]]></template>
+		<template name="arcade_gamebit_score" version="1000"><![CDATA[<li class="yourscore">{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>]]></template>
+		<template name="arcade_gamebit_tournaments" version="1000"><![CDATA[<li class="tournaments"><a href="tournaments.php?action=create&amp;gid={$game['gid']}">{$lang->create_tournament}</a></li>]]></template>
 		<template name="arcade_menu" version="1000"><![CDATA[<br />
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 	<tr>
