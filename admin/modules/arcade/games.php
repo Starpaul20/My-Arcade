@@ -646,6 +646,8 @@ if($mybb->input['action'] == "delete")
 		}
 
 		$db->delete_query("arcadetournaments", "gid='{$game['gid']}'");
+
+		require_once MYBB_ROOT."inc/functions_arcade.php";
 		update_tournaments_stats();
 
 		$plugins->run_hooks("admin_arcade_games_delete_commit");
