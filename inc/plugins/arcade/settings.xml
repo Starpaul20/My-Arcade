@@ -21,7 +21,7 @@
 			<title>Newest Games/Most Played Games</title>
 			<description><![CDATA[The number of newest games and most played games to show on the statistics box.]]></description>
 			<disporder>3</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[15]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -29,7 +29,7 @@
 			<title>Newest Champions</title>
 			<description><![CDATA[The number of newest champions to show in the statistic box.]]></description>
 			<disporder>4</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[5]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -37,7 +37,7 @@
 			<title>Latest Scores</title>
 			<description><![CDATA[Number of latest scores to show in the statistic box.]]></description>
 			<disporder>5</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[5]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -61,7 +61,7 @@
 			<title>Games Per Page</title>
 			<description><![CDATA[The number of games to show per page on the arcade page.]]></description>
 			<disporder>8</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[10]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -92,7 +92,7 @@ desc=Descending]]></optionscode>
 			<title>Number Of Categories Per Row</title>
 			<description><![CDATA[The number of categories to display on a single row of the category table. It is recommended that this value be no higher than 10.]]></description>
 			<disporder>11</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[5]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -100,7 +100,7 @@ desc=Descending]]></optionscode>
 			<title>Days For New Game</title>
 			<description><![CDATA[The number of days a game will be marked as new after being added.]]></description>
 			<disporder>12</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[7]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -144,7 +144,7 @@ desc=Descending]]></optionscode>
 			<title>Scores Per Page</title>
 			<description><![CDATA[The number of scores to show per page on the score page.]]></description>
 			<disporder>17</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[10]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -152,7 +152,7 @@ desc=Descending]]></optionscode>
 			<title>Comment Edit Time Limit</title>
 			<description><![CDATA[The number of minutes until regular users cannot edit their own score comments. Enter 0 (zero) for no limit.]]></description>
 			<disporder>18</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[60]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -160,7 +160,7 @@ desc=Descending]]></optionscode>
 			<title>Maximum Score Comment Length</title>
 			<description><![CDATA[The maximum number of characters a score comment can be.]]></description>
 			<disporder>19</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[120]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -168,7 +168,7 @@ desc=Descending]]></optionscode>
 			<title>Stats Per Page</title>
 			<description><![CDATA[The number of games to show per page on the stats page. It is recommended this be no higher than 15.]]></description>
 			<disporder>20</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[10]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -200,7 +200,7 @@ desc=Descending]]></optionscode>
 			<title>Maximum Championships On Postbit</title>
 			<description><![CDATA[Enter the maximum number of championships that should be shown on the postbit. Enter 0 (zero) for no limit.]]></description>
 			<disporder>24</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[10]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
@@ -250,7 +250,7 @@ desc=Descending]]></optionscode>
 			<title>Tournament Cancel Time</title>
 			<description><![CDATA[The amount of time a tournament has (in days) to get players before it is cancelled.]]></description>
 			<disporder>5</disporder>
-			<optionscode><![CDATA[text]]></optionscode>
+			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[90]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>

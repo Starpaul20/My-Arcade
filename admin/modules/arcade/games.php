@@ -191,8 +191,8 @@ if($mybb->input['action'] == "add_simple")
 	$form_container->output_row($lang->category, "", $form->generate_select_box("cid", $categories, $mybb->input['cid'], array('id' => 'cid')), 'cid');
 
 	$form_container->output_row($lang->bg_color, "", $form->generate_text_box('bgcolor', $mybb->input['bgcolor'], array('id' => 'bgcolor')), 'bgcolor');
-	$form_container->output_row($lang->width, "", $form->generate_text_box('width', $mybb->input['width'], array('id' => 'width')), 'width');
-	$form_container->output_row($lang->height, "", $form->generate_text_box('height', $mybb->input['height'], array('id' => 'height')), 'height');
+	$form_container->output_row($lang->width, "", $form->generate_numeric_field('width', $mybb->input['width'], array('id' => 'width', 'min' => 0)), 'width');
+	$form_container->output_row($lang->height, "", $form->generate_numeric_field('height', $mybb->input['height'], array('id' => 'height', 'min' => 0)), 'height');
 
 	$sort_by = array(
 		'desc' => $lang->desc_score,
@@ -586,8 +586,8 @@ if($mybb->input['action'] == "edit")
 	$form_container->output_row($lang->category, "", $form->generate_select_box("cid", $categories, $mybb->input['cid'], array('id' => 'cid')), 'cid');
 
 	$form_container->output_row($lang->bg_color, "", $form->generate_text_box('bgcolor', $mybb->input['bgcolor'], array('id' => 'bgcolor')), 'bgcolor');
-	$form_container->output_row($lang->width, "", $form->generate_text_box('width', $mybb->input['width'], array('id' => 'width')), 'width');
-	$form_container->output_row($lang->height, "", $form->generate_text_box('height', $mybb->input['height'], array('id' => 'height')), 'height');
+	$form_container->output_row($lang->width, "", $form->generate_numeric_field('width', $mybb->input['width'], array('id' => 'width', 'min' => 0)), 'width');
+	$form_container->output_row($lang->height, "", $form->generate_numeric_field('height', $mybb->input['height'], array('id' => 'height', 'min' => 0)), 'height');
 
 	$sort_by = array(
 		'desc' => $lang->desc_score,
