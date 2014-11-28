@@ -289,7 +289,7 @@ ul.game_tools li.tournaments {
 </body>
 </html>]]></template>
 		<template name="arcade_champions_bit" version="1000"><![CDATA[<tr>
-	<td class="{$alt_bg}" align="center"><a href="arcade.php?action=play&amp;gid={$champ['gid']}">{$champ['name']}</a></td>
+	<td class="{$alt_bg}" align="center"><a href="arcade.php?action=scores&amp;gid={$champ['gid']}">{$champ['name']}</a></td>
 	<td class="{$alt_bg}" align="center"><a href="{$profilelink}">{$champ['username']}</a></td>
 	<td class="{$alt_bg}" align="center">{$dateline}</td>
 	<td class="{$alt_bg}" align="center">{$champ['score']}</td>
@@ -697,7 +697,7 @@ body {
 </body>
 </html>]]></template>
 		<template name="arcade_scoreboard_bit" version="1000"><![CDATA[<tr>
-	<td class="{$alt_bg}" align="center"><a href="arcade.php?action=play&amp;gid={$score['gid']}">{$score['name']}</a></td>
+	<td class="{$alt_bg}" align="center"><a href="arcade.php?action=scores&amp;gid={$score['gid']}">{$score['name']}</a></td>
 	<td class="{$alt_bg}" align="center"><a href="{$profilelink}">{$score['username']}</a></td>
 	<td class="{$alt_bg}" align="center">{$dateline}</td>
 	<td class="{$alt_bg}" align="center">{$score['score']}</td>
