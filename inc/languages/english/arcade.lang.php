@@ -106,7 +106,7 @@ $l['no_scores'] = "No Scores";
 $l['no_game_scores'] = "There are no scores for this game.";
 $l['scored'] = "scored";
 $l['playing'] = "playing";
-$l['by_user'] = "by {1}";
+$l['by'] = "by";
 $l['new'] = "New";
 $l['play_full_screen'] = "Play Full Screen";
 

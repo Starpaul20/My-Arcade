@@ -16,6 +16,7 @@ $templatelist .= ",arcade_tournaments,arcade_tournaments_cancelled,arcade_scores
 $templatelist .= ",arcade_settings_gamesselect,arcade_settings_scoreselect,arcade_settings_whosonline,arcade_settings_tournamentnotify,arcade_settings_champpostbit,arcade_statistics_bestplayers_avatar";
 $templatelist .= ",arcade_scores_play,arcade_scores_rating,arcade_scores_no_scores,arcade_no_display,arcade_scores,arcade_scores_bit,arcade_favorite,arcade_scoreboard,arcade_no_games,arcade_settings,arcade_play";
 $templatelist .= ",arcade_gamebit_champ,arcade_settings_gamesselect_option,arcade_settings_scoreselect_option,arcade_statistics_no_games,arcade_statistics_no_champs,arcade_statistics_no_scores,arcade_search";
+$templatelist .= ",arcade_fullscreen,arcade_gamebit_fullscreen,arcade_scores_bit_ipaddress,arcade_scores_ipaddress,arcade_stats_userinput,arcade_catinput,arcade_play_champion,arcade_gamebit_lastplayed";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -322,7 +323,7 @@ if($mybb->input['action'] == "play")
 			$profilelink = get_profile_link($champ['uid']);
 		}
 
-		$champusername = "<a href=\"{$profilelink}\">{$champ['username']}</a>";
+		eval("\$champusername = \"".$templates->get("arcade_play_champion")."\";");
 	}
 	else
 	{
@@ -754,10 +755,11 @@ if($mybb->input['action'] == "scores")
 		}
 
 		// Display IP address of scores if user is a mod/admin
+		$ipaddressbit = '';
 		if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 		{
 			$score['ipaddress'] = my_inet_ntop($db->unescape_binary($score['ipaddress']));
-			$ipaddressbit = "<td class=\"{$alt_bg}\" align=\"center\">{$score['ipaddress']}</td>";
+			eval("\$ipaddressbit = \"".$templates->get("arcade_scores_bit_ipaddress")."\";");
 		}
 
 		eval("\$score_bit .= \"".$templates->get("arcade_scores_bit")."\";");
@@ -769,9 +771,10 @@ if($mybb->input['action'] == "scores")
 	}
 
 	// Display IP address of scores if user is a mod/admin
+	$ipaddresscol = '';
 	if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 	{
-		$ipaddresscol = "<td class=\"tcat\" width=\"10%\" align=\"center\"><span class=\"smalltext\"><strong>{$lang->ip_address}</strong></span></td>";
+		eval("\$ipaddresscol = \"".$templates->get("arcade_scores_ipaddress")."\";");
 		$colspan = "7";
 	}
 	else
@@ -1339,9 +1342,9 @@ if($mybb->input['action'] == "favorites")
 			$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
 		}
 
-		$lastplayedby = "";
-		if($game['lastplayeduid'])
+		if($game['lastplayed'])
 		{
+			$lastplayed = my_date('relative', $game['lastplayed']);
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
@@ -1351,17 +1354,11 @@ if($mybb->input['action'] == "favorites")
 				$profilelink = get_profile_link($game['lastplayeduid']);
 			}
 
-			$playedby = "<a href=\"{$profilelink}\">{$game['user_name']}</a>";
-			$lastplayedby = $lang->sprintf($lang->by_user, $playedby);
-		}
-
-		if($game['lastplayed'] && $game['lastplayeduid'])
-		{
-			$lastplayed = my_date('relative', $game['lastplayed']);
+			eval("\$lastplayedby = \"".$templates->get("arcade_gamebit_lastplayed")."\";");
 		}
 		else
 		{
-			$lastplayed = $lang->na;
+			$lastplayedby = $lang->na;
 		}
 
 		if($game['champscore'])
@@ -1659,10 +1656,10 @@ if($mybb->input['action'] == "stats")
 	$lang->arcade_stats_for = $lang->sprintf($lang->arcade_stats_for, $user['username']);
 	$lang->player_details = $lang->sprintf($lang->player_details, $user['username']);
 
-	$userinput = "";
+	$userinput = '';
 	if($mybb->input['uid'])
 	{
-		$userinput = "<input type=\"hidden\" name=\"uid\" value=\"{$mybb->input['uid']}\" />";
+		eval("\$userinput = \"".$templates->get("arcade_stats_userinput")."\";");
 	}
 
 	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
@@ -2144,10 +2141,11 @@ if($mybb->input['action'] == "scoreboard")
 		$alt_bg = alt_trow();
 
 		// Display IP address of scores if user is a mod/admin
+		$ipaddressbit = '';
 		if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 		{
 			$score['ipaddress'] = my_inet_ntop($db->unescape_binary($score['ipaddress']));
-			$ipaddressbit = "<td class=\"{$alt_bg}\" align=\"center\">{$score['ipaddress']}</td>";
+			eval("\$ipaddressbit = \"".$templates->get("arcade_scores_bit_ipaddress")."\";");
 		}
 
 		eval("\$score_bit .= \"".$templates->get("arcade_scoreboard_bit")."\";");
@@ -2161,9 +2159,10 @@ if($mybb->input['action'] == "scoreboard")
 	}
 
 	// Display IP address of scores if user is a mod/admin
+	$ipaddresscol = '';
 	if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 	{
-		$ipaddresscol = "<td class=\"tcat\" width=\"10%\" align=\"center\"><strong>{$lang->ip_address}</strong></td>";
+		eval("\$ipaddresscol = \"".$templates->get("arcade_scores_ipaddress")."\";");
 		$colspan = "6";
 	}
 	else
@@ -2410,9 +2409,9 @@ if($mybb->input['action'] == "results")
 			$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
 		}
 
-		$lastplayedby = "";
-		if($game['lastplayeduid'])
+		if($game['lastplayed'])
 		{
+			$lastplayed = my_date('relative', $game['lastplayed']);
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
@@ -2422,17 +2421,11 @@ if($mybb->input['action'] == "results")
 				$profilelink = get_profile_link($game['lastplayeduid']);
 			}
 
-			$playedby = "<a href=\"{$profilelink}\">{$game['user_name']}</a>";
-			$lastplayedby = $lang->sprintf($lang->by_user, $playedby);
-		}
-
-		if($game['lastplayed'])
-		{
-			$lastplayed = my_date('relative', $game['lastplayed']);
+			eval("\$lastplayedby = \"".$templates->get("arcade_gamebit_lastplayed")."\";");
 		}
 		else
 		{
-			$lastplayed = $lang->na;
+			$lastplayedby = $lang->na;
 		}
 
 		if($game['champscore'])
@@ -2574,7 +2567,7 @@ if(!$mybb->input['action'])
 			error($lang->error_nocategorypermission);
 		}
 
-		$catinput = "<input type=\"hidden\" name=\"cid\" value=\"{$cid}\" />";
+		eval("\$catinput = \"".$templates->get("arcade_catinput")."\";");
 		$where_cat = " AND g.cid='{$cid}'";
 	}
 
@@ -3033,9 +3026,9 @@ if(!$mybb->input['action'])
 			$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
 		}
 
-		$lastplayedby = "";
-		if($game['lastplayeduid'])
+		if($game['lastplayed'])
 		{
+			$lastplayed = my_date('relative', $game['lastplayed']);
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
@@ -3045,17 +3038,11 @@ if(!$mybb->input['action'])
 				$profilelink = get_profile_link($game['lastplayeduid']);
 			}
 
-			$playedby = "<a href=\"{$profilelink}\">{$game['user_name']}</a>";
-			$lastplayedby = $lang->sprintf($lang->by_user, $playedby);
-		}
-
-		if($game['lastplayed'])
-		{
-			$lastplayed = my_date('relative', $game['lastplayed']);
+			eval("\$lastplayedby = \"".$templates->get("arcade_gamebit_lastplayed")."\";");
 		}
 		else
 		{
-			$lastplayed = $lang->na;
+			$lastplayedby = $lang->na;
 		}
 
 		if($game['champscore'])
