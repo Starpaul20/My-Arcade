@@ -1398,7 +1398,7 @@ function myarcade_delete($delete)
 		SELECT r.*, g.numratings, g.totalratings
 		FROM ".TABLE_PREFIX."arcaderatings r
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=r.gid)
-		WHERE r.uid IN('.$delete->delete_uids.')
+		WHERE r.uid IN({$delete->delete_uids})
 	");
 	while($rating = $db->fetch_array($query))
 	{
@@ -1416,7 +1416,7 @@ function myarcade_delete($delete)
 	$db->delete_query('arcadelogs', 'uid IN('.$delete->delete_uids.')');
 
 	// Update game champion
-	$query = $db->simple_select("arcadechampions", "gid", "uid IN('.$delete->delete_uids.')");
+	$query = $db->simple_select("arcadechampions", "gid", "uid IN({$delete->delete_uids})");
 	while($champion = $db->fetch_array($query))
 	{
 		update_champion($champion['gid']);
