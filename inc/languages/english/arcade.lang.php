@@ -108,6 +108,7 @@ $l['scored'] = "scored";
 $l['playing'] = "playing";
 $l['by_user'] = "by {1}";
 $l['new'] = "New";
+$l['play_full_screen'] = "Play Full Screen";
 
 $l['arcade_settings'] = "Settings";
 $l['edit_settings'] = "Edit Settings";
@@ -165,6 +166,7 @@ $l['categories'] = "Categories";
 $l['time_played'] = "Time Played";
 
 $l['play_game'] = "Play {1}";
+$l['play_game_fullscreen'] = "Play {1} Full Screen";
 $l['arcade_home'] = "Arcade Home";
 $l['highest_scores_of'] = "Highest scores of {1}";
 $l['back_to_arcade'] = "Back to the Arcade";

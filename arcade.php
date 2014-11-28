@@ -421,6 +421,138 @@ if($mybb->input['action'] == "play")
 	output_page($play);
 }
 
+// Playing a game full screen
+if($mybb->input['action'] == "fullscreen")
+{
+	if($mybb->usergroup['canplayarcade'] != 1)
+	{
+		error_no_permission();
+	}
+
+	$mybb->binary_fields["arcadesessions"] = array('ipaddress' => true);
+
+	$gid = $mybb->get_input('gid', 1);
+	$game = get_game($gid);
+
+	if($mybb->settings['enabletournaments'] == 1 && !empty($mybb->input['tid']))
+	{
+		$tid = $mybb->get_input('tid', 1);
+
+		$query = $db->query("
+			SELECT t.*, p.*
+			FROM ".TABLE_PREFIX."arcadetournaments t
+			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (t.tid=p.tid AND p.round=t.round)
+			WHERE t.tid='{$tid}' AND t.status='2' AND p.uid='{$mybb->user['uid']}'
+		");
+		$tournament = $db->fetch_array($query);
+
+		$game = get_game($tournament['gid']);
+
+		$information = unserialize($tournament['information']);
+
+		// Invalid tournament
+		if(!$tournament['tid'])
+		{
+			error($lang->error_invalidtournament);
+		}
+
+		if(!$tournament['uid'])
+		{
+			error($lang->error_notjoined);
+		}
+
+		if($tournament['attempts'] >= $tournament['tries'])
+		{
+			error($lang->error_maxattemptsreached);
+		}
+	}
+
+	// Invalid game
+	if($game['active'] != 1 || !$game['gid'])
+	{
+		error($lang->error_invalidgame);
+	}
+
+	$category = explode(',', $unviewable);
+	if(in_array($game['cid'], $category))
+	{
+		error($lang->error_nogamepermission);
+	}
+
+	// Check group limits
+	if($mybb->usergroup['maxplaysday'] > 0)
+	{
+		$query = $db->simple_select("arcadesessions", "COUNT(*) AS play_count", "uid='{$mybb->user['uid']}' AND dateline >= '".(TIME_NOW - (60*60*24))."'");
+		$play_count = $db->fetch_field($query, "play_count");
+		if($play_count >= $mybb->usergroup['maxplaysday'])
+		{
+			$lang->error_max_plays_day = $lang->sprintf($lang->error_max_plays_day, $mybb->usergroup['maxplaysday']);
+			error($lang->error_max_plays_day);
+		}
+	}
+
+	$plugins->run_hooks("arcade_fullscreen_start");
+
+	my_unsetcookie('arcadesession');
+
+	// Load Tournament info if inputted
+	if($mybb->settings['enabletournaments'] == 1 && !empty($mybb->input['tid']))
+	{
+		// Create an arcade session (to ensure proper submitting and scoring)
+		$sid = md5(uniqid(microtime(), 3));
+		$new_session = array(
+			"sid" => $db->escape_string($sid),
+			"uid" => (int)$mybb->user['uid'],
+			"gid" => (int)$game['gid'],
+			"tid" => (int)$tid,
+			"dateline" => TIME_NOW,
+			"gname" => $db->escape_string($game['file']),
+			"gtitle" => $db->escape_string($game['name']),
+			"ipaddress" => $db->escape_binary($session->packedip)
+		);
+		$db->insert_query("arcadesessions", $new_session);
+
+		my_setcookie('arcadesession', $sid, 21600);
+
+		$startedon = $information[$tournament['round']]['starttime'];
+		$roundstartedon = my_date($mybb->settings['dateformat'], $startedon).", ".my_date($mybb->settings['timeformat'], $startedon);
+		$triesleft = ($tournament['tries'] - $tournament['attempts']);
+		$hightournamentscore = my_number_format(floatval($tournament['score']));
+
+		eval("\$tournaments = \"".$templates->get("arcade_play_tournament")."\";");
+	}
+	else
+	{
+		// Create an arcade session (to ensure proper submitting and scoring)
+		$sid = md5(uniqid(microtime(), 3));
+		$new_session = array(
+			"sid" => $db->escape_string($sid),
+			"uid" => (int)$mybb->user['uid'],
+			"gid" => (int)$game['gid'],
+			"dateline" => TIME_NOW,
+			"gname" => $db->escape_string($game['file']),
+			"gtitle" => $db->escape_string($game['name']),
+			"ipaddress" => $db->escape_binary($session->packedip)
+		);
+		$db->insert_query("arcadesessions", $new_session);
+
+		my_setcookie('arcadesession', $sid, 21600);
+	}
+
+	// Increment play views, last play time and last play uid.
+	$update_game = array(
+		"plays" => (int)$game['plays'] + 1,
+		"lastplayed" => TIME_NOW,
+		"lastplayeduid" => (int)$mybb->user['uid']
+	);
+	$db->update_query("arcadegames", $update_game, "gid='{$game['gid']}'");
+
+	$plugins->run_hooks("arcade_fullscreen_end");
+
+	eval("\$fullscreen = \"".$templates->get("arcade_fullscreen")."\";");
+	output_page($fullscreen);
+}
+
 // High scores for a game
 if($mybb->input['action'] == "scores")
 {
@@ -445,6 +577,7 @@ if($mybb->input['action'] == "scores")
 	$game['description'] = htmlspecialchars_uni($game['description']);
 
 	$lang->play_game = $lang->sprintf($lang->play_game, $game['name']);
+	$lang->play_game_fullscreen = $lang->sprintf($lang->play_game_fullscreen, $game['name']);
 	$lang->highest_scores_of = $lang->sprintf($lang->highest_scores_of, $game['name']);
 
 	add_breadcrumb($lang->highest_scores_of, "arcade.php?action=scores&gid={$game['gid']}");
@@ -1195,9 +1328,11 @@ if($mybb->input['action'] == "favorites")
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		$play_full_screen = '';
 		if($mybb->usergroup['canplayarcade'] == 1)
 		{
 			$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+			eval("\$play_full_screen = \"".$templates->get("arcade_gamebit_fullscreen")."\";");
 		}
 		else
 		{
@@ -2264,9 +2399,11 @@ if($mybb->input['action'] == "results")
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		$play_full_screen = '';
 		if($mybb->usergroup['canplayarcade'] == 1)
 		{
 			$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+			eval("\$play_full_screen = \"".$templates->get("arcade_gamebit_fullscreen")."\";");
 		}
 		else
 		{
@@ -2885,9 +3022,11 @@ if(!$mybb->input['action'])
 		$game['name'] = htmlspecialchars_uni($game['name']);
 		$game['description'] = htmlspecialchars_uni($game['description']);
 
+		$play_full_screen = '';
 		if($mybb->usergroup['canplayarcade'] == 1)
 		{
 			$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+			eval("\$play_full_screen = \"".$templates->get("arcade_gamebit_fullscreen")."\";");
 		}
 		else
 		{
