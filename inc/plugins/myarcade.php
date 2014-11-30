@@ -1535,7 +1535,7 @@ function myarcade_user_graph()
 	$lang->load("arcade_module_meta");
 
 	echo "<div id=\"tab_arcade\">";
-	$form_container = new FormContainer($lang->arcade.": {$user['username']}");
+	$form_container = new FormContainer($lang->arcade_settings.": {$user['username']}");
 
 	$gpp_options = array($lang->use_default);
 	if($mybb->settings['gamesperpageoptions'])

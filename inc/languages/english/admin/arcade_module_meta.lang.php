@@ -23,6 +23,7 @@ $l['group_arcade'] = "Arcade";
 $l['group_tournament'] = "Arcade Tournament";
 
 // User settings
+$l['arcade_settings'] = "Arcade Settings";
 $l['games_scores_options'] = "Games and Scores Options";
 $l['general_options'] = "General Options";
 $l['games_per_page'] = "Games Per Page";
