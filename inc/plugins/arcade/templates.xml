@@ -769,9 +769,9 @@ body {
 	<td class="{$alt_bg}">{$score['comment']} <span class="smalltext" style="float:right;">{$edit_link} {$delete_link}</span></td>
 	<td class="{$alt_bg}" align="center">{$dateline}</td>
 	<td class="{$alt_bg}" align="center">{$timeplayed}</td>
-{$ipaddressbit}
+	{$ipaddressbit}
 </tr>]]></template>
-		<template name="arcade_scores_bit_ipaddress" version="1000"><![CDATA[[<td class="{$alt_bg}" align="center">{$score['ipaddress']}</td>]]]></template>
+		<template name="arcade_scores_bit_ipaddress" version="1000"><![CDATA[<td class="{$alt_bg}" align="center">{$score['ipaddress']}</td>]]></template>
 		<template name="arcade_scores_delete" version="1000"><![CDATA[[<a href="arcade.php?action=delete&amp;sid={$score['sid']}&amp;my_post_key={$mybb->post_code}" onclick="if(confirm(&quot;{$lang->delete_score_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;">{$lang->delete}</a>]]]></template>
 		<template name="arcade_scores_edit" version="1000"><![CDATA[[<a href="javascript:Arcade.editScore({$score['sid']});">{$lang->edit}</a>]]]></template>
 		<template name="arcade_scores_ipaddress" version="1000"><![CDATA[<td class="tcat" width="10%" align="center"><span class="smalltext"><strong>{$lang->ip_address}</strong></span></td>]]></template>
