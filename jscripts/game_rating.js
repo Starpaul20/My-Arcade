@@ -1,6 +1,6 @@
 /**
  * My Arcade
- * Copyright 2014 Starpaul20
+ * Copyright 2015 Starpaul20
  * Rating javascript is based off the MyBB thread rating system
  */
 
