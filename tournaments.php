@@ -83,7 +83,7 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 	// Verify incoming POST request
 	verify_post_check($mybb->get_input('my_post_key'));
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	$plugins->run_hooks("tournaments_do_create_start");
@@ -133,9 +133,9 @@ if($mybb->input['action'] == "do_create" && $mybb->request_method == "post")
 		"uid" => (int)$mybb->user['uid'],
 		"dateline" => TIME_NOW,
 		"status" => 1,
-		"rounds" => $mybb->get_input('rounds', 1),
-		"tries" => $mybb->get_input('tries', 1),
-		"days" => $mybb->get_input('days', 1)
+		"rounds" => $mybb->get_input('rounds', MyBB::INPUT_INT),
+		"tries" => $mybb->get_input('tries', MyBB::INPUT_INT),
+		"days" => $mybb->get_input('days', MyBB::INPUT_INT)
 	);
 	$tid = $db->insert_query("arcadetournaments", $insert_array);
 	update_tournaments_stats();
@@ -166,7 +166,7 @@ if($mybb->input['action'] == "create")
 
 	$plugins->run_hooks("tournaments_create_start");
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 
 	if($gid)
 	{
@@ -273,7 +273,7 @@ if($mybb->input['action'] == "create")
 // Viewing a tournament
 if($mybb->input['action'] == "view")
 {
-	$tid = $mybb->get_input('tid', 1);
+	$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 
 	$query = $db->query("
 		SELECT t.*, u.username
@@ -485,7 +485,7 @@ if($mybb->input['action'] == "join")
 		error($lang->error_cannotjointournaments);
 	}
 
-	$tid = $mybb->get_input('tid', 1);
+	$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 	$tournament = get_tournament($tid);
 
 	// Invalid tournament
@@ -746,7 +746,7 @@ if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 
 	$plugins->run_hooks("tournaments_do_cancel_start");
 
-	$tid = $mybb->get_input('tid', 1);
+	$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 	$tournament = get_tournament($tid);
 
 	if($mybb->usergroup['canmoderategames'] == 0)
@@ -793,7 +793,7 @@ if($mybb->input['action'] == "do_cancel" && $mybb->request_method == "post")
 // Cancel a tournament
 if($mybb->input['action'] == "cancel")
 {
-	$tid = $mybb->get_input('tid', 1);
+	$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 	$tournament = get_tournament($tid);
 
 	$plugins->run_hooks("tournaments_cancel_start");
@@ -861,7 +861,7 @@ if($mybb->input['action'] == "disqualify")
 		error($lang->error_disqualify_nopermission);
 	}
 
-	$pid = $mybb->get_input('pid', 1);
+	$pid = $mybb->get_input('pid', MyBB::INPUT_INT);
 	$query = $db->simple_select("arcadetournamentplayers", "*", "pid='{$pid}'");
 	$player = $db->fetch_array($query);
 
@@ -914,7 +914,7 @@ if($mybb->input['action'] == "delete")
 		error_no_permission();
 	}
 
-	$tid = $mybb->get_input('tid', 1);
+	$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 	$tournament = get_tournament($tid);
 
 	$plugins->run_hooks("tournaments_delete_start");

@@ -185,12 +185,12 @@ if($mybb->input['action'] == "play")
 
 	$mybb->binary_fields["arcadesessions"] = array('ipaddress' => true);
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	if($mybb->settings['enabletournaments'] == 1 && !empty($mybb->input['tid']))
 	{
-		$tid = $mybb->get_input('tid', 1);
+		$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 
 		$query = $db->query("
 			SELECT t.*, p.*
@@ -432,12 +432,12 @@ if($mybb->input['action'] == "fullscreen")
 
 	$mybb->binary_fields["arcadesessions"] = array('ipaddress' => true);
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	if($mybb->settings['enabletournaments'] == 1 && !empty($mybb->input['tid']))
 	{
-		$tid = $mybb->get_input('tid', 1);
+		$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 
 		$query = $db->query("
 			SELECT t.*, p.*
@@ -557,7 +557,7 @@ if($mybb->input['action'] == "fullscreen")
 // High scores for a game
 if($mybb->input['action'] == "scores")
 {
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -584,7 +584,7 @@ if($mybb->input['action'] == "scores")
 	add_breadcrumb($lang->highest_scores_of, "arcade.php?action=scores&gid={$game['gid']}");
 
 	// Figure out if we need to display multiple pages.
-	$perpage = $mybb->get_input('perpage', 1);
+	$perpage = $mybb->get_input('perpage', MyBB::INPUT_INT);
 	if(!$perpage || $perpage <= 0)
 	{
 		$perpage = $mybb->settings['scoresperpage'];
@@ -595,7 +595,7 @@ if($mybb->input['action'] == "scores")
 
 	if($mybb->input['page'] != "last")
 	{
-		$page = $mybb->get_input('page', 1);
+		$page = $mybb->get_input('page', MyBB::INPUT_INT);
 	}
 
 	$pages = $result / $perpage;
@@ -806,7 +806,7 @@ if($mybb->input['action'] == "rate")
 	// Verify incoming POST request
 	verify_post_check($mybb->get_input('my_post_key'));
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -823,7 +823,7 @@ if($mybb->input['action'] == "rate")
 
 	$plugins->run_hooks("arcade_rate_start");
 
-	$mybb->input['rating'] = $mybb->get_input('rating', 1);
+	$mybb->input['rating'] = $mybb->get_input('rating', MyBB::INPUT_INT);
 	if($mybb->input['rating'] < 1 || $mybb->input['rating'] > 5)
 	{
 		error($lang->error_invalidrating);
@@ -926,7 +926,7 @@ if($mybb->input['action'] == "delete")
 
 	$plugins->run_hooks("arcade_delete_start");
 
-	$sid = $mybb->get_input('sid', 1);
+	$sid = $mybb->get_input('sid', MyBB::INPUT_INT);
 	$query = $db->simple_select("arcadescores", "sid, gid, uid", "sid='{$sid}'");
 	$score = $db->fetch_array($query);
 
@@ -956,7 +956,7 @@ if($mybb->input['action'] == "do_edit" && $mybb->request_method == "post")
 	// Verify incoming POST request
 	verify_post_check($mybb->get_input('my_post_key'));
 
-	$sid = $mybb->get_input('sid', 1);
+	$sid = $mybb->get_input('sid', MyBB::INPUT_INT);
 	$query = $db->simple_select("arcadescores", "sid, uid, comment", "sid='{$sid}'");
 	$score = $db->fetch_array($query);
 
@@ -1027,7 +1027,7 @@ if($mybb->input['action'] == "edit")
 {
 	$time = TIME_NOW;
 
-	$sid = $mybb->get_input('sid', 1);
+	$sid = $mybb->get_input('sid', MyBB::INPUT_INT);
 	$query = $db->simple_select("arcadescores", "*", "sid='{$sid}'");
 	$score = $db->fetch_array($query);
 
@@ -1100,7 +1100,7 @@ if($mybb->input['action'] == "addfavorite")
 		error_no_permission();
 	}
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -1154,7 +1154,7 @@ if($mybb->input['action'] == "removefavorite")
 		error_no_permission();
 	}
 
-	$gid = $mybb->get_input('gid', 1);
+	$gid = $mybb->get_input('gid', MyBB::INPUT_INT);
 	$game = get_game($gid);
 
 	// Invalid game
@@ -1270,7 +1270,7 @@ if($mybb->input['action'] == "favorites")
 
 	// Figure out if we need to display multiple pages.
 	$perpage = $mybb->settings['gamesperpage'];
-	$page = $mybb->get_input('page', 1);
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->simple_select("arcadefavorites", "COUNT(gid) AS page_count", "uid='".(int)$mybb->user['uid']."'");
 	$page_count = $db->fetch_field($query, "page_count");
@@ -1477,14 +1477,14 @@ if($mybb->input['action'] == "do_settings" && $mybb->request_method == "post")
 	$plugins->run_hooks("arcade_do_settings_start");
 
 	$update_array = array(
-		"gamesperpage" => $mybb->get_input('gamesperpage', 1),
-		"scoresperpage" => $mybb->get_input('scoresperpage', 1),
+		"gamesperpage" => $mybb->get_input('gamesperpage', MyBB::INPUT_INT),
+		"scoresperpage" => $mybb->get_input('scoresperpage', MyBB::INPUT_INT),
 		"gamessortby" => $db->escape_string($mybb->get_input('gamessortby')),
 		"gamesorder" => $db->escape_string($mybb->get_input('gamesorder')),
-		"whosonlinearcade" => $mybb->get_input('whosonlinearcade', 1),
-		"champdisplaypostbit" => $mybb->get_input('champdisplaypostbit', 1),
-		"tournamentnotify" => $mybb->get_input('tournamentnotify', 1),
-		"champnotify" => $mybb->get_input('champnotify', 1)
+		"whosonlinearcade" => $mybb->get_input('whosonlinearcade', MyBB::INPUT_INT),
+		"champdisplaypostbit" => $mybb->get_input('champdisplaypostbit', MyBB::INPUT_INT),
+		"tournamentnotify" => $mybb->get_input('tournamentnotify', MyBB::INPUT_INT),
+		"champnotify" => $mybb->get_input('champnotify', MyBB::INPUT_INT)
 	);
 	$db->update_query("users", $update_array, "uid='".(int)$mybb->user['uid']."'");
 
@@ -1632,7 +1632,7 @@ if($mybb->input['action'] == "settings")
 // Stats page
 if($mybb->input['action'] == "stats")
 {
-	$uid = $mybb->get_input('uid', 1);
+	$uid = $mybb->get_input('uid', MyBB::INPUT_INT);
 	if(!$mybb->input['uid'])
 	{
 		$uid = (int)$mybb->user['uid'];
@@ -1701,7 +1701,7 @@ if($mybb->input['action'] == "stats")
 	}
 
 	$perpage = $mybb->settings['statsperpage'];
-	$page = $mybb->get_input('page', 1);
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->simple_select("arcadegames", "COUNT(gid) AS page_count", "active='1'{$cat_sql}");
 	$page_count = $db->fetch_field($query, "page_count");
@@ -1892,7 +1892,7 @@ if($mybb->input['action'] == "champions")
 	$perpage_selected[$mybb->input['perpage']] = 'selected="selected"';
 
 	// Figure out if we need to display multiple pages.
-	$mybb->input['perpage'] = $mybb->get_input('perpage', 1);
+	$mybb->input['perpage'] = $mybb->get_input('perpage', MyBB::INPUT_INT);
 	if($mybb->input['perpage'] > 0 && $mybb->input['perpage'] <= 500)
 	{
 		$perpage = $mybb->input['perpage'];
@@ -1902,7 +1902,7 @@ if($mybb->input['action'] == "champions")
 		$perpage = $mybb->input['perpage'] = $mybb->settings['scoresperpage'];	
 	}
 
-	$page = $mybb->get_input('page', 1);
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->query("
 		SELECT COUNT(c.cid) AS page_count, g.active, g.cid
@@ -2040,7 +2040,7 @@ if($mybb->input['action'] == "scoreboard")
 	$perpage_selected[$mybb->input['perpage']] = 'selected="selected"';
 
 	// Figure out if we need to display multiple pages.
-	$mybb->input['perpage'] = $mybb->get_input('perpage', 1);
+	$mybb->input['perpage'] = $mybb->get_input('perpage', MyBB::INPUT_INT);
 	if($mybb->input['perpage'] > 0 && $mybb->input['perpage'] <= 500)
 	{
 		$perpage = $mybb->input['perpage'];
@@ -2050,7 +2050,7 @@ if($mybb->input['action'] == "scoreboard")
 		$perpage = $mybb->input['perpage'] = $mybb->settings['scoresperpage'];	
 	}
 
-	$page = $mybb->get_input('page', 1);
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->query("
 		SELECT COUNT(s.sid) AS page_count, g.active, g.cid
@@ -2337,7 +2337,7 @@ if($mybb->input['action'] == "results")
 
 	// Work out pagination, which page we're at, as well as the limits.
 	$perpage = $mybb->settings['gamesperpage'];
-	$page = $mybb->get_input('page', 1);
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 	if($page > 0)
 	{
 		$start = ($page-1) * $perpage;
@@ -2545,7 +2545,7 @@ if(!$mybb->input['action'])
 	$where_cat = $catinput = '';
 	if(!empty($mybb->input['cid']))
 	{
-		$cid = $mybb->get_input('cid', 1);
+		$cid = $mybb->get_input('cid', MyBB::INPUT_INT);
 
 		$query = $db->simple_select("arcadecategories", "*", "cid='{$cid}'");
 		$category = $db->fetch_array($query);
@@ -2937,7 +2937,7 @@ if(!$mybb->input['action'])
 
 	// Figure out if we need to display multiple pages.
 	$perpage = $mybb->settings['gamesperpage'];
-	$page = $mybb->get_input('page', 1);
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	if($mybb->input['cid'])
 	{
@@ -2970,7 +2970,7 @@ if(!$mybb->input['action'])
 
 	if($mybb->input['cid'] > 0)
 	{
-		$cid = $mybb->get_input('cid', 1);
+		$cid = $mybb->get_input('cid', MyBB::INPUT_INT);
 		$page_url .= "?cid={$cid}";
 		$and = "&";
 	}

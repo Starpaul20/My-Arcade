@@ -1913,14 +1913,14 @@ function myarcade_user_graph()
 function myarcade_user_commit()
 {
 	global $db, $extra_user_updates, $mybb;
-	$extra_user_updates['gamesperpage'] = (int)$mybb->input['gamesperpage'];
-	$extra_user_updates['scoresperpage'] = (int)$mybb->input['scoresperpage'];
+	$extra_user_updates['gamesperpage'] = $mybb->get_input('gamesperpage', MyBB::INPUT_INT);
+	$extra_user_updates['scoresperpage'] = $mybb->get_input('scoresperpage', MyBB::INPUT_INT);
 	$extra_user_updates['gamessortby'] = $db->escape_string($mybb->input['gamessortby']);
 	$extra_user_updates['gamesorder'] = $db->escape_string($mybb->input['gamesorder']);
-	$extra_user_updates['whosonlinearcade'] = (int)$mybb->input['whosonlinearcade'];
-	$extra_user_updates['champdisplaypostbit'] = (int)$mybb->input['champdisplaypostbit'];
-	$extra_user_updates['champnotify'] = (int)$mybb->input['champnotify'];
-	$extra_user_updates['tournamentnotify'] = (int)$mybb->input['tournamentnotify'];
+	$extra_user_updates['whosonlinearcade'] = $mybb->get_input('whosonlinearcade', MyBB::INPUT_INT);
+	$extra_user_updates['champdisplaypostbit'] = $mybb->get_input('champdisplaypostbit', MyBB::INPUT_INT);
+	$extra_user_updates['champnotify'] = $mybb->get_input('champnotify', MyBB::INPUT_INT);
+	$extra_user_updates['tournamentnotify'] = $mybb->get_input('tournamentnotify', MyBB::INPUT_INT);
 }
 
 // Usergroup permissions
@@ -1973,17 +1973,17 @@ function myarcade_usergroups_graph()
 function myarcade_usergroups_commit()
 {
 	global $updated_group, $mybb;
-	$updated_group['canviewarcade'] = (int)$mybb->input['canviewarcade'];
-	$updated_group['canplayarcade'] = (int)$mybb->input['canplayarcade'];
-	$updated_group['maxplaysday'] = (int)$mybb->input['maxplaysday'];
-	$updated_group['canrategames'] = (int)$mybb->input['canrategames'];
-	$updated_group['cansearchgames'] = (int)$mybb->input['cansearchgames'];
-	$updated_group['canviewgamestats'] = (int)$mybb->input['canviewgamestats'];
-	$updated_group['canmoderategames'] = (int)$mybb->input['canmoderategames'];
-	$updated_group['canviewtournaments'] = (int)$mybb->input['canviewtournaments'];
-	$updated_group['canjointournaments'] = (int)$mybb->input['canjointournaments'];
-	$updated_group['cancreatetournaments'] = (int)$mybb->input['cancreatetournaments'];
-	$updated_group['maxtournamentsday'] = (int)$mybb->input['maxtournamentsday'];
+	$updated_group['canviewarcade'] = $mybb->get_input('canviewarcade', MyBB::INPUT_INT);
+	$updated_group['canplayarcade'] = $mybb->get_input('canplayarcade', MyBB::INPUT_INT);
+	$updated_group['maxplaysday'] = $mybb->get_input('maxplaysday', MyBB::INPUT_INT);
+	$updated_group['canrategames'] = $mybb->get_input('canrategames', MyBB::INPUT_INT);
+	$updated_group['cansearchgames'] = $mybb->get_input('cansearchgames', MyBB::INPUT_INT);
+	$updated_group['canviewgamestats'] = $mybb->get_input('canviewgamestats', MyBB::INPUT_INT);
+	$updated_group['canmoderategames'] = $mybb->get_input('canmoderategames', MyBB::INPUT_INT);
+	$updated_group['canviewtournaments'] = $mybb->get_input('canviewtournaments', MyBB::INPUT_INT);
+	$updated_group['canjointournaments'] = $mybb->get_input('canjointournaments', MyBB::INPUT_INT);
+	$updated_group['cancreatetournaments'] = $mybb->get_input('cancreatetournaments', MyBB::INPUT_INT);
+	$updated_group['maxtournamentsday'] = $mybb->get_input('maxtournamentsday', MyBB::INPUT_INT);
 }
 
 // Rebuild arcade caches in Admin CP

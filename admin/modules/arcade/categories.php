@@ -45,7 +45,7 @@ if($mybb->input['action'] == "add")
 			$new_categories = array(
 				"name" => $db->escape_string($mybb->input['name']),
 				"image" => $db->escape_string($mybb->input['image']),
-				"active" => (int)$mybb->input['active']
+				"active" => $mybb->get_input('active', MyBB::INPUT_INT)
 			);
 
 			if($mybb->input['group_type'] == 2)
@@ -167,7 +167,7 @@ if($mybb->input['action'] == "edit")
 {
 	$plugins->run_hooks("admin_arcade_categories_edit");
 
-	$query = $db->simple_select("arcadecategories", "*", "cid='".(int)$mybb->input['cid']."'");
+	$query = $db->simple_select("arcadecategories", "*", "cid='".$mybb->get_input('cid', MyBB::INPUT_INT)."'");
 	$category = $db->fetch_array($query);
 
 	// Does the category not exist?
@@ -204,7 +204,7 @@ if($mybb->input['action'] == "edit")
 			$updated_category = array(
 				"name" => $db->escape_string($mybb->input['name']),
 				"image" => $db->escape_string($mybb->input['image']),
-				"active" => (int)$mybb->input['active']
+				"active" => $mybb->get_input('active', MyBB::INPUT_INT)
 			);
 
 			if($mybb->input['group_type'] == 2)
@@ -256,7 +256,7 @@ if($mybb->input['action'] == "edit")
 	}
 	else
 	{
-		$query = $db->simple_select("arcadecategories", "*", "cid = '".(int)$mybb->input['cid']."'");
+		$query = $db->simple_select("arcadecategories", "*", "cid='".$mybb->get_input('cid', MyBB::INPUT_INT)."'");
 		$category = $db->fetch_array($query);
 		$mybb->input['name'] = $category['name'];
 		$mybb->input['image'] = $category['image'];
@@ -338,7 +338,7 @@ if($mybb->input['action'] == "delete")
 {
 	$plugins->run_hooks("admin_arcade_categories_delete");
 
-	$query = $db->simple_select("arcadecategories", "*", "cid='".(int)$mybb->input['cid']."'");
+	$query = $db->simple_select("arcadecategories", "*", "cid='".$mybb->get_input('cid', MyBB::INPUT_INT)."'");
 	$category = $db->fetch_array($query);
 
 	if(!$category['cid'])
@@ -379,7 +379,7 @@ if($mybb->input['action'] == "disable")
 {
 	$plugins->run_hooks("admin_arcade_categories_disable");
 
-	$query = $db->simple_select("arcadecategories", "*", "cid='".(int)$mybb->input['cid']."'");
+	$query = $db->simple_select("arcadecategories", "*", "cid='".$mybb->get_input('cid', MyBB::INPUT_INT)."'");
 	$category = $db->fetch_array($query);
 
 	if(!$category['cid'])
@@ -406,7 +406,7 @@ if($mybb->input['action'] == "enable")
 {
 	$plugins->run_hooks("admin_arcade_categories_enable");
 
-	$query = $db->simple_select("arcadecategories", "*", "cid='".(int)$mybb->input['cid']."'");
+	$query = $db->simple_select("arcadecategories", "*", "cid='".$mybb->get_input('cid', MyBB::INPUT_INT)."'");
 	$category = $db->fetch_array($query);
 
 	if(!$category['cid'])
