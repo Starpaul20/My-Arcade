@@ -204,14 +204,6 @@ desc=Descending]]></optionscode>
 			<settingvalue><![CDATA[10]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
-		<setting name="myalerts_alert_arcade_champship">
-			<title>Alert on Championship Broken?</title>
-			<description><![CDATA[Do you wish for users to receive an alert when their championship is broken? This setting only works if you have the <a href="http://mods.mybb.com/view/myalerts">MyAlerts</a> plugin installed.]]></description>
-			<disporder>25</disporder>
-			<optionscode><![CDATA[yesno]]></optionscode>
-			<settingvalue><![CDATA[1]]></settingvalue>
-			<isdefault>0</isdefault>
-		</setting>
 	</settinggroup>
 	<settinggroup name="tournaments" title="Tournament Settings" description="Various options with relation to the Arcade tournament system (tournaments.php) can be managed and set here." disporder="71" isdefault="0">
 		<setting name="enabletournaments">
@@ -252,14 +244,6 @@ desc=Descending]]></optionscode>
 			<disporder>5</disporder>
 			<optionscode><![CDATA[numeric]]></optionscode>
 			<settingvalue><![CDATA[90]]></settingvalue>
-			<isdefault>0</isdefault>
-		</setting>
-		<setting name="myalerts_alert_arcade_newround">
-			<title>Alert on New Tournament round?</title>
-			<description><![CDATA[Do you wish for users to receive an alert when a new tournament round starts? This setting only works if you have the <a href="http://mods.mybb.com/view/myalerts">MyAlerts</a> plugin installed.]]></description>
-			<disporder>6</disporder>
-			<optionscode><![CDATA[yesno]]></optionscode>
-			<settingvalue><![CDATA[1]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
 	</settinggroup>
