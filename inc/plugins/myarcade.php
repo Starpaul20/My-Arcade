@@ -68,10 +68,6 @@ $plugins->add_hook("build_friendly_wol_location_end", "myarcade_online_location"
 $plugins->add_hook("datahandler_user_update", "myarcade_user_update");
 $plugins->add_hook("datahandler_user_delete_content", "myarcade_delete");
 
-$plugins->add_hook("myalerts_load_lang", "myarcade_load_lang");
-$plugins->add_hook("myalerts_alerts_output_start", "myarcade_alerts_output");
-$plugins->add_hook("admin_config_plugins_activate_commit", "myarcade_alerts_activate");
-
 $plugins->add_hook("admin_style_templates_set", "myarcade_templates");
 $plugins->add_hook("admin_user_users_merge_commit", "myarcade_merge");
 $plugins->add_hook("admin_user_users_edit_graph_tabs", "myarcade_user_options");
@@ -763,12 +759,6 @@ function myarcade_uninstall()
 	$db->delete_query("templates", "title LIKE 'tournaments_%'");
 	$db->delete_query("templates", "title='arcade'"); // The wildcard deletion above misses this template
 	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','header_menu_arcade')");
-
-	// MyAlerts support
-	if($db->table_exists("alerts"))
-	{
-		$db->delete_query("alerts", "alert_type IN('arcade_champship','arcade_newround')");
-	}
 }
 
 // This function runs when the plugin is activated.
@@ -1027,20 +1017,6 @@ function myarcade_activate()
 	change_admin_permission('arcade', 'categories');
 	change_admin_permission('arcade', 'scores');
 	change_admin_permission('arcade', 'logs');
-
-	// MyAlerts support
-	if($db->table_exists("alert_settings"))
-	{
-		$insertarray = array(
-			'code'		=>	'arcade_champship'
-		);
-		$db->insert_query("alert_settings", $insertarray);
-
-		$insertarray = array(
-			'code'		=>	'arcade_newround'
-		);
-		$db->insert_query("alert_settings", $insertarray);
-	}
 }
 
 // This function runs when the plugin is deactivated.
@@ -1052,7 +1028,7 @@ function myarcade_deactivate()
 	$db->delete_query("templates", "title LIKE 'tournaments_%' AND sid='-2'");
 	$db->delete_query("templates", "title='arcade' AND sid='-2'"); // The wildcard deletion above misses this template
 	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','header_menu_arcade')");
-	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime','myalerts_alert_arcade_newround','myalerts_alert_arcade_champship')");
+	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime')");
 	$db->delete_query("settinggroups", "name IN('arcade','tournaments')");
 	rebuild_settings();
 
@@ -1084,12 +1060,6 @@ function myarcade_deactivate()
 	change_admin_permission('arcade', 'categories', -1);
 	change_admin_permission('arcade', 'scores', -1);
 	change_admin_permission('arcade', 'logs', -1);
-
-	// MyAlerts support
-	if($db->table_exists("alert_settings"))
-	{
-		$db->delete_query("alert_settings", "code IN('arcade_champship','arcade_newround')");
-	}
 }
 
 // Insert score (for IBProArcade games)
@@ -1725,59 +1695,6 @@ function myarcade_delete($delete)
 	}
 
 	return $delete;
-}
-
-// Add MyAlerts settings
-function myarcade_load_lang()
-{
-	global $lang;
-	if(!$lang->arcade)
-	{
-		$lang->load('arcade');
-	}
-}
-
-// Add MyAlerts alert output
-function myarcade_alerts_output(&$alert)
-{
-	global $mybb, $lang;
-	$lang->load("arcade");
-
-	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
-	{
-		if($alert['alert_type'] == 'arcade_champship' AND $mybb->settings['myalerts_alert_arcade_champship'] AND $mybb->user['myalerts_settings']['arcade_champship'])
-		{
-			$alert['gamelink'] = $mybb->settings['bburl']."/arcade.php?action=scores&gid={$alert['content']['gid']}";
-			$alert['message'] = $lang->sprintf($lang->myalerts_arcade_champship_alert, $alert['user'], $alert['gamelink'], htmlspecialchars_uni($alert['content']['name']), $alert['dateline']);
-			$alert['rowType'] = 'champshipAlert';
-		}
-
-		if($alert['alert_type'] == 'arcade_newround' AND $mybb->settings['myalerts_alert_arcade_newround'] AND $mybb->user['myalerts_settings']['arcade_newround'])
-		{
-			$alert['tournamentlink'] = $mybb->settings['bburl']."/tournaments.php?action=view&tid={$alert['content']['tid']}";
-			$alert['message'] = $lang->sprintf($lang->myalerts_arcade_new_round, $alert['tournamentlink'], htmlspecialchars_uni($alert['content']['name']), $alert['dateline']);
-			$alert['rowType'] = 'roundAlert';
-		}
-	}
-}
-
-// MyAlerts actvation support - if MyAlerts is added after My Arcade, this will add the settings.
-function myarcade_alerts_activate()
-{
-	global $db, $codename;
-
-	if($codename == 'myalerts')
-	{
-		$insertarray = array(
-			'code'		=>	'arcade_champship'
-		);
-		$db->insert_query("alert_settings", $insertarray);
-
-		$insertarray = array(
-			'code'		=>	'arcade_newround'
-		);
-		$db->insert_query("alert_settings", $insertarray);
-	}
 }
 
 // Show template group language in template list

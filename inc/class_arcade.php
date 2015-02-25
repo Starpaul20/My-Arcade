@@ -180,12 +180,6 @@ class Arcade
 
 							my_mail($champ['email'], $emailsubject, $emailmessage);
 						}
-
-						// MyAlerts support
-						if($db->table_exists("alerts") && $mybb->settings['myalerts_enabled'])
-						{
-							$Alerts->addAlert($champ['uid'], 'arcade_champship', 0, $uid, array('gid' => $game['gid'], 'name' => $game['name']));
-						}
 					}
 
 					$update_champ = array(
