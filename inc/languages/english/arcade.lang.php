@@ -8,12 +8,6 @@ $l['arcade'] = "Arcade";
 $l['arcade_disabled'] = "You cannot use the arcade system as it has been disabled by the Administrator.";
 $l['arcade_task_ran'] = "The arcade cleanup task successfully ran.";
 
-// MyAlerts support
-$l['myalerts_setting_arcade_champship'] = "Receive alert if any of your arcade championships are broken?";
-$l['myalerts_setting_arcade_newround'] = "Receive alert if a new arcade tournament round is started?";
-$l['myalerts_arcade_champship_alert'] = "{1} has broken your championship of \"<a href=\"{2}\">{3}</a>\". ({4})";
-$l['myalerts_arcade_new_round'] = "A new tournament round has started for \"<a href=\"{1}\">{2}</a>\". ({3})";
-
 // Online activity
 $l['playing_game'] = "Playing Game";
 $l['playing_game2'] = "Playing <a href=\"arcade.php?action=play&amp;gid={1}\">{2}</a>";

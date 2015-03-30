@@ -18,7 +18,7 @@ class Arcade
 	 */
 	function submit_score($score, $name, $sid)
 	{
-		global $db, $mybb, $lang, $plugins, $session, $arcade_session, $Alerts;
+		global $db, $mybb, $lang, $plugins, $session, $arcade_session;
 		$lang->load("arcade");
 
 		$uid = (int)$mybb->user['uid'];
