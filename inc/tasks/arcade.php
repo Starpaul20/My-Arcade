@@ -7,7 +7,7 @@
 function task_arcade($task)
 {
 	global $mybb, $db, $lang, $Alerts;
-	$lang->load("arcade");
+	$lang->load("arcade", true);
 
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 	require_once MYBB_ROOT."inc/class_arcade.php";
