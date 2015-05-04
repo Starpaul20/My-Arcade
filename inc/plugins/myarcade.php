@@ -1870,7 +1870,7 @@ function myarcade_usergroups_graph()
 	$game_options = array(
 		$form->generate_check_box("canplayarcade", 1, $lang->can_play_games, array("checked" => $mybb->input['canplayarcade'])),
 		$form->generate_check_box("canrategames", 1, $lang->can_rate_games, array("checked" => $mybb->input['canrategames'])),
-		"{$lang->max_plays_day}:<br /><small>{$lang->max_plays_day_desc}</small><br />".$form->generate_text_box('maxplaysday', $mybb->input['maxplaysday'], array('id' => 'maxplaysday', 'class' => 'field50'))
+		"{$lang->max_plays_day}:<br /><small>{$lang->max_plays_day_desc}</small><br />".$form->generate_numeric_field('maxplaysday', $mybb->input['maxplaysday'], array('id' => 'maxplaysday', 'class' => 'field50', 'min' => 0))
 	);
 	$form_container->output_row($lang->games, "", "<div class=\"group_settings_bit\">".implode("</div><div class=\"group_settings_bit\">", $game_options)."</div>");
 
@@ -1878,7 +1878,7 @@ function myarcade_usergroups_graph()
 		$form->generate_check_box("canviewtournaments", 1, $lang->can_view_tournaments, array("checked" => $mybb->input['canviewtournaments'])),
 		$form->generate_check_box("canjointournaments", 1, $lang->can_join_tournaments, array("checked" => $mybb->input['canjointournaments'])),
 		$form->generate_check_box("cancreatetournaments", 1, $lang->can_create_tournaments, array("checked" => $mybb->input['cancreatetournaments'])),
-		"{$lang->max_tournaments_day}:<br /><small>{$lang->max_tournaments_day_desc}</small><br />".$form->generate_text_box('maxtournamentsday', $mybb->input['maxtournamentsday'], array('id' => 'maxtournamentsday', 'class' => 'field50'))
+		"{$lang->max_tournaments_day}:<br /><small>{$lang->max_tournaments_day_desc}</small><br />".$form->generate_numeric_field('maxtournamentsday', $mybb->input['maxtournamentsday'], array('id' => 'maxtournamentsday', 'class' => 'field50', 'min' => 0))
 	);
 	$form_container->output_row($lang->tournaments, "", "<div class=\"group_settings_bit\">".implode("</div><div class=\"group_settings_bit\">", $tournaments_options)."</div>");
 
