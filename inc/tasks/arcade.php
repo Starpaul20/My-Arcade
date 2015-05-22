@@ -22,7 +22,7 @@ function task_arcade($task)
 	{
 		// Changing round
 		$query = $db->query("
-			SELECT t.*, g.*, COUNT(p.pid) AS roundplayers
+			SELECT t.*, g.name, g.sortby, COUNT(p.pid) AS roundplayers
 			FROM ".TABLE_PREFIX."arcadetournaments t
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid AND t.round=p.round)
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
@@ -50,7 +50,7 @@ function task_arcade($task)
 					$db->update_query("arcadetournaments", $update_tournament, "tid='{$round['tid']}'");
 
 					$query2 = $db->query("
-						SELECT p.*, u.*, p.uid AS player, p.username AS playerusername
+						SELECT p.uid, p.username, u.tournamentnotify, u.receivepms, u.language, u.email
 						FROM ".TABLE_PREFIX."arcadetournamentplayers p
 						LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
 						WHERE p.tid='{$round['tid']}' AND p.round='{$round['round']}' AND p.attempts != '0'
@@ -61,8 +61,8 @@ function task_arcade($task)
 					{
 						$insert_player = array(
 							"tid" => (int)$round['tid'],
-							"uid" => (int)$player['player'],
-							"username" => $db->escape_string($player['playerusername']),
+							"uid" => (int)$player['uid'],
+							"username" => $db->escape_string($player['username']),
 							"round" => $round['round'] + 1
 						);
 						$db->insert_query("arcadetournamentplayers", $insert_player);
@@ -111,7 +111,7 @@ function task_arcade($task)
 				else if($round['roundplayers'] == 1)
 				{
 					$query3 = $db->query("
-						SELECT *
+						SELECT uid
 						FROM ".TABLE_PREFIX."arcadetournamentplayers
 						WHERE tid='{$round['tid']}' AND round='{$round['round']}' AND attempts != '0'
 						ORDER BY score {$round['sortby']}, scoreattempt ASC, attempts ASC, timeplayed ASC
@@ -149,7 +149,7 @@ function task_arcade($task)
 
 		// Change running status to finished
 		$query4 = $db->query("
-			SELECT t.*, g.sortby, g.active, COUNT(p.pid) AS roundplayers
+			SELECT t.*, g.sortby, COUNT(p.pid) AS roundplayers
 			FROM ".TABLE_PREFIX."arcadetournaments t
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid AND t.round=p.round)
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
@@ -167,7 +167,7 @@ function task_arcade($task)
 				$information['reason'] = $lang->finished_playing;
 
 				$query5 = $db->query("
-					SELECT *
+					SELECT uid
 					FROM ".TABLE_PREFIX."arcadetournamentplayers
 					WHERE tid='{$finished['tid']}' AND round='{$finished['round']}' AND attempts != '0'
 					ORDER BY score {$finished['sortby']}, scoreattempt ASC, attempts ASC, timeplayed ASC
@@ -191,7 +191,7 @@ function task_arcade($task)
 			$tourcut = TIME_NOW-($mybb->settings['tournaments_canceltime']*60*60*24);
 
 			$query6 = $db->query("
-				SELECT *
+				SELECT tid, information
 				FROM ".TABLE_PREFIX."arcadetournaments
 				WHERE status='1' AND numplayers != POW(2, rounds) AND dateline < '{$tourcut}'
 			");
