@@ -1,2 +1,8 @@
+1.1 (May 22nd, 2015)
+- Added My Alerts 2.0 support
+- Start a tournament immediately when last player needed joined
+- Added generate_numeric_field function in a few places where it could be used
+- Bug: Fixed Language error when task is run (Issue #1)
+
 1.0 (February 25th, 2015)
 - Initial release
