@@ -765,7 +765,7 @@ function myarcade_uninstall()
 // This function runs when the plugin is activated.
 function myarcade_activate()
 {
-	global $db;
+	global $db, $cache;
 	require_once MYBB_ROOT."inc/class_xml.php";
 
 	$settings = @file_get_contents(MYBB_ROOT.'inc/plugins/arcade/settings.xml');
@@ -1018,12 +1018,38 @@ function myarcade_activate()
 	change_admin_permission('arcade', 'categories');
 	change_admin_permission('arcade', 'scores');
 	change_admin_permission('arcade', 'logs');
+
+	// If My Alerts is being used, add alert type
+	if($db->table_exists("alert_types"))
+	{
+		if (class_exists('MybbStuff_MyAlerts_AlertTypeManager')) {
+			$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::getInstance();
+
+			if (!$alertTypeManager) {
+				$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::createInstance($db, $cache);
+			}
+
+			$insertArray = array('arcade_championship', 'arcade_newround');
+			$alertTypesToAdd = array();
+
+			foreach ($insertArray as $type) {
+				$alertType = new MybbStuff_MyAlerts_Entity_AlertType();
+				$alertType->setCode($type);
+				$alertType->setEnabled(true);
+				$alertType->setCanBeUserDisabled(true);
+
+				$alertTypesToAdd[] = $alertType;
+			}
+
+			$alertTypeManager->addTypes($alertTypesToAdd);
+		}
+	}
 }
 
 // This function runs when the plugin is deactivated.
 function myarcade_deactivate()
 {
-	global $db;
+	global $db, $cache;
 
 	$db->delete_query("templates", "title LIKE 'arcade_%' AND sid='-2'");
 	$db->delete_query("templates", "title LIKE 'tournaments_%' AND sid='-2'");
@@ -1061,6 +1087,20 @@ function myarcade_deactivate()
 	change_admin_permission('arcade', 'categories', -1);
 	change_admin_permission('arcade', 'scores', -1);
 	change_admin_permission('arcade', 'logs', -1);
+
+	if($db->table_exists("alert_types"))
+	{
+		if (class_exists('MybbStuff_MyAlerts_AlertTypeManager')) {
+			$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::getInstance();
+
+			if (!$alertTypeManager) {
+				$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::createInstance($db, $cache);
+			}
+
+			$alertTypeManager->deleteByCode('arcade_championship');
+			$alertTypeManager->deleteByCode('arcade_newround');
+		}
+	}
 }
 
 // Insert score (for IBProArcade games)
@@ -1203,15 +1243,42 @@ function myarcade_index()
 	}
 }
 
-// Cache the header link template
+// Cache the header link template / Register My Alerts Formmatter
 function myarcade_link_cache()
 {
-	global $templatelist;
+	global $templatelist, $mybb, $lang, $formatterManager;
+	$lang->load("arcade");
+
 	if(isset($templatelist))
 	{
 		$templatelist .= ',';
 	}
 	$templatelist .= 'header_menu_arcade';
+
+	// Registering alert formatter
+	if((function_exists('myalerts_is_activated') && myalerts_is_activated()) && $mybb->user['uid']) {
+		if (class_exists('MybbStuff_MyAlerts_AlertFormatterManager')) {
+			$formatterManager = MybbStuff_MyAlerts_AlertFormatterManager::getInstance();
+
+			if (!$formatterManager) {
+				$formatterManager = MybbStuff_MyAlerts_AlertFormatterManager::createInstance($mybb, $lang);
+			}
+
+			if(class_exists('ArcadeChampionshipFormmatter'))
+			{
+				$formatterManager->registerFormatter(
+					new ArcadeChampionshipFormmatter($mybb, $lang, 'arcade_championship')
+				);
+			}
+
+			if(class_exists('ArcadeNewRoundFormmatter'))
+			{
+				$formatterManager->registerFormatter(
+					new ArcadeNewRoundFormmatter($mybb, $lang, 'arcade_newround')
+				);
+			}
+		}
+	}
 }
 
 // Arcade header link
@@ -1952,4 +2019,112 @@ function myarcade_admin_adminlog($plugin_array)
 	return $plugin_array;
 }
 
+// My Alerts classes
+if(class_exists("MybbStuff_MyAlerts_Formatter_AbstractFormatter"))
+{
+	/**
+	 * Alert formatter for arcade championship alert type.
+	 */
+	class ArcadeChampionshipFormmatter extends MybbStuff_MyAlerts_Formatter_AbstractFormatter
+	{
+		/**
+		 * Format an alert into it's output string to be used in both the main alerts listing page and the popup.
+		 *
+		 * @param MybbStuff_MyAlerts_Entity_Alert $alert The alert to format.
+		 *
+		 * @return string The formatted alert string.
+		 */
+		public function formatAlert(MybbStuff_MyAlerts_Entity_Alert $alert, array $outputAlert)
+		{
+			$alertContent = $alert->getExtraDetails();
+
+			return $this->lang->sprintf(
+				$this->lang->my_alert_arcade_championship,
+				$outputAlert['from_user'],
+				htmlspecialchars_uni($alertContent['g_name']),
+				$outputAlert['dateline']
+			);
+		}
+
+		/**
+		 * Init function called before running formatAlert(). Used to load language files and initialize other required
+		 * resources.
+		 *
+		 * @return void
+		 */
+		public function init()
+		{
+			if (!$this->lang->arcade) {
+				$this->lang->load('arcade');
+			}
+		}
+
+		/**
+		 * Build a link to an alert's content so that the system can redirect to it.
+		 *
+		 * @param MybbStuff_MyAlerts_Entity_Alert $alert The alert to build the link for.
+		 *
+		 * @return string The built alert, preferably an absolute link.
+		 */
+		public function buildShowLink(MybbStuff_MyAlerts_Entity_Alert $alert)
+		{
+			$alertContent = $alert->getExtraDetails();
+
+			$gameLink = $this->mybb->settings['bburl'] . '/arcade.php?action=scores&amp;gid='.(int)$alertContent['gid'];
+			return $gameLink;
+		}
+	}
+
+	/**
+	 * Alert formatter for arcade new round alert type.
+	 */
+	class ArcadeNewRoundFormmatter extends MybbStuff_MyAlerts_Formatter_AbstractFormatter
+	{
+		/**
+		 * Format an alert into it's output string to be used in both the main alerts listing page and the popup.
+		 *
+		 * @param MybbStuff_MyAlerts_Entity_Alert $alert The alert to format.
+		 *
+		 * @return string The formatted alert string.
+		 */
+		public function formatAlert(MybbStuff_MyAlerts_Entity_Alert $alert, array $outputAlert)
+		{
+			$alertContent = $alert->getExtraDetails();
+
+			return $this->lang->sprintf(
+				$this->lang->my_alert_arcade_new_round,
+				htmlspecialchars_uni($alertContent['g_name']),
+				$outputAlert['dateline']
+			);
+		}
+
+		/**
+		 * Init function called before running formatAlert(). Used to load language files and initialize other required
+		 * resources.
+		 *
+		 * @return void
+		 */
+		public function init()
+		{
+			if (!$this->lang->arcade) {
+				$this->lang->load('arcade');
+			}
+		}
+
+		/**
+		 * Build a link to an alert's content so that the system can redirect to it.
+		 *
+		 * @param MybbStuff_MyAlerts_Entity_Alert $alert The alert to build the link for.
+		 *
+		 * @return string The built alert, preferably an absolute link.
+		 */
+		public function buildShowLink(MybbStuff_MyAlerts_Entity_Alert $alert)
+		{
+			$alertContent = $alert->getExtraDetails();
+
+			$gameLink = $this->mybb->settings['bburl'] . '/tournaments.php?action=view&amp;tid='.(int)$alertContent['tid'];
+			return $gameLink;
+		}
+	}
+}
 ?>

@@ -180,6 +180,22 @@ class Arcade
 
 							my_mail($champ['email'], $emailsubject, $emailmessage);
 						}
+
+						// My Alerts support
+						if($db->table_exists("alert_types") && class_exists("MybbStuff_MyAlerts_AlertTypeManager"))
+						{
+							$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('arcade_championship');
+
+							if ($alertType != null && $alertType->getEnabled()) {
+								$alert = new MybbStuff_MyAlerts_Entity_Alert($current_champion['uid'], $alertType, $game['gid'], $mybb->user['uid']);
+										$alert->setExtraDetails(
+										array(
+											'gid' 		=> $game['gid'],
+											'g_name' => $db->escape_string($game['name'])
+										));
+								MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
+							}
+						}
 					}
 
 					$update_champ = array(

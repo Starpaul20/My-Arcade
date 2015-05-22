@@ -41,7 +41,7 @@ function task_arcade($task)
 			$db->update_query("arcadetournaments", $update_tournament, "tid='{$open['tid']}'");
 
 			$query = $db->query("
-				SELECT p.tid, u.*
+				SELECT p.uid, u.tournamentnotify, u.receivepms, u.language, u.email
 				FROM ".TABLE_PREFIX."arcadetournamentplayers p
 				LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
 				WHERE p.tid='{$open['tid']}'
@@ -68,6 +68,22 @@ function task_arcade($task)
 					$emailmessage = $lang->sprintf($lang->tournament_message, $open['name'], $open['days'], $open['tries']);
 
 					my_mail($player['email'], $emailsubject, $emailmessage);
+				}
+
+				// My Alerts support
+				if($db->table_exists("alert_types") && class_exists("MybbStuff_MyAlerts_AlertTypeManager"))
+				{
+					$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('arcade_newround');
+
+					if ($alertType != null && $alertType->getEnabled()) {
+						$alert = new MybbStuff_MyAlerts_Entity_Alert($player['uid'], $alertType, $open['tid'], $open['uid']);
+								$alert->setExtraDetails(
+								array(
+									'tid' 		=> $open['tid'],
+									'g_name' => $db->escape_string($open['name'])
+								));
+						MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
+					}
 				}
 			}
 		}
@@ -139,6 +155,22 @@ function task_arcade($task)
 							$emailmessage = $lang->sprintf($lang->tournament_message, $round['name'], $round['days'], $round['tries']);
 
 							my_mail($player['email'], $emailsubject, $emailmessage);
+						}
+
+						// My Alerts support
+						if($db->table_exists("alert_types") && class_exists("MybbStuff_MyAlerts_AlertTypeManager"))
+						{
+							$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('arcade_newround');
+
+							if ($alertType != null && $alertType->getEnabled()) {
+								$alert = new MybbStuff_MyAlerts_Entity_Alert($player['uid'], $alertType, $round['tid'], $round['uid']);
+										$alert->setExtraDetails(
+										array(
+											'tid' 		=> $round['tid'],
+											'g_name' => $db->escape_string($round['name'])
+										));
+								MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
+							}
 						}
 					}
 				}
