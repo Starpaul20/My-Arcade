@@ -825,4 +825,103 @@ function arcade_perform_search_mysql($search)
 	);
 }
 
+/**
+ * Start a tournament if ready
+ *
+ * @param int The tournament ID
+ */
+function start_tournament($tid)
+{
+	global $db, $mybb;
+
+	$tid = (int)$tid;
+	$tournament = get_tournament($tid);
+
+	// Invalid tournament
+	if(!$tournament['tid'])
+	{
+		return false;
+	}
+
+	$game = get_game($tournament['gid']);
+
+	// Invalid game
+	if(!$game['gid'])
+	{
+		return false;
+	}
+
+	// Make sure we have enough players to start
+	$players = pow(2, $tournament['rounds']);
+
+	$query = $db->simple_select("arcadetournamentplayers", "*", "tid='{$tournament['tid']}'");
+	$playersentered = $db->num_rows($query);
+
+	if($players <= $playersentered)
+	{
+		$information = array();
+		$information['1']['starttime'] = TIME_NOW;
+
+		$update_tournament = array(
+			"status" => 2,
+			"round" => 1,
+			"information" => serialize($information)
+		);
+
+		$db->update_query("arcadetournaments", $update_tournament, "tid='{$tournament['tid']}'");
+
+		$query = $db->query("
+			SELECT p.uid, u.tournamentnotify, u.receivepms, u.language, u.email
+			FROM ".TABLE_PREFIX."arcadetournamentplayers p
+			LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
+			WHERE p.tid='{$tournament['tid']}'
+		");
+		while($player = $db->fetch_array($query))
+		{
+			if($player['tournamentnotify'] == 1)
+			{
+				$player_pm = array(
+					'subject' => 'tournament_subject',
+					'message' => array('tournament_message', $game['name'], $tournament['days'], $tournament['tries']),
+					'touid' => $player['uid'],
+					'receivepms' => (int)$player['receivepms'],
+					'language' => $player['language'],
+					'language_file' => 'arcade'
+				);
+
+				send_pm($player_pm, $tournament['uid']);
+			}
+
+			else if($player['tournamentnotify'] == 2)
+			{
+				$emailsubject = $lang->sprintf($lang->tournament_email_subject, $mybb->settings['bbname']);
+				$emailmessage = $lang->sprintf($lang->tournament_message, $game['name'], $tournament['days'], $tournament['tries']);
+
+				my_mail($player['email'], $emailsubject, $emailmessage);
+			}
+
+			// My Alerts support
+			if($db->table_exists("alert_types") && class_exists("MybbStuff_MyAlerts_AlertTypeManager"))
+			{
+				$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('arcade_newround');
+
+				if ($alertType != null && $alertType->getEnabled()) {
+					$alert = new MybbStuff_MyAlerts_Entity_Alert($player['uid'], $alertType, $tournament['tid'], $tournament['uid']);
+							$alert->setExtraDetails(
+							array(
+								'tid' 		=> $tournament['tid'],
+								'g_name' => $db->escape_string($game['name'])
+							));
+					MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
+				}
+			}
+		}
+
+		update_tournaments_stats();
+		return true;
+	}
+
+	return false;
+}
+
 ?>

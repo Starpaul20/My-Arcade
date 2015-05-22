@@ -33,6 +33,7 @@ $l['error_alreadyjoined'] = "You have already joined this tournament.";
 $l['error_jointoomanyplayers'] = "This tournament already has enough players.";
 $l['error_cancel_nopermission'] = "You do not have permission to cancel a tournament.";
 $l['redirect_tournamentjoined'] = "You have joined this tournament.<br />You will now be redirected to the tournament page.";
+$l['redirect_tournamentjoined_started'] = "You have joined this tournament and the tournament has started.<br />You will now be redirected to the tournament page.";
 $l['redirect_tournamentcreated'] = "The tournament has been created.<br />You will now be redirected to the tournament page.";
 
 $l['viewing_tournament'] = "Viewing Tournament";

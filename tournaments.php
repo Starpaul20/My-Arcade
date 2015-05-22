@@ -551,9 +551,18 @@ if($mybb->input['action'] == "join")
 	);
 	$db->update_query("arcadetournaments", $update_tournament, "tid='{$tournament['tid']}'");
 
+	$starttournament = start_tournament($tournament['tid']);
+
 	$plugins->run_hooks("tournaments_join_end");
 
-	redirect("tournaments.php?action=view&tid={$tournament['tid']}", $lang->redirect_tournamentjoined);
+	if($starttournament == true)
+	{
+		redirect("tournaments.php?action=view&tid={$tournament['tid']}", $lang->redirect_tournamentjoined_started);
+	}
+	else
+	{
+		redirect("tournaments.php?action=view&tid={$tournament['tid']}", $lang->redirect_tournamentjoined);
+	}
 }
 
 // Tournaments waiting for players

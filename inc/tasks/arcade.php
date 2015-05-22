@@ -20,83 +20,15 @@ function task_arcade($task)
 	// Tournament updating
 	if($mybb->settings['enabletournaments'] == 1)
 	{
-		// Change waiting status to running
-		$query = $db->query("
-			SELECT t.*, g.name, g.active
-			FROM ".TABLE_PREFIX."arcadetournaments t
-			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
-			WHERE t.status='1' AND t.numplayers=POW(2, t.rounds) AND g.active='1'
-		");
-		while($open = $db->fetch_array($query))
-		{
-			$information = array();
-			$information['1']['starttime'] = TIME_NOW;
-
-			$update_tournament = array(
-				"status" => 2,
-				"round" => 1,
-				"information" => serialize($information)
-			);
-
-			$db->update_query("arcadetournaments", $update_tournament, "tid='{$open['tid']}'");
-
-			$query = $db->query("
-				SELECT p.uid, u.tournamentnotify, u.receivepms, u.language, u.email
-				FROM ".TABLE_PREFIX."arcadetournamentplayers p
-				LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
-				WHERE p.tid='{$open['tid']}'
-			");
-			while($player = $db->fetch_array($query))
-			{
-				if($player['tournamentnotify'] == 1)
-				{
-					$player_pm = array(
-						'subject' => 'tournament_subject',
-						'message' => array('tournament_message', $open['name'], $open['days'], $open['tries']),
-						'touid' => $player['uid'],
-						'receivepms' => (int)$player['receivepms'],
-						'language' => $player['language'],
-						'language_file' => 'arcade'
-					);
-
-					send_pm($player_pm, $open['uid']);
-				}
-
-				else if($player['tournamentnotify'] == 2)
-				{
-					$emailsubject = $lang->sprintf($lang->tournament_email_subject, $mybb->settings['bbname']);
-					$emailmessage = $lang->sprintf($lang->tournament_message, $open['name'], $open['days'], $open['tries']);
-
-					my_mail($player['email'], $emailsubject, $emailmessage);
-				}
-
-				// My Alerts support
-				if($db->table_exists("alert_types") && class_exists("MybbStuff_MyAlerts_AlertTypeManager"))
-				{
-					$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('arcade_newround');
-
-					if ($alertType != null && $alertType->getEnabled()) {
-						$alert = new MybbStuff_MyAlerts_Entity_Alert($player['uid'], $alertType, $open['tid'], $open['uid']);
-								$alert->setExtraDetails(
-								array(
-									'tid' 		=> $open['tid'],
-									'g_name' => $db->escape_string($open['name'])
-								));
-						MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
-					}
-				}
-			}
-		}
-
 		// Changing round
-		$query2 = $db->query("
+		$query = $db->query("
 			SELECT t.*, g.*, COUNT(p.pid) AS roundplayers
 			FROM ".TABLE_PREFIX."arcadetournaments t
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid AND t.round=p.round)
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 			WHERE t.status='2' AND t.rounds != t.round AND g.active='1' AND p.attempts != '0'
 		");
-		while($round = $db->fetch_array($query2))
+		while($round = $db->fetch_array($query))
 		{
 			$playersneeded = pow(2, $round['rounds'] - $round['round']);
 			$roundtime = $round['days']*60*60*24;
@@ -117,7 +49,7 @@ function task_arcade($task)
 
 					$db->update_query("arcadetournaments", $update_tournament, "tid='{$round['tid']}'");
 
-					$query3 = $db->query("
+					$query2 = $db->query("
 						SELECT p.*, u.*, p.uid AS player, p.username AS playerusername
 						FROM ".TABLE_PREFIX."arcadetournamentplayers p
 						LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=p.uid)
@@ -125,11 +57,11 @@ function task_arcade($task)
 						ORDER BY p.score {$round['sortby']}, p.scoreattempt ASC, p.attempts ASC, p.timeplayed ASC
 						LIMIT 0, {$playersneeded}
 					");
-					while($player = $db->fetch_array($query3))
+					while($player = $db->fetch_array($query2))
 					{
 						$insert_player = array(
-							"tid" => intval($round['tid']),
-							"uid" => intval($player['player']),
+							"tid" => (int)$round['tid'],
+							"uid" => (int)$player['player'],
 							"username" => $db->escape_string($player['playerusername']),
 							"round" => $round['round'] + 1
 						);
@@ -178,21 +110,21 @@ function task_arcade($task)
 				// Only one played, so declare them champion and end tournament
 				else if($round['roundplayers'] == 1)
 				{
-					$query4 = $db->query("
+					$query3 = $db->query("
 						SELECT *
 						FROM ".TABLE_PREFIX."arcadetournamentplayers
 						WHERE tid='{$round['tid']}' AND round='{$round['round']}' AND attempts != '0'
 						ORDER BY score {$round['sortby']}, scoreattempt ASC, attempts ASC, timeplayed ASC
 						LIMIT 1
 					");
-					$champ = $db->fetch_array($query4);
+					$champ = $db->fetch_array($query3);
 				
 					$information[$round['round']]['endtime'] = TIME_NOW;
 					$information['reason'] = $lang->not_enough_played;
 
 					$update_tournament = array(
 						"status" => 3,
-						"champion" => intval($champ['uid']),
+						"champion" => (int)$champ['uid'],
 						"finishdateline" => TIME_NOW,
 						"information" => serialize($information)
 					);
@@ -216,7 +148,7 @@ function task_arcade($task)
 		}
 
 		// Change running status to finished
-		$query5 = $db->query("
+		$query4 = $db->query("
 			SELECT t.*, g.sortby, g.active, COUNT(p.pid) AS roundplayers
 			FROM ".TABLE_PREFIX."arcadetournaments t
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid AND t.round=p.round)
@@ -224,7 +156,7 @@ function task_arcade($task)
 			WHERE t.status='2' AND t.rounds=t.round AND g.active='1'
 			GROUP BY t.tid
 		");
-		while($finished = $db->fetch_array($query5))
+		while($finished = $db->fetch_array($query4))
 		{
 			$roundtime = $finished['days']*60*60*24;
 			$information = unserialize($finished['information']);
@@ -234,18 +166,18 @@ function task_arcade($task)
 				$information[$finished['round']]['endtime'] = TIME_NOW;
 				$information['reason'] = $lang->finished_playing;
 
-				$query6 = $db->query("
+				$query5 = $db->query("
 					SELECT *
 					FROM ".TABLE_PREFIX."arcadetournamentplayers
 					WHERE tid='{$finished['tid']}' AND round='{$finished['round']}' AND attempts != '0'
 					ORDER BY score {$finished['sortby']}, scoreattempt ASC, attempts ASC, timeplayed ASC
 					LIMIT 1
 				");
-				$champ = $db->fetch_array($query6);
+				$champ = $db->fetch_array($query5);
 
 				$update_tournament = array(
 					"status" => 3,
-					"champion" => intval($champ['uid']),
+					"champion" => (int)$champ['uid'],
 					"finishdateline" => TIME_NOW,
 					"information" => serialize($information)
 				);
