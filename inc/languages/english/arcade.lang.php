@@ -9,8 +9,8 @@ $l['arcade_disabled'] = "You cannot use the arcade system as it has been disable
 $l['arcade_task_ran'] = "The arcade cleanup task successfully ran.";
 
 // My Alerts support
-$l['my_alert_arcade_championship'] = "{1} has broken your championship of {2}. ({3})";
-$l['my_alert_arcade_new_round'] = "A new tournament round has started for {1}. ({2})";
+$l['my_alert_arcade_championship'] = "{1} has broken your championship of {2}.";
+$l['my_alert_arcade_new_round'] = "A new tournament round has started for {1}.";
 $l['myalerts_setting_arcade_championship'] = "Receive alert when somebody breaks any of your arcade championships?";
 $l['myalerts_setting_arcade_newround'] = "Receive alert when an arcade tournament round is started?";
 

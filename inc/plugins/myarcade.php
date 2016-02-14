@@ -2041,8 +2041,7 @@ if(class_exists("MybbStuff_MyAlerts_Formatter_AbstractFormatter"))
 			return $this->lang->sprintf(
 				$this->lang->my_alert_arcade_championship,
 				$outputAlert['from_user'],
-				htmlspecialchars_uni($alertContent['g_name']),
-				$outputAlert['dateline']
+				htmlspecialchars_uni($alertContent['g_name'])
 			);
 		}
 
@@ -2093,8 +2092,7 @@ if(class_exists("MybbStuff_MyAlerts_Formatter_AbstractFormatter"))
 
 			return $this->lang->sprintf(
 				$this->lang->my_alert_arcade_new_round,
-				htmlspecialchars_uni($alertContent['g_name']),
-				$outputAlert['dateline']
+				htmlspecialchars_uni($alertContent['g_name'])
 			);
 		}
 
