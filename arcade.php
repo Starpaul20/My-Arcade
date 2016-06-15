@@ -314,6 +314,8 @@ if($mybb->input['action'] == "play")
 
 	if($champ['username'])
 	{
+		$champ['username'] = htmlspecialchars_uni($champ['username']);
+
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
 			$profilelink = "arcade.php?action=stats&uid={$champ['uid']}";
@@ -694,6 +696,7 @@ if($mybb->input['action'] == "scores")
 	while($score = $db->fetch_array($query))
 	{
 		$score['score'] = my_number_format(floatval($score['score']));
+		$score['username'] = htmlspecialchars_uni($score['username']);
 		$dateline = my_date('relative', $score['dateline']);
 
 		$plus = ($perpage * $page) - $perpage;
@@ -1345,6 +1348,8 @@ if($mybb->input['action'] == "favorites")
 		if($game['lastplayed'])
 		{
 			$lastplayed = my_date('relative', $game['lastplayed']);
+			$game['user_name'] = htmlspecialchars_uni($game['user_name']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
@@ -1373,6 +1378,8 @@ if($mybb->input['action'] == "favorites")
 
 		if($game['champusername'])
 		{
+			$game['champusername'] = htmlspecialchars_uni($game['champusername']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['champuid']}";
@@ -1652,6 +1659,8 @@ if($mybb->input['action'] == "stats")
 	$plugins->run_hooks("arcade_stats_start");
 
 	add_breadcrumb($lang->arcade_stats, "arcade.php?action=stats");
+
+	$user['username'] = htmlspecialchars_uni($user['username']);
 
 	$lang->arcade_stats_for = $lang->sprintf($lang->arcade_stats_for, $user['username']);
 	$lang->player_details = $lang->sprintf($lang->player_details, $user['username']);
@@ -1955,6 +1964,7 @@ if($mybb->input['action'] == "champions")
 		$champ['score'] = my_number_format(floatval($champ['score']));
 
 		$dateline = my_date('relative', $champ['dateline']);
+		$champ['username'] = htmlspecialchars_uni($champ['username']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -2102,6 +2112,7 @@ if($mybb->input['action'] == "scoreboard")
 		$score['score'] = my_number_format(floatval($score['score']));
 
 		$dateline = my_date('relative', $score['dateline']);
+		$score['username'] = htmlspecialchars_uni($score['username']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -2412,6 +2423,8 @@ if($mybb->input['action'] == "results")
 		if($game['lastplayed'])
 		{
 			$lastplayed = my_date('relative', $game['lastplayed']);
+			$game['user_name'] = htmlspecialchars_uni($game['user_name']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
@@ -2440,6 +2453,8 @@ if($mybb->input['action'] == "results")
 
 		if($game['champusername'])
 		{
+			$game['champusername'] = htmlspecialchars_uni($game['champusername']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['champuid']}";
@@ -2632,6 +2647,8 @@ if(!$mybb->input['action'])
 			$score['score'] = my_number_format(floatval($score['score']));
 
 			$dateline = my_date('relative', $score['dateline']);
+			$score['username'] = htmlspecialchars_uni($score['username']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$score['uid']}";
@@ -2674,6 +2691,8 @@ if(!$mybb->input['action'])
 			$score['score'] = my_number_format(floatval($score['score']));
 
 			$dateline = my_date('relative', $score['dateline']);
+			$score['username'] = htmlspecialchars_uni($score['username']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$score['uid']}";
@@ -2727,6 +2746,7 @@ if(!$mybb->input['action'])
 					eval("\$best_player_avatar = \"".$templates->get("arcade_statistics_bestplayers_avatar")."\";");
 				}
 
+				$champ['username'] = htmlspecialchars_uni($champ['username']);
 				$with_wins = $lang->sprintf($lang->with_wins, $champ['champs']);
 
 				if($mybb->usergroup['canviewgamestats'] == 1)
@@ -3029,6 +3049,8 @@ if(!$mybb->input['action'])
 		if($game['lastplayed'])
 		{
 			$lastplayed = my_date('relative', $game['lastplayed']);
+			$game['user_name'] = htmlspecialchars_uni($game['user_name']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
@@ -3057,6 +3079,8 @@ if(!$mybb->input['action'])
 
 		if($game['champusername'])
 		{
+			$game['champusername'] = htmlspecialchars_uni($game['champusername']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$game['champuid']}";

@@ -492,6 +492,7 @@ function whos_online()
 						}
 
 						// Properly format the username and assign the template.
+						$online['username'] = htmlspecialchars_uni($online['username']);
 						$online['username'] = format_name($online['username'], $online['usergroup'], $online['displaygroup']);
 						$online['profilelink'] = build_profile_link($online['username'], $online['uid']);
 						eval("\$onlinemembers .= \"".$templates->get("arcade_online_memberbit", 1, 0)."\";");

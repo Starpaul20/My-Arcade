@@ -99,7 +99,7 @@ if($mybb->input['action'] == 'prune')
 		{
 			$selected = "selected=\"selected\"";
 		}
-		$user_options[$user['uid']] = $user['username'];
+		$user_options[$user['uid']] = htmlspecialchars_uni($user['username']);
 	}
 
 	$game_options[''] = $lang->all_games;
@@ -249,6 +249,8 @@ if(!$mybb->input['action'])
 		$logitem['action'] = htmlspecialchars_uni($logitem['action']);
 		$logitem['dateline'] = my_date('relative', $logitem['dateline']);
 		$trow = alt_trow();
+
+		$logitem['username'] = htmlspecialchars_uni($logitem['username']);
 		$username = format_name($logitem['username'], $logitem['usergroup'], $logitem['displaygroup']);
 		$logitem['profilelink'] = build_profile_link($username, $logitem['uid']);
 		if($logitem['gid'])
@@ -309,7 +311,7 @@ if(!$mybb->input['action'])
 		{
 			$selected = "selected=\"selected\"";
 		}
-		$user_options[$user['uid']] = $user['username'];
+		$user_options[$user['uid']] = htmlspecialchars_uni($user['username']);
 	}
 
 	$game_options[''] = $lang->all_games;

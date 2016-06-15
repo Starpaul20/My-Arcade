@@ -372,6 +372,8 @@ if($mybb->input['action'] == "view")
 
 	if($tournament['champion'])
 	{
+		$tournament['username'] = htmlspecialchars_uni($tournament['username']);
+
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
 			$profilelink = "arcade.php?action=stats&uid={$tournament['champion']}";
@@ -408,6 +410,8 @@ if($mybb->input['action'] == "view")
 		{
 			$alt_bg = alt_trow();
 			$width = floor(100/$numplayers);
+
+			$player['username'] = htmlspecialchars_uni($player['username']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -664,6 +668,8 @@ if($mybb->input['action'] == "finished")
 
 		if($tournament['champion'])
 		{
+			$tournament['champ'] = htmlspecialchars_uni($tournament['champ']);
+
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
 				$profilelink = "arcade.php?action=stats&uid={$tournament['champion']}";
@@ -719,6 +725,7 @@ if($mybb->input['action'] == "cancelled")
 	while($tournament = $db->fetch_array($query))
 	{
 		$tournament['name'] = htmlspecialchars_uni($tournament['name']);
+		$tournament['username'] = htmlspecialchars_uni($tournament['username']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
