@@ -1761,7 +1761,7 @@ if($mybb->input['action'] == "stats")
 		LEFT JOIN ".TABLE_PREFIX."arcadescores c ON (g.gid=c.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions ch ON (g.gid=ch.gid AND ch.uid='{$uid}')
 		WHERE g.active='1'{$cat_sql_game}
-		GROUP BY g.gid
+		GROUP BY g.gid, s.score, s.dateline
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
 	");
@@ -1914,7 +1914,7 @@ if($mybb->input['action'] == "champions")
 	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->query("
-		SELECT COUNT(c.cid) AS page_count, g.active, g.cid
+		SELECT COUNT(c.cid) AS page_count, g.active
 		FROM ".TABLE_PREFIX."arcadechampions c
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=c.gid)
 		WHERE g.active='1'{$cat_sql_game}
@@ -2063,7 +2063,7 @@ if($mybb->input['action'] == "scoreboard")
 	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->query("
-		SELECT COUNT(s.sid) AS page_count, g.active, g.cid
+		SELECT COUNT(s.sid) AS page_count, g.active
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
 		WHERE g.active='1'{$cat_sql_game}
@@ -2725,12 +2725,12 @@ if(!$mybb->input['action'])
 			$rank = 0;
 
 			$query5 = $db->query("
-				SELECT c.*, u.avatar, u.avatardimensions, COUNT(c.gid) AS champs
+				SELECT c.uid, c.username, u.avatar, u.avatardimensions, COUNT(c.gid) AS champs
 				FROM ".TABLE_PREFIX."arcadechampions c
 				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=c.gid)
 				LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=c.uid)
 				WHERE g.active ='1'{$cat_sql_game}
-				GROUP BY c.uid
+				GROUP BY c.uid, c.username
 				ORDER BY champs DESC
 				LIMIT 3
 			");

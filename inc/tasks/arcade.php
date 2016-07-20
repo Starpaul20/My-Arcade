@@ -27,6 +27,7 @@ function task_arcade($task)
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid AND t.round=p.round)
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 			WHERE t.status='2' AND t.rounds != t.round AND g.active='1' AND p.attempts != '0'
+			GROUP BY t.tid
 		");
 		while($round = $db->fetch_array($query))
 		{

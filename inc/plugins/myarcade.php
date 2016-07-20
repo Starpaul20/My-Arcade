@@ -435,7 +435,7 @@ function myarcade_install()
 				gid int unsigned NOT NULL default '0',
 				uid int unsigned NOT NULL default '0',
 				username varchar(120) NOT NULL default '',
-				score float NOT NULL,
+				score float NOT NULL default '0',
 				dateline int unsigned NOT NULL default '0',
 				timeplayed int(10) unsigned NOT NULL default '0',
 				comment varchar(200) NOT NULL default '',
@@ -472,7 +472,7 @@ function myarcade_install()
 				round tinyint(2) unsigned NOT NULL default '0',
 				champion int unsigned NOT NULL default '0',
 				finishdateline int unsigned NOT NULL default '0',
-				information text NOT NULL,
+				information text NULL,
 				KEY gid (gid),
 				PRIMARY KEY(tid)
 			) ENGINE=MyISAM{$collation};");
@@ -482,7 +482,7 @@ function myarcade_install()
 				tid int unsigned NOT NULL default '0',
 				uid int unsigned NOT NULL default '0',
 				username varchar(120) NOT NULL default '',
-				score float NOT NULL,
+				score float NOT NULL default '0',
 				round tinyint(2) unsigned NOT NULL default '0',
 				attempts smallint(5) unsigned NOT NULL default '0',
 				scoreattempt tinyint(2) unsigned NOT NULL default '0',
@@ -1484,7 +1484,7 @@ function myarcade_profile()
 		}
 
 		$query2 = $db->query("
-			SELECT COUNT(s.sid) AS score_count, g.active, g.cid
+			SELECT COUNT(s.sid) AS score_count, g.active
 			FROM ".TABLE_PREFIX."arcadescores s
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
 			WHERE g.active='1' AND s.uid={$memprofile['uid']}{$cat_sql}
