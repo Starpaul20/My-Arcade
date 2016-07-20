@@ -7,10 +7,10 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "tournaments_view,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished,tournaments_finished_bit";
-$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify";
-$templatelist .= ",arcade_menu,arcade_online_memberbit,arcade_online,tournaments_view_cancel,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries";
-$templatelist .= ",tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_create,tournaments_view_rounds,tournaments_view_delete";
+$templatelist = "arcade_online,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished_bit,tournaments_view_rounds_profile,tournaments_view_cancel";
+$templatelist .= ",arcade_menu,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify,tournaments_view_champion";
+$templatelist .= ",tournaments_view,arcade_online_memberbit,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_finished_champion_cancelled,tournaments_finished";
+$templatelist .= ",tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_create,tournaments_view_rounds,tournaments_finished_champion,tournaments_view_delete";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -370,6 +370,7 @@ if($mybb->input['action'] == "view")
 
 	$colspan = $players + 1;
 
+	$champion = '';
 	if($tournament['champion'])
 	{
 		$tournament['username'] = htmlspecialchars_uni($tournament['username']);
@@ -383,7 +384,7 @@ if($mybb->input['action'] == "view")
 			$profilelink = get_profile_link($tournament['champion']);
 		}
 
-		$champion = "<a href=\"{$profilelink}\">{$tournament['username']}</a>";
+		eval("\$champion = \"".$templates->get('tournaments_view_champion')."\";");
 	}
 	else
 	{
@@ -422,7 +423,7 @@ if($mybb->input['action'] == "view")
 				$profilelink = get_profile_link($player['uid']);
 			}
 
-			$player['username'] = "<a href=\"{$profilelink}\">{$player['username']}</a>";
+			eval("\$player['username'] = \"".$templates->get("tournaments_view_rounds_profile")."\";");
 
 			$disqualifylink = '';
 			if($mybb->usergroup['canmoderategames'] == 1 && $tournament['status'] < 3)
@@ -464,7 +465,7 @@ if($mybb->input['action'] == "view")
 			$width = floor(100/$numplayers);
 
 			$player['username'] = $lang->na;
-			$disqualifylink = "";
+			$disqualifylink = '';
 
 			eval("\$rounds_bit .= \"".$templates->get('tournaments_view_rounds_bit')."\";");
 		}
@@ -666,6 +667,7 @@ if($mybb->input['action'] == "finished")
 		$tournament['name'] = htmlspecialchars_uni($tournament['name']);
 		$dateline = my_date('relative', $tournament['finishdateline']);
 
+		$champion = '';
 		if($tournament['champion'])
 		{
 			$tournament['champ'] = htmlspecialchars_uni($tournament['champ']);
@@ -679,11 +681,11 @@ if($mybb->input['action'] == "finished")
 				$profilelink = get_profile_link($tournament['champion']);
 			}
 
-			$champion = "<a href=\"{$profilelink}\">{$tournament['champ']}</a>";
+			eval("\$champion = \"".$templates->get("tournaments_finished_champion")."\";");
 		}
 		else
 		{
-			$champion = "<em>{$lang->tournament_cancelled}</em>";
+			eval("\$champion = \"".$templates->get("tournaments_finished_champion_cancelled")."\";");
 		}
 
 		$alt_bg = alt_trow();
