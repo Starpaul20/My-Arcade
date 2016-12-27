@@ -773,7 +773,7 @@ body {
 </tr>]]></template>
 		<template name="arcade_scores_bit_ipaddress" version="1000"><![CDATA[<td class="{$alt_bg}" align="center">{$score['ipaddress']}</td>]]></template>
 		<template name="arcade_scores_delete" version="1000"><![CDATA[[<a href="arcade.php?action=delete&amp;sid={$score['sid']}&amp;my_post_key={$mybb->post_code}" onclick="if(confirm(&quot;{$lang->delete_score_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;">{$lang->delete}</a>]]]></template>
-		<template name="arcade_scores_edit" version="1000"><![CDATA[[<a href="javascript:Arcade.editScore({$score['sid']});">{$lang->edit}</a>]]]></template>
+		<template name="arcade_scores_edit" version="1200"><![CDATA[[<a href="javascript:void(0)" onclick="javascript:Arcade.editScore({$score['sid']}); return false;">{$lang->edit}</a>]]]></template>
 		<template name="arcade_scores_ipaddress" version="1000"><![CDATA[<td class="tcat" width="10%" align="center"><span class="smalltext"><strong>{$lang->ip_address}</strong></span></td>]]></template>
 		<template name="arcade_scores_no_scores" version="1000"><![CDATA[<tr>
 	<td class="trow1" colspan="7" align="center">{$lang->no_game_scores}</td>
@@ -1445,7 +1445,7 @@ body {
 {$footer}
 </body>
 </html>]]></template>
-		<template name="tournaments_view_cancel" version="1000"><![CDATA[[<a href="javascript:Arcade.cancelTournament({$tid});">{$lang->cancel_tournament}</a>]]]></template>
+		<template name="tournaments_view_cancel" version="1200"><![CDATA[[<a href="javascript:void(0)" onclick="javascript:Arcade.cancelTournament({$tid}); return false;">{$lang->cancel_tournament}</a>]]]></template>
 		<template name="tournaments_view_champion" version="1200"><![CDATA[<a href="{$profilelink}">{$tournament['username']}</a>]]></template>
 		<template name="tournaments_view_delete" version="1000"><![CDATA[[<a href="tournaments.php?action=delete&amp;tid={$tid}&amp;my_post_key={$mybb->post_code}" onclick="if(confirm(&quot;{$lang->delete_tournament_confirm}&quot;))window.location=this.href.replace('action=delete','action=delete');return false;">{$lang->delete_tournament}</a>]]]></template>
 		<template name="tournaments_view_join" version="1000"><![CDATA[<a href="tournaments.php?action=join&amp;tid={$tid}&amp;my_post_key={$mybb->post_code}">{$lang->join_now}</a>]]></template>
