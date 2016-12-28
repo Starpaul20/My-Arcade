@@ -181,7 +181,7 @@ $l['error_invalidcategory'] = "Invalid category specificed.";
 $l['error_nogamepermission'] = "You do not have permission to view this game.";
 $l['error_nocategorypermission'] = "You do not have permission to view this category.";
 $l['no_name_input'] = "The game did not input properly, your score was not saved.";
-$l['no_score_input'] = "The score did not input properly, and therefore could not be saved.";
+$l['no_score_input'] = "The score did not input properly, and therefore could not be saved. Please note if you have scored 0 it will not be saved.";
 $l['no_session_input'] = "Your game session was invalid, your score was not saved.";
 $l['error_categoryinactive'] = "This category is currently inactivate.";
 
