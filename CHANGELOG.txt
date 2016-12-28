@@ -1,3 +1,14 @@
+1.2 (December 28th, 2016)
+- MyAlerts support: Removed dateline from sprintf
+- Bug: Fixed possible XSS Injection when pruning scores/logs in Admin CP
+- Optimized PNG images
+- Sanitized usernames
+- Bug: Fixed SQL errors with ONLY_FULL_GROUP_BY enabled (Issue #2)
+- Moved more hardcoded HTML to templates
+- Updated javascript links
+- Updated numeric settings
+- Added note about zero scores not saving
+
 1.1 (May 22nd, 2015)
 - Added My Alerts 2.0 support
 - Start a tournament immediately when last player needed joined
