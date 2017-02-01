@@ -125,6 +125,16 @@ if($mybb->input['action'] == "add_simple")
 		'link' => "index.php?module=arcade-games&amp;action=add_tar",
 	);
 
+	$sub_tabs['export_games'] = array(
+		'title' => $lang->export_games,
+		'link' => "index.php?module=arcade-games&amp;action=export",
+	);
+
+	$sub_tabs['import_games'] = array(
+		'title' => $lang->import_games,
+		'link' => "index.php?module=arcade-games&amp;action=import",
+	);
+
 	$page->output_nav_tabs($sub_tabs, 'add_game_simple');
 	$form = new Form("index.php?module=arcade-games&amp;action=add_simple", "post", "add");
 	if($errors)
@@ -381,6 +391,16 @@ if($mybb->input['action'] == "add_tar")
 		'title' => $lang->add_game_tar,
 		'link' => "index.php?module=arcade-games&amp;action=add_tar",
 		'description' => $lang->add_game_tar_desc
+	);
+
+	$sub_tabs['export_games'] = array(
+		'title' => $lang->export_games,
+		'link' => "index.php?module=arcade-games&amp;action=export",
+	);
+
+	$sub_tabs['import_games'] = array(
+		'title' => $lang->import_games,
+		'link' => "index.php?module=arcade-games&amp;action=import",
 	);
 
 	$page->output_nav_tabs($sub_tabs, 'add_game_tar');
@@ -718,6 +738,356 @@ if($mybb->input['action'] == "enable")
 	admin_redirect("index.php?module=arcade-games");
 }
 
+if($mybb->input['action'] == "export")
+{
+	if($mybb->request_method == "post")
+	{
+		if(trim($mybb->input['name']) == '')
+		{
+			$errors[] = $lang->error_missing_file_name;
+		}
+
+		$exporttype = $mybb->get_input('exporttype', MyBB::INPUT_INT);
+
+		if($exporttype == 3)
+		{
+			if(count($mybb->input['category_1_categories']) < 1)
+			{
+				$errors[] = $lang->error_no_categories_selected;
+			}
+
+			$game_checked[3] = "checked=\"checked\"";
+		}
+		elseif($exporttype == 4)
+		{
+			if(count($mybb->input['game_1_games']) < 1)
+			{
+				$errors[] = $lang->error_no_games_selected;
+			}
+
+			$game_checked[4] = "checked=\"checked\"";
+		}
+		else
+		{
+			$game_checked[0] = "checked=\"checked\"";
+			$mybb->input['game_1_games'] = '';
+			$mybb->input['category_1_categories'] = '';
+		}
+
+		if(!$errors)
+		{
+			$where = '';
+			if($exporttype == 1)
+			{
+				$where = "active='1'";
+			}
+			elseif($exporttype == 2)
+			{
+				$where = "active='0'";
+			}
+			elseif($exporttype == 3)
+			{
+				if(is_array($mybb->input['category_1_categories']))
+				{
+					$checked = array();
+					foreach($mybb->input['category_1_categories'] as $cid)
+					{
+						$checked[] = (int)$cid;
+					}
+
+					$categories = implode(',', $checked);
+					$where = "cid IN({$categories})";
+				}
+			}
+			elseif($exporttype == 4)
+			{
+				if(is_array($mybb->input['game_1_games']))
+				{
+					$checked = array();
+					foreach($mybb->input['game_1_games'] as $gid)
+					{
+						$checked[] = (int)$gid;
+					}
+
+					$games = implode(',', $checked);
+					$where = "gid IN({$games})";
+				}
+			}
+
+			$count = 0;
+			$xml = "<?xml version=\"1.0\" encoding=\"{$lang->settings['charset']}\"?".">\n";
+			$xml .= "<games version=\"{$mybb->version_code}\" exported=\"".TIME_NOW."\">\n";
+
+			$query = $db->simple_select("arcadegames", "name, description, about, controls, file, smallimage, largeimage, bgcolor, width, height, tournamentselect, active", $where, array('order_by' => 'name', 'order_dir' => 'ASC'));
+			while($game = $db->fetch_array($query))
+			{
+				$xml .= "\t<game>\n";
+				foreach($game as $key => $value)
+				{
+					$value = str_replace(']]>', ']]]]><![CDATA[>', $value);
+					$xml .= "\t\t<{$key}><![CDATA[{$value}]]></{$key}>\n";
+				}
+				$xml .= "\t</game>\n";
+				++$count;
+			}
+
+			$xml .= "</games>";
+			$mybb->input['name'] = urlencode($mybb->input['name']);
+
+			if($count == 0)
+			{
+				flash_message($lang->error_nothing_to_export, 'error');
+				admin_redirect("index.php?module=arcade-games&action=export");
+			}
+			else
+			{
+				// Log admin action
+				log_admin_action();
+
+				header("Content-disposition: filename=".$mybb->input['name'].".xml");
+				header("Content-Length: ".my_strlen($xml));
+				header("Content-type: unknown/unknown");
+				header("Pragma: no-cache");
+				header("Expires: 0");
+
+				echo $xml;
+				exit;
+			}
+		}
+	}
+
+	$sub_tabs['games'] = array(
+		'title' => $lang->games,
+		'link' => "index.php?module=arcade-games",
+	);
+
+	$sub_tabs['add_game_simple'] = array(
+		'title' => $lang->add_game_simple,
+		'link' => "index.php?module=arcade-games&amp;action=add_simple",
+	);
+
+	$sub_tabs['add_game_tar'] = array(
+		'title' => $lang->add_game_tar,
+		'link' => "index.php?module=arcade-games&amp;action=add_tar",
+	);
+
+	$sub_tabs['export_games'] = array(
+		'title' => $lang->export_games,
+		'link' => "index.php?module=arcade-games&amp;action=export",
+		'description' => $lang->export_games_desc
+	);
+
+	$sub_tabs['import_games'] = array(
+		'title' => $lang->import_games,
+		'link' => "index.php?module=arcade-games&amp;action=import",
+	);
+
+	$page->add_breadcrumb_item($lang->export_games);
+	$page->output_header($lang->games." - ".$lang->export_games);
+	$page->output_nav_tabs($sub_tabs, 'export_games');
+
+	$form = new Form("index.php?module=arcade-games&amp;action=export", "post", false, true);
+
+	if($errors)
+	{
+		$page->output_inline_error($errors);
+	}
+	else
+	{
+		$mybb->input['game_1_games'] = '';
+		$mybb->input['category_1_categories'] = '';
+		$mybb->input['name'] = 'games';
+		$game_checked[0] = "checked=\"checked\"";
+		$game_checked[1] = '';
+		$game_checked[2] = '';
+		$game_checked[3] = '';
+		$game_checked[4] = '';
+	}
+
+	$form_container = new FormContainer($lang->export_games);
+
+	$query = $db->simple_select("arcadegames", "gid, name", "", array("order_by" => "name", "order_dir" => "asc"));
+	while($game = $db->fetch_array($query))
+	{
+		$games[$game['gid']] = $game['name'];
+	}
+
+	$categories['0'] = $lang->no_category;
+
+	$query = $db->simple_select("arcadecategories", "cid, name", "", array("order_by" => "name", "order_dir" => "asc"));
+	while($category = $db->fetch_array($query))
+	{
+		$categories[$category['cid']] = $category['name'];
+	}
+
+	$type_select = "<script type=\"text/javascript\">
+		function checkAction(id)
+		{
+			var checked = '';
+
+			$('.'+id+'s_check').each(function(e, val)
+			{
+				if($(this).prop('checked') == true)
+				{
+					checked = $(this).val();
+				}
+			});
+			$('.'+id+'s').each(function(e)
+			{
+				$(this).hide();
+			});
+			if($('#'+id+'_'+checked))
+			{
+				$('#'+id+'_'+checked).show();
+			}
+		}
+	</script>
+
+	<dl style=\"margin-top: 0; margin-bottom: 0; width: 100%\">
+		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"exporttype\" value=\"0\" {$game_checked[0]} class=\"games_check\" onclick=\"checkAction('game');\" style=\"vertical-align: middle;\" /> <strong>{$lang->all_games}</strong></label></dt>
+		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"exporttype\" value=\"1\" {$game_checked[1]} class=\"games_check\" onclick=\"checkAction('game');\" style=\"vertical-align: middle;\" /> <strong>{$lang->enabled_games}</strong></label></dt>
+		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"exporttype\" value=\"2\" {$game_checked[2]} class=\"games_check\" onclick=\"checkAction('game');\" style=\"vertical-align: middle;\" /> <strong>{$lang->disabled_games}</strong></label></dt>
+		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"exporttype\" value=\"3\" {$game_checked[3]} class=\"games_check\" onclick=\"checkAction('game');\" style=\"vertical-align: middle;\" /> <strong>{$lang->in_category}</strong></label></dt>
+		<dd style=\"margin-top: 4px;\" id=\"game_3\" class=\"games\">
+			<table cellpadding=\"4\">
+				<tr>
+					<td valign=\"top\"><small>{$lang->categories_colon}</small></td>
+					<td>".$form->generate_select_box('category_1_categories[]', $categories, $mybb->input['category_1_categories'], array('multiple' => true, 'size' => 5))."</td>
+				</tr>
+			</table>
+		</dd>
+		<dt><label style=\"display: block;\"><input type=\"radio\" name=\"exporttype\" value=\"4\" {$game_checked[4]} class=\"games_check\" onclick=\"checkAction('game');\" style=\"vertical-align: middle;\" /> <strong>{$lang->select_games}</strong></label></dt>
+		<dd style=\"margin-top: 4px;\" id=\"game_4\" class=\"games\">
+			<table cellpadding=\"4\">
+				<tr>
+					<td valign=\"top\"><small>{$lang->games_colon}</small></td>
+					<td>".$form->generate_select_box('game_1_games[]', $games, $mybb->input['game_1_games'], array('multiple' => true, 'size' => 5))."</td>
+				</tr>
+			</table>
+		</dd>
+	</dl>
+	<script type=\"text/javascript\">
+		checkAction('game');
+	</script>";
+
+	$form_container->output_row($lang->export_type." <em>*</em>", '', $type_select);
+	$form_container->output_row($lang->file_name.' <em>*</em>', $lang->file_name_desc, $form->generate_text_box('name', $mybb->input['name'], array('id' => 'name')), 'name');
+
+	$form_container->end();
+
+	$buttons[] = $form->generate_submit_button($lang->export_games);
+
+	$form->output_submit_wrapper($buttons);
+	$form->end();
+
+	$page->output_footer();
+}
+
+if($mybb->input['action'] == "import")
+{
+	if($mybb->request_method == "post")
+	{
+		if(!is_uploaded_file($_FILES['gamefile']['tmp_name']))
+		{
+			$errors[] = $lang->error_missing_file;
+		}
+
+		$ext = get_extension(my_strtolower($_FILES['gamefile']['name']));
+		if(!preg_match("#^(xml)$#i", $ext))
+		{
+			$errors[] = $lang->error_invalid_extension;
+		}
+
+		if(!$errors)
+		{
+			require_once MYBB_ROOT."inc/class_xml.php";
+
+			$contents = @file_get_contents($_FILES['gamefile']['tmp_name']);
+			// Delete the temporary file if possible
+			@unlink($_FILES['gamefile']['tmp_name']);
+
+			$parser = new XMLParser($contents);
+			$parser->collapse_dups = 0;
+			$tree = $parser->get_tree();
+
+			foreach($tree['games'][0]['game'] as $game)
+			{
+				$new_game = array(
+					'name' => $db->escape_string($game['name'][0]['value']),
+					'description' => $db->escape_string($game['description'][0]['value']),
+					'about' => $db->escape_string($game['about'][0]['value']),
+					'controls' => $db->escape_string($game['controls'][0]['value']),
+					'file' => $db->escape_string($game['file'][0]['value']),
+					'smallimage' => $db->escape_string($game['smallimage'][0]['value']),
+					'largeimage' => $db->escape_string($game['largeimage'][0]['value']),
+					'dateline' => TIME_NOW,
+					'bgcolor' => $db->escape_string($game['bgcolor'][0]['value']),
+					'width' => $db->escape_string($game['width'][0]['value']),
+					'height' => $db->escape_string($game['height'][0]['value']),
+					'tournamentselect' => $db->escape_string($game['tournamentselect'][0]['value']),
+					'active' => $db->escape_string($game['active'][0]['value'])
+				);
+
+				$db->insert_query("arcadegames", $new_game);
+			}
+
+			// Log admin action
+			log_admin_action();
+
+			flash_message($lang->success_imported_games, 'success');
+			admin_redirect('index.php?module=arcade-games');
+		}
+	}
+
+	$sub_tabs['games'] = array(
+		'title' => $lang->games,
+		'link' => "index.php?module=arcade-games",
+	);
+
+	$sub_tabs['add_game_simple'] = array(
+		'title' => $lang->add_game_simple,
+		'link' => "index.php?module=arcade-games&amp;action=add_simple",
+	);
+
+	$sub_tabs['add_game_tar'] = array(
+		'title' => $lang->add_game_tar,
+		'link' => "index.php?module=arcade-games&amp;action=add_tar",
+	);
+
+	$sub_tabs['export_games'] = array(
+		'title' => $lang->export_games,
+		'link' => "index.php?module=arcade-games&amp;action=export",
+	);
+
+	$sub_tabs['import_games'] = array(
+		'title' => $lang->import_games,
+		'link' => "index.php?module=arcade-games&amp;action=import",
+		'description' => $lang->import_games_desc
+	);
+
+	$page->add_breadcrumb_item($lang->import_games);
+	$page->output_header($lang->games." - ".$lang->import_games);
+	$page->output_nav_tabs($sub_tabs, 'import_games');
+
+	$form = new Form("index.php?module=arcade-games&amp;action=import", "post", false, true);
+
+	if($errors)
+	{
+		$page->output_inline_error($errors);
+	}
+
+	$form_container = new FormContainer($lang->import_games);
+	$form_container->output_row($lang->game_file."<em>*</em>", $lang->game_file_desc, $form->generate_file_upload_box("gamefile", array('id' => 'gamefile')), 'gamefile');
+	$form_container->end();
+
+	$buttons[] = $form->generate_submit_button($lang->import_games);
+
+	$form->output_submit_wrapper($buttons);
+	$form->end();
+
+	$page->output_footer();
+}
+
 if(!$mybb->input['action'])
 {
 	$plugins->run_hooks("admin_arcade_games_start");
@@ -738,6 +1108,16 @@ if(!$mybb->input['action'])
 	$sub_tabs['add_game_tar'] = array(
 		'title' => $lang->add_game_tar,
 		'link' => "index.php?module=arcade-games&amp;action=add_tar",
+	);
+
+	$sub_tabs['export_games'] = array(
+		'title' => $lang->export_games,
+		'link' => "index.php?module=arcade-games&amp;action=export",
+	);
+
+	$sub_tabs['import_games'] = array(
+		'title' => $lang->import_games,
+		'link' => "index.php?module=arcade-games&amp;action=import",
 	);
 
 	$page->output_nav_tabs($sub_tabs, 'games');

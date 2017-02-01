@@ -12,6 +12,10 @@ $l['add_game_tar'] = "Add Game (Tar)";
 $l['add_game_tar_desc'] = "Here you can add a new game to your arcade. Please be sure that the arcade directary is writable.";
 $l['edit_game'] = "Edit Game";
 $l['edit_games_desc'] = "Here you can edit a game in your arcade.";
+$l['export_games'] = "Export Games";
+$l['export_games_desc'] = "Here you can export games.";
+$l['import_games'] = "Import Game";
+$l['import_games_desc'] = "Here you can import games to your arcade.";
 
 $l['success_game_added'] = "The game has been added successfully.";
 $l['success_game_updated'] = "The game has been edited successfully.";
@@ -79,5 +83,26 @@ $l['error_missing_game_tar_php'] = "This tar file is missing a PHP file.";
 $l['error_missing_game_tar_largeimage'] = "This tar file is missing a large image GIF.";
 $l['error_missing_game_tar_smallimage'] = "This tar file is missing a small image GIF.";
 $l['confirm_game_deletion'] = "Are you sure you wish to delete this game?";
+
+$l['error_missing_file_name'] = "Please enter a file name for you game export.";
+$l['error_no_games_selected'] = "You did not select any games to export.";
+$l['error_no_categories_selected'] = "You did not select any categories to export.";
+$l['error_nothing_to_export'] = "There are no games to export with the settings you selected";
+$l['error_missing_file'] = "You did not select a file to import.";
+$l['error_invalid_extension'] = "Invalid file extension. Please upload only XML files.";
+$l['success_imported_games'] = " The games(s) has been imported successfully.";
+
+$l['export_type'] = "Export Type";
+$l['all_games'] = "All Games";
+$l['enabled_games'] = "Enabled Games Only";
+$l['disabled_games'] = "Disabled Games Only";
+$l['in_category'] = "In Category";
+$l['select_games'] = "Select Games";
+$l['games_colon'] = "Games:";
+$l['categories_colon'] = "Categories:";
+$l['file_name'] = "File Name";
+$l['file_name_desc'] = "Enter the file name you wish to give your game export.";
+$l['game_file'] = "Game File";
+$l['game_file_desc'] = "Select the XML file you wish to import. Please note you will need to upload the arcade file and images separately.";
 
 ?>
