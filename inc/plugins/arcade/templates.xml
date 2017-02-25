@@ -598,7 +598,7 @@ body {
 			lang.ratings_update_error = "{$lang->ratings_update_error}";
 		// -->
 		</script>
-		<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1000"></script>
+		<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1300"></script>
 		<strong>{$lang->game_rating}</strong><br />
 		<div class="inline_rating">
 			<ul class="star_rating{$not_rated}" id="rating_game_{$game['gid']}">
@@ -622,7 +622,7 @@ body {
 </tr>]]></template>
 		<template name="arcade_rating" version="1000"><![CDATA[<td class="tcat" width="10%" align="center">
 	<strong>{$lang->rating}</strong>
-	<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1000"></script>
+	<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1300"></script>
 	<script type="text/javascript">
 		<!--
 			lang.stars = new Array();
@@ -786,7 +786,7 @@ body {
 		lang.ratings_update_error = "{$lang->ratings_update_error}";
 	// -->
 	</script>
-	<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1000"></script>
+	<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1300"></script>
 	<span class="float_left" style="padding-right: 5px;">{$lang->rating}:</span>
 	<div class="inline_rating">
 		<ul class="star_rating{$not_rated}" id="rating_game_{$game['gid']}">
