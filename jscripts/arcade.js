@@ -1,3 +1,8 @@
+/**
+ * My Arcade
+ * Copyright 2015 Starpaul20
+ */
+
 var Arcade = {
 	init: function()
 	{
@@ -7,12 +12,12 @@ var Arcade = {
 
 	editScore: function(sid)
 	{
-		MyBB.popupWindow("/arcade.php?action=edit&sid="+sid);
+		MyBB.popupWindow("/arcade.php?modal=1&action=edit&sid="+sid);
 	},
 
 	cancelTournament: function(tid)
 	{
-		MyBB.popupWindow("/tournaments.php?action=cancel&tid="+tid);
+		MyBB.popupWindow("/tournaments.php?modal=1&action=cancel&tid="+tid);
 	},
 
 	submitScoreEdit: function(sid)
@@ -21,7 +26,7 @@ var Arcade = {
 		var datastring = $(".score_"+sid).serialize();
 		$.ajax({
 			type: "POST",
-			url: "arcade.php",
+			url: "arcade.php?modal=1",
 			data: datastring,
 			dataType: "html",
 			success: function(data) {
@@ -29,6 +34,7 @@ var Arcade = {
 				$('.modal_'+sid).fadeOut('slow', function() {
 					$('.modal_'+sid).html(data);
 					$('.modal_'+sid).fadeIn('slow');
+					$(".modal").fadeIn('slow');
 				});
 			},
 			error: function(){
@@ -45,7 +51,7 @@ var Arcade = {
 		var datastring = $(".tournament_"+tid).serialize();
 		$.ajax({
 			type: "POST",
-			url: "tournaments.php",
+			url: "tournaments.php?modal=1",
 			data: datastring,
 			dataType: "html",
 			success: function(data) {
@@ -53,6 +59,7 @@ var Arcade = {
 				$('.modal_'+tid).fadeOut('slow', function() {
 					$('.modal_'+tid).html(data);
 					$('.modal_'+tid).fadeIn('slow');
+					$(".modal").fadeIn('slow');
 				});
 			},
 			error: function(){

@@ -591,7 +591,7 @@ body {
 </html>]]></template>
 		<template name="arcade_play_champion" version="1000"><![CDATA[<a href="{$profilelink}">{$champ['username']}</a>]]></template>
 		<template name="arcade_play_guest" version="1000"><![CDATA[<span class="smalltext">{$lang->guest_scoring}</span><br /><br />]]></template>
-		<template name="arcade_play_rating" version="1000"><![CDATA[<tr>
+		<template name="arcade_play_rating" version="1300"><![CDATA[<tr>
 	<td class="trow2" align="center">
 		<script type="text/javascript">
 		<!--
@@ -620,7 +620,7 @@ body {
 		{$lang->highest_tournament_score} {$hightournamentscore}
 	</td>
 </tr>]]></template>
-		<template name="arcade_rating" version="1000"><![CDATA[<td class="tcat" width="10%" align="center">
+		<template name="arcade_rating" version="1300"><![CDATA[<td class="tcat" width="10%" align="center">
 	<strong>{$lang->rating}</strong>
 	<script type="text/javascript" src="{$mybb->asset_url}/jscripts/game_rating.js?ver=1300"></script>
 	<script type="text/javascript">
@@ -635,11 +635,11 @@ body {
 		// -->
 	</script>
 </td>]]></template>
-		<template name="arcade_scoreboard" version="1000"><![CDATA[<html>
+		<template name="arcade_scoreboard" version="1300"><![CDATA[<html>
 <head>
 <title>{$lang->arcade} - {$lang->scoreboard}</title>
 {$headerinclude}
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1000"></script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1300"></script>
 </head>
 <body>
 {$header}
@@ -700,11 +700,11 @@ body {
 	<td class="{$alt_bg}">{$score['comment']} <span class="smalltext" style="float:right;">{$edit_link} {$delete_link}</span></td>
 	{$ipaddressbit}
 </tr>]]></template>
-		<template name="arcade_scores" version="1000"><![CDATA[<html>
+		<template name="arcade_scores" version="1300"><![CDATA[<html>
 <head>
 <title>{$lang->arcade} - {$lang->highest_scores_of}</title>
 {$headerinclude}
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1000"></script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1300"></script>
 </head>
 <body>
 {$header}
@@ -780,7 +780,7 @@ body {
 </tr>]]></template>
 		<template name="arcade_scores_play" version="1000"><![CDATA[<a href="arcade.php?action=play&amp;gid={$game['gid']}">{$lang->play_game}</a><br />
 <a href="arcade.php?action=fullscreen&amp;gid={$game['gid']}">{$lang->play_game_fullscreen}</a><br />]]></template>
-		<template name="arcade_scores_rating" version="1000"><![CDATA[<div style="padding-right: 10px;" class="float_left">
+		<template name="arcade_scores_rating" version="1300"><![CDATA[<div style="padding-right: 10px;" class="float_left">
 	<script type="text/javascript">
 	<!--
 		lang.ratings_update_error = "{$lang->ratings_update_error}";
@@ -1415,11 +1415,11 @@ body {
 	<td class="{$alt_bg}" align="center">{$dateline}</td>
 	<td class="{$alt_bg}" align="center">{$tournament['days']}</td>
 </tr>]]></template>
-		<template name="tournaments_view" version="1000"><![CDATA[<html>
+		<template name="tournaments_view" version="1300"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->viewing_tournament}</title>
 {$headerinclude}
-<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1000"></script>
+<script type="text/javascript" src="{$mybb->asset_url}/jscripts/arcade.js?ver=1300"></script>
 </head>
 <body>
 {$header}
