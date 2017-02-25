@@ -40,11 +40,12 @@ var Rating = {
 
 	build_gamebit: function(gid, options)
 	{
-		if(!$("#rating_game_"+gid))
+		var list = $("#rating_game_"+gid);
+		if(!list.length)
 		{
 			return;
 		}
-		var list = $("#rating_game_"+gid);
+
 		list.addClass("star_rating")
 			.addClass(options.extra_class);
 
