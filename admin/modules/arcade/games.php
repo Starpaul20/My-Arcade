@@ -842,7 +842,7 @@ if($mybb->input['action'] == "export")
 			else
 			{
 				// Log admin action
-				log_admin_action();
+				log_admin_action($count);
 
 				header("Content-disposition: filename=".$mybb->input['name'].".xml");
 				header("Content-Length: ".my_strlen($xml));
@@ -1001,6 +1001,7 @@ if($mybb->input['action'] == "import")
 		if(!$errors)
 		{
 			require_once MYBB_ROOT."inc/class_xml.php";
+			$count = 0;
 
 			$contents = @file_get_contents($_FILES['gamefile']['tmp_name']);
 			// Delete the temporary file if possible
@@ -1035,14 +1036,23 @@ if($mybb->input['action'] == "import")
 					);
 
 					$db->insert_query("arcadegames", $new_game);
+					++$count;
 				}
 			}
 
-			// Log admin action
-			log_admin_action();
+			if($count == 0)
+			{
+				flash_message($lang->error_nothing_to_import, 'error');
+				admin_redirect("index.php?module=arcade-games");
+			}
+			else
+			{
+				// Log admin action
+				log_admin_action($count);
 
-			flash_message($lang->success_imported_games, 'success');
-			admin_redirect('index.php?module=arcade-games');
+				flash_message($lang->success_imported_games, 'success');
+				admin_redirect("index.php?module=arcade-games");
+			}
 		}
 	}
 

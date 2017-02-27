@@ -90,7 +90,8 @@ $l['error_no_categories_selected'] = "You did not select any categories to expor
 $l['error_nothing_to_export'] = "There are no games to export with the settings you selected";
 $l['error_missing_file'] = "You did not select a file to import.";
 $l['error_invalid_extension'] = "Invalid file extension. Please upload only XML files.";
-$l['success_imported_games'] = " The games(s) has been imported successfully.";
+$l['success_imported_games'] = "The games(s) has been imported successfully.";
+$l['error_nothing_to_import'] = "There are no games to import or are duplicates of current games.";
 
 $l['export_type'] = "Export Type";
 $l['all_games'] = "All Games";
