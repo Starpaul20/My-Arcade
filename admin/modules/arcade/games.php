@@ -1012,23 +1012,30 @@ if($mybb->input['action'] == "import")
 
 			foreach($tree['games'][0]['game'] as $game)
 			{
-				$new_game = array(
-					'name' => $db->escape_string($game['name'][0]['value']),
-					'description' => $db->escape_string($game['description'][0]['value']),
-					'about' => $db->escape_string($game['about'][0]['value']),
-					'controls' => $db->escape_string($game['controls'][0]['value']),
-					'file' => $db->escape_string($game['file'][0]['value']),
-					'smallimage' => $db->escape_string($game['smallimage'][0]['value']),
-					'largeimage' => $db->escape_string($game['largeimage'][0]['value']),
-					'dateline' => TIME_NOW,
-					'bgcolor' => $db->escape_string($game['bgcolor'][0]['value']),
-					'width' => $db->escape_string($game['width'][0]['value']),
-					'height' => $db->escape_string($game['height'][0]['value']),
-					'tournamentselect' => $db->escape_string($game['tournamentselect'][0]['value']),
-					'active' => $db->escape_string($game['active'][0]['value'])
-				);
+				// Only import games that don't already use the same file
+				$query = $db->simple_select("arcadegames", "file", "file='{$game['file'][0]['value']}'");
+				$file = $db->fetch_array($query);
 
-				$db->insert_query("arcadegames", $new_game);
+				if(!$file['file'])
+				{
+					$new_game = array(
+						'name' => $db->escape_string($game['name'][0]['value']),
+						'description' => $db->escape_string($game['description'][0]['value']),
+						'about' => $db->escape_string($game['about'][0]['value']),
+						'controls' => $db->escape_string($game['controls'][0]['value']),
+						'file' => $db->escape_string($game['file'][0]['value']),
+						'smallimage' => $db->escape_string($game['smallimage'][0]['value']),
+						'largeimage' => $db->escape_string($game['largeimage'][0]['value']),
+						'dateline' => TIME_NOW,
+						'bgcolor' => $db->escape_string($game['bgcolor'][0]['value']),
+						'width' => $db->escape_string($game['width'][0]['value']),
+						'height' => $db->escape_string($game['height'][0]['value']),
+						'tournamentselect' => $db->escape_string($game['tournamentselect'][0]['value']),
+						'active' => $db->escape_string($game['active'][0]['value'])
+					);
+
+					$db->insert_query("arcadegames", $new_game);
+				}
 			}
 
 			// Log admin action
