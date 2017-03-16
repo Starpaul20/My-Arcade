@@ -768,12 +768,12 @@ function myarcade_activate()
 	global $db, $cache;
 	require_once MYBB_ROOT."inc/class_xml.php";
 
-	$settings = @file_get_contents(MYBB_ROOT.'inc/plugins/arcade/settings.xml');
+	// Insert settings
+	$settings = @file_get_contents(MYBB_ROOT.'inc/plugins/myarcade/settings.xml');
 	$parser = new XMLParser($settings);
 	$parser->collapse_dups = 0;
 	$tree = $parser->get_tree();
 
-	// Insert settings
 	foreach($tree['settings'][0]['settinggroup'] as $settinggroup)
 	{
 		$groupdata = array(
@@ -816,7 +816,7 @@ function myarcade_activate()
 	$db->insert_query("templategroups", $insertarray);
 
 	// Inserts templates (arcade)
-	$contents = @file_get_contents(MYBB_ROOT.'inc/plugins/arcade/templates.xml');
+	$contents = @file_get_contents(MYBB_ROOT.'inc/plugins/myarcade/templates.xml');
 	require_once MYBB_ADMIN_DIR."inc/functions.php";
 	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
 
