@@ -332,47 +332,43 @@ if($mybb->input['action'] == "add_tar")
 			@unlink(MYBB_ROOT."arcade/".$_FILES['tar_file']['name']);
 
 			// SWF file
-			if(!@copy(MYBB_ROOT."arcade/".$filename.".swf", MYBB_ROOT."arcade/swf/".$filename.".swf"))
+			if(!is_file(MYBB_ROOT."arcade/".$filename.".swf"))
 			{
 				$errors[] = $lang->error_missing_game_tar_swf;
 			}
 			else
 			{
-				@my_chmod(MYBB_ROOT."arcade/swf/".$filename.".swf", 0777);
-				@unlink(MYBB_ROOT."arcade/".$filename.".swf");
+				@rename(MYBB_ROOT."arcade/".$filename.".swf", MYBB_ROOT."arcade/swf/".$filename.".swf");
 			}
 
 			// PHP file
-			if(!@copy(MYBB_ROOT."arcade/".$filename.".php", MYBB_ROOT."arcade/php/".$filename.".php"))
+			if(!is_file(MYBB_ROOT."arcade/".$filename.".php"))
 			{
 				$errors[] = $lang->error_missing_game_tar_php;
 			}
 			else
 			{
-				@my_chmod(MYBB_ROOT."arcade/php/".$filename.".php", 0777);
-				@unlink(MYBB_ROOT."arcade/".$filename.".php");
+				@rename(MYBB_ROOT."arcade/".$filename.".php", MYBB_ROOT."arcade/php/".$filename.".php");
 			}
 
 			// Large image file
-			if(!@copy(MYBB_ROOT."arcade/".$filename."1.gif", MYBB_ROOT."arcade/largeimages/".$filename."1.gif"))
+			if(!is_file(MYBB_ROOT."arcade/".$filename."1.gif"))
 			{
 				$errors[] = $lang->error_missing_game_tar_largeimage;
 			}
 			else
 			{
-				@my_chmod(MYBB_ROOT."arcade/largeimages/".$filename."1.gif", 0777);
-				@unlink(MYBB_ROOT."arcade/".$filename."1.gif");
+				@rename(MYBB_ROOT."arcade/".$filename."1.gif", MYBB_ROOT."arcade/largeimages/".$filename."1.gif");
 			}
 
 			// Small image file
-			if(!@copy(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/smallimages/".$filename."2.gif"))
+			if(!is_file(MYBB_ROOT."arcade/".$filename."2.gif"))
 			{
 				$errors[] = $lang->error_missing_game_tar_smallimage;
 			}
 			else
 			{
-				@my_chmod(MYBB_ROOT."arcade/smallimages/".$filename."2.gif", 0777);
-				@unlink(MYBB_ROOT."arcade/".$filename."2.gif");
+				@rename(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/largeimages/".$filename."2.gif");
 			}
 		}
 
