@@ -368,7 +368,7 @@ if($mybb->input['action'] == "add_tar")
 			}
 			else
 			{
-				@rename(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/largeimages/".$filename."2.gif");
+				@rename(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/smallimage/".$filename."2.gif");
 			}
 		}
 
