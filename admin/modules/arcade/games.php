@@ -275,7 +275,7 @@ if($mybb->input['action'] == "add_tar")
 					$errors[] = $lang->error_not_tar;
 				}
 
-				$filename = explode(".tar", $_FILES['tar_file']['tmp_name']);
+				$filename = explode(".tar", $_FILES['tar_file']['name']);
 				$filename = my_substr($filename[0], 5);
 
 				$query = $db->simple_select("arcadegames", "file", "file='{$filename}'");
@@ -328,7 +328,7 @@ if($mybb->input['action'] == "add_tar")
 			$filename = explode(".tar", $_FILES['tar_file']['name']);
 			$filename = my_substr($filename[0], 5);
 
-			// Delete tar
+			// Delete TAR
 			@unlink(MYBB_ROOT."arcade/".$_FILES['tar_file']['name']);
 
 			// SWF file
