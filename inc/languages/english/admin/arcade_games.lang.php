@@ -8,8 +8,8 @@ $l['games'] = "Games";
 $l['games_desc'] = "Here you can manage the games in your arcade.";
 $l['add_game_simple'] = "Add Game (Simple)";
 $l['add_game_simple_desc'] = "Here you can add a new game to your arcade. You must upload the game files before you can add.";
-$l['add_game_tar'] = "Add Game (Tar)";
-$l['add_game_tar_desc'] = "Here you can add a new game to your arcade. Please be sure that the arcade directary is writable.";
+$l['add_game_tar'] = "Add Game (TAR)";
+$l['add_game_tar_desc'] = "Here you can add a new game to your arcade via a TAR archive. Please be sure that the arcade directary is writable.";
 $l['edit_game'] = "Edit Game";
 $l['edit_games_desc'] = "Here you can edit a game in your arcade.";
 $l['export_games'] = "Export Games";
@@ -52,8 +52,8 @@ $l['delete_game'] = "Delete Game";
 $l['na'] = "N/A";
 
 $l['add_new_game_simple'] = "Add New Game (Simple)";
-$l['add_new_game_tar'] = "Add New Game (Tar)";
-$l['tar_file'] = "Tar File";
+$l['add_new_game_tar'] = "Add New Game (TAR)";
+$l['tar_archive'] = "TAR Archive";
 $l['about'] = "About";
 $l['about_desc'] = "Enter a short purpose/goal/object for this game.";
 $l['game_controls'] = "Game Controls";
@@ -77,10 +77,10 @@ $l['no_category'] = "No Category";
 $l['category'] = "Category";
 
 $l['error_game_already_used'] = "This game has already been added. You cannot use it again.";
-$l['error_missing_game_tar_swf'] = "This tar file is missing a SWF file.";
-$l['error_missing_game_tar_php'] = "This tar file is missing a PHP file.";
-$l['error_missing_game_tar_largeimage'] = "This tar file is missing a large image GIF.";
-$l['error_missing_game_tar_smallimage'] = "This tar file is missing a small image GIF.";
+$l['error_missing_game_tar_swf'] = "This TAR archive is missing a SWF file.";
+$l['error_missing_game_tar_php'] = "This TAR archive is missing a PHP file.";
+$l['error_missing_game_tar_largeimage'] = "This TAR archive is missing a large image GIF.";
+$l['error_missing_game_tar_smallimage'] = "This TAR archive is missing a small image GIF.";
 $l['confirm_game_deletion'] = "Are you sure you wish to delete this game?";
 
 $l['error_missing_file_name'] = "Please enter a file name for you game export.";

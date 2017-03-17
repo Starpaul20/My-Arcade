@@ -456,7 +456,7 @@ if($mybb->input['action'] == "add_tar")
 		$mybb->input['tournamentselect'] = 1;
 	}
 	$form_container = new FormContainer($lang->add_new_game_tar);
-	$form_container->output_row($lang->tar_file." <em>*</em>", "", $form->generate_file_upload_box('tar_file', array('id' => 'tar_file')), 'tar_file');
+	$form_container->output_row($lang->tar_archive." <em>*</em>", "", $form->generate_file_upload_box('tar_file', array('id' => 'tar_file')), 'tar_file');
 
 	$categories['0'] = $lang->no_category;
 
