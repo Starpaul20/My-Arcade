@@ -36,7 +36,6 @@ $l['error_swf_already_used'] = "The SWF file you selected is already in use by a
 $l['error_category_does_not_exist'] = "The selected category doesn't exist. Please select another.";
 $l['error_uploadfailed_notar'] = "MyBB could not find the TAR with the file you uploaded. Please check the file is the correct and is not corrupt.";
 $l['error_missing_tar'] = "You did not select a TAR file to upload.";
-$l['tar_problem'] = "There is a problem with this TAR file.";
 $l['error_not_tar'] = "The selected file is not a TAR. Please upload only TAR files.";
 
 $l['name'] = "Name";
@@ -77,7 +76,7 @@ $l['no_category'] = "No Category";
 $l['category'] = "Category";
 
 $l['error_game_already_used'] = "This game has already been added. You cannot use it again.";
-$l['error_missing_game_tar_swf'] = "This TAR archive is missing a SWF file.";
+$l['error_missing_game_tar_swf'] = "This TAR archive is missing an SWF file.";
 $l['error_missing_game_tar_php'] = "This TAR archive is missing a PHP file.";
 $l['error_missing_game_tar_largeimage'] = "This TAR archive is missing a large image GIF.";
 $l['error_missing_game_tar_smallimage'] = "This TAR archive is missing a small image GIF.";

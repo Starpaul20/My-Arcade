@@ -313,13 +313,13 @@ if($mybb->input['action'] == "add_tar")
 				$errors[] = $lang->error_uploadfailed_notar;
 			}
 
-			// Unpack TAR
-			require_once MYBB_ROOT."inc/3rdparty/tar/pcltar.lib.php";
-			$tar = PclTarExtract(MYBB_ROOT."arcade/".$_FILES['tar_file']['name'], MYBB_ROOT."arcade", "", "tar");
-
-			if($tar == 0)
-			{
-				$errors[] = $lang->tar_problem;
+			// Unpack TAR (PHP >= 5.3.0, PECL phar >= 2.0.0)
+			try {
+				$phar = new PharData(MYBB_ROOT."arcade/".$_FILES['tar_file']['name']);
+				$phar->extractTo(MYBB_ROOT."arcade", null, true);
+				unset($phar); // We need to unset this here otherwise it won't delete the TAR archive below
+			} catch (Exception $error) {
+				$errors[] = $error->getMessage();
 			}
 		}
 
