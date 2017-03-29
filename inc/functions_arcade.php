@@ -7,8 +7,8 @@
 /**
  * Get the game of a game id.
  *
- * @param int The game id of the arcade game.
- * @param boolean Whether or not to recache the game.
+ * @param int $gid The game id of the arcade game.
+ * @param boolean $recache Whether or not to recache the game.
  * @return string The database row of the game.
  */
 function get_game($gid, $recache = false)
@@ -43,8 +43,8 @@ function get_game($gid, $recache = false)
 /**
  * Get the tournament of a tournament id.
  *
- * @param int The tournament ID.
- * @param boolean Whether or not to recache the tournament.
+ * @param int $tid The tournament ID.
+ * @param boolean $recache Whether or not to recache the tournament.
  * @return string The database row of the tournament.
  */
 function get_tournament($tid, $recache = false)
@@ -79,8 +79,8 @@ function get_tournament($tid, $recache = false)
 /**
  * Log any actions in the arcade.
  *
- * @param array The data of the action.
- * @param string The message to enter for the action performed.
+ * @param array $data The data of the action.
+ * @param string $action The message to enter for the action performed.
  */
 function log_arcade_action($data, $action="")
 {
@@ -122,7 +122,7 @@ function log_arcade_action($data, $action="")
 /**
  * Update Champion of a game.
  *
- * @param int The game ID.
+ * @param int $gid The game ID.
  */
 function update_champion($gid)
 {
@@ -161,9 +161,9 @@ function update_champion($gid)
 /**
  * Get a specific user's score ranking for a game
  *
- * @param int The user ID.
- * @param int The game ID.
- * @param int Game score sorting direction.
+ * @param int $uid The user ID.
+ * @param int $gid The game ID.
+ * @param string $sortby Game score sorting direction.
  * @return string The rank of the user.
  */
 
@@ -201,7 +201,7 @@ function get_rank($uid, $gid, $sortby)
 /**
  *  Build a comma separated list of the categories this user cannot view
  * 
- *  @param int The primary group ID
+ *  @param int $usergroup The primary group ID
  *  @return string return a CSV list of categories user cannot view or play games in
  */
 function get_unviewable_categories($usergroup)
@@ -287,8 +287,8 @@ function reload_arcade_mostonline()
 /**
  * Builds a user's game rankings for the stats page
  *
- *  @param int User ID
- *  @param int Unviewable Category CSV
+ *  @param int $uid User ID
+ *  @param string $cat_sql Unviewable Category CSV
  */
 function user_game_rank($uid, $cat_sql)
 {
@@ -587,7 +587,7 @@ function whos_online()
 /**
  * Perform a game search under MySQL or MySQLi
  *
- * @param array Array of search data
+ * @param array $search Array of search data
  * @return array Array of search data with results mixed in
  */
 function arcade_perform_search_mysql($search)
@@ -829,7 +829,7 @@ function arcade_perform_search_mysql($search)
 /**
  * Start a tournament if ready
  *
- * @param int The tournament ID
+ * @param int $tid The tournament ID
  */
 function start_tournament($tid)
 {

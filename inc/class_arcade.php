@@ -11,9 +11,9 @@ class Arcade
 	/**
 	 * Submits score (and update if new score is higher)
 	 *
-	 * @param array Score from game
-	 * @param array Name of game
-	 * @param array Arcade Session ID
+	 * @param int $score Score from game
+	 * @param string $name Name of game
+	 * @param string $sid Arcade Session ID
 	 * @return true
 	 */
 	function submit_score($score, $name, $sid)
@@ -243,9 +243,9 @@ class Arcade
 	/**
 	 * Submits tournament score (and updates if new score is higher)
 	 *
-	 * @param array Score from game
-	 * @param array Name of game
-	 * @param array Arcade Session ID
+	 * @param int $score Score from game
+	 * @param string $name Name of game
+	 * @param string $sid Arcade Session ID
 	 * @return true
 	 */
 	function submit_tournament($score, $name, $sid)
@@ -305,8 +305,8 @@ class Arcade
 	/**
 	 * Delete a score
 	 *
-	 * @param array Score ID
-	 * @param array Game ID
+	 * @param int $sid Score ID
+	 * @param int $gid Game ID
 	 * @return boolean true
 	 */
 	function delete_score($sid, $gid)
@@ -327,8 +327,8 @@ class Arcade
 	/**
 	 * Cancel a tournament
 	 *
-	 * @param array Tournaments ID
-	 * @param array Reason for cancellation
+	 * @param int $tid Tournaments ID
+	 * @param string $cancel_reason Reason for cancellation
 	 * @return boolean true
 	 */
 	function cancel_tournament($tid, $cancel_reason)
@@ -363,8 +363,8 @@ class Arcade
 	/**
 	 * Disqualify user from tournament
 	 *
-	 * @param array Tournaments ID
-	 * @param array User ID
+	 * @param int $tid Tournaments ID
+	 * @param int $uid User ID
 	 * @return boolean true
 	 */
 	function disqualify_user($tid, $uid)
@@ -397,7 +397,7 @@ class Arcade
 	/**
 	 * Delete a Tournament
 	 *
-	 * @param array Tournament ID
+	 * @param int $tid Tournament ID
 	 * @return boolean true
 	 */
 	function delete_tournament($tid)
