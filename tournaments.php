@@ -954,4 +954,3 @@ if(!$mybb->input['action'])
 {
 	header("Location: arcade.php");
 }
-?>

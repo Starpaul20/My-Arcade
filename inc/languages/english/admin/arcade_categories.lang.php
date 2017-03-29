@@ -41,5 +41,3 @@ $l['options'] = "Options";
 
 $l['confirm_category_deletion'] = "Are you sure you wish to delete this category?";
 $l['no_categories'] = "There are no categories in your arcade.";
-
-?>

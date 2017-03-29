@@ -282,5 +282,3 @@ $l['champ_email_message'] = "{1} has just beaten your championship of {2} with a
 $l['tournament_email_subject'] = "A new tournament round has started at {1}";
 $l['tournament_subject'] = "A new tournament round has started";
 $l['tournament_message'] = "This message is to inform you that a new tournament round has started for the game {1}. You have {2} days from the time of this message to play the game. You have {3} tries to get the highest score possible.";
-
-?>

@@ -85,5 +85,3 @@ $l['admin_log_arcade_logs_prune'] = "Pruned {4} arcade logs older than {1} days"
 $l['admin_log_arcade_logs_prune_user'] = "Pruned {4} arcade logs older than {1} days for user #{2}";
 $l['admin_log_arcade_logs_prune_game'] = "Pruned {4} arcade logs older than {1} days for game #{3}";
 $l['admin_log_arcade_logs_prune_user_game'] = "Pruned {4} arcade logs older than {1} days for user #{2} and game #{3}";
-
-?>

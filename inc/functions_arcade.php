@@ -924,5 +924,3 @@ function start_tournament($tid)
 
 	return false;
 }
-
-?>

@@ -220,4 +220,3 @@ function task_arcade($task)
 
 	add_task_log($task, $lang->arcade_task_ran);
 }
-?>

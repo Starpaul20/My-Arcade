@@ -2125,4 +2125,3 @@ if(class_exists("MybbStuff_MyAlerts_Formatter_AbstractFormatter"))
 		}
 	}
 }
-?>

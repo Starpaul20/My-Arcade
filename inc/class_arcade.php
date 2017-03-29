@@ -415,5 +415,3 @@ class Arcade
 		return true;
 	}
 }
-
-?>

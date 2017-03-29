@@ -3185,5 +3185,3 @@ if(!$mybb->input['action'])
 	eval("\$arcadehome = \"".$templates->get("arcade")."\";");
 	output_page($arcadehome);
 }
-
-?>

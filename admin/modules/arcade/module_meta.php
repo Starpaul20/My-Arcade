@@ -69,5 +69,3 @@ function arcade_admin_permissions()
 
 	return array("name" => $lang->arcade, "permissions" => $admin_permissions, "disporder" => 100);
 }
-
-?>

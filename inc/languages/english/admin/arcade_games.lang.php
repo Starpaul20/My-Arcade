@@ -103,5 +103,3 @@ $l['file_name'] = "File Name";
 $l['file_name_desc'] = "Enter the file name you wish to give your game export.";
 $l['game_file'] = "Game File";
 $l['game_file_desc'] = "Select the XML file you wish to import. Please note you will need to upload the arcade file and images separately.";
-
-?>
