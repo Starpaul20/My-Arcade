@@ -7,10 +7,11 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "arcade_online,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished_bit,tournaments_view_rounds_profile,tournaments_view_cancel";
-$templatelist .= ",arcade_menu,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_rounds_disqualify,tournaments_view_champion";
-$templatelist .= ",tournaments_view,arcade_online_memberbit,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_finished_champion_cancelled,tournaments_finished";
-$templatelist .= ",tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_create,tournaments_view_rounds,tournaments_finished_champion,tournaments_view_delete";
+$templatelist = "arcade_online,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished_bit,tournaments_view_rounds_profile";
+$templatelist .= ",arcade_menu,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_cancel";
+$templatelist .= ",tournaments_view,arcade_online_memberbit,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_finished_champion_cancelled";
+$templatelist .= ",tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_create,tournaments_view_rounds,tournaments_finished_champion";
+$templatelist .= ",arcade_online_memberbit_image_home,arcade_online_memberbit_image_game,tournaments_view_delete,tournaments_finished,tournaments_view_champion,tournaments_view_rounds_disqualify";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";

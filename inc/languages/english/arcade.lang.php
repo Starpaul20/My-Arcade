@@ -93,6 +93,8 @@ $l['online_count'] = "{1} {2} active in the past {3} minutes ({4} {5}, {6} of wh
 $l['whos_online'] = "Who's Online";
 $l['online_record'] = "Most users online at one time was {1} on {2} at {3}";
 $l['playing_game_online'] = "Playing {1}";
+$l['home'] = "Home";
+$l['game'] = "Game";
 
 $l['best_players'] = "Best Players";
 $l['arcade_stats'] = "Arcade Stats";

@@ -446,6 +446,7 @@ function whos_online()
 		// Is this user in the Arcade?
 		if($online_loc == "arcade" || $online_loc == "tournaments")
 		{
+			$location = '';
 			if($mybb->settings['arcade_onlineimage'] == 1)
 			{
 				$loc_image_gid = explode("gid=", $online['location']);
@@ -454,11 +455,14 @@ function whos_online()
 
 				if(isset($loc_image_gid[0]) && isset($game[trim($loc_image_gid[0])]))
 				{
-					$location = "<a href=\"".$loc_image_link."\"><img src=\"arcade/smallimages/".$game[trim($loc_image_gid[0])].".gif\" alt=\"\" /></a> ";
+					$gamelink = "arcade.php?action=scores&gid={$loc_image_gid[0]}";
+					$gameimage = $game[trim($loc_image_gid[0])];
+
+					eval("\$location = \"".$templates->get("arcade_online_memberbit_image_game", 1, 0)."\";");
 				}
 				else
 				{
-					$location = "<a href=\"arcade.php\"><img src=\"images/arcade/arcade.png\" alt=\"Home\" /></a> ";
+					eval("\$location = \"".$templates->get("arcade_online_memberbit_image_home", 1, 0)."\";");
 				}
 			}
 
