@@ -147,6 +147,109 @@ if($mybb->input['action'] == 'prune')
 	$page->output_footer();
 }
 
+if($mybb->input['action'] == 'edit')
+{
+	$query = $db->simple_select("arcadescores", "*", "sid='".$mybb->get_input('sid', MyBB::INPUT_INT)."'");
+	$score = $db->fetch_array($query);
+
+	if(!$score['sid'])
+	{
+		flash_message($lang->error_invalid_score, 'error');
+		admin_redirect("index.php?module=arcade-scores");
+	}
+
+	if($mybb->request_method == "post")
+	{
+		if(my_strlen($mybb->input['comment']) > $mybb->settings['arcade_maxcommentlength'])
+		{
+			$errors[] = $lang->sprintf($lang->error_score_comment_too_long, $mybb->settings['arcade_maxcommentlength']);
+		}
+
+		if(!$errors)
+		{
+			$updated_score = array(
+				'comment' => $db->escape_string($mybb->input['comment'])
+			);
+			$db->update_query("arcadescores", $updated_score, "sid='{$score['sid']}'");
+
+			// Log admin action
+			log_admin_action($score['sid'], $score['uid']);
+
+			flash_message($lang->success_score_updated, 'success');
+			admin_redirect('index.php?module=arcade-scores');
+		}
+	}
+
+	$page->add_breadcrumb_item($lang->edit_score);
+	$page->output_header($lang->scores." - ".$lang->edit_score);
+
+	$sub_tabs['edit_score'] = array(
+		'title'	=> $lang->edit_score,
+		'link'	=> "index.php?module=arcade-scores",
+		'description'	=> $lang->edit_score_desc
+	);
+
+	$page->output_nav_tabs($sub_tabs, 'edit_score');
+
+	$form = new Form("index.php?module=arcade-scores&amp;action=edit", "post", "edit");
+	echo $form->generate_hidden_field("sid", $score['sid']);
+
+	if($errors)
+	{
+		$page->output_inline_error($errors);
+	}
+	else
+	{
+		$mybb->input = $score;
+	}
+
+	$form_container = new FormContainer($lang->edit_score);
+	$form_container->output_row($lang->comment, "", $form->generate_text_area('comment', $mybb->input['comment'], array('id' => 'comment', 'maxlength' => '255')), 'comment');
+	$form_container->end();
+
+	$buttons[] = $form->generate_submit_button($lang->edit_score);
+
+	$form->output_submit_wrapper($buttons);
+	$form->end();
+
+	$page->output_footer();
+}
+
+if($mybb->input['action'] == 'delete')
+{
+	$query = $db->simple_select("arcadescores", "*", "sid='".$mybb->get_input('sid', MyBB::INPUT_INT)."'");
+	$score = $db->fetch_array($query);
+
+	if(!$score['sid'])
+	{
+		flash_message($lang->error_invalid_score, 'error');
+		admin_redirect("index.php?module=arcade-scores");
+	}
+
+	// User clicked no
+	if($mybb->input['no'])
+	{
+		admin_redirect("index.php?module=arcade-scores");
+	}
+
+	if($mybb->request_method == "post")
+	{
+		$db->delete_query("arcadescores", "sid='{$score['sid']}'");
+
+		update_champion($score['gid']);
+
+		// Log admin action
+		log_admin_action($score['sid'], $score['uid']);
+
+		flash_message($lang->success_score_deleted, 'success');
+		admin_redirect("index.php?module=arcade-scores");
+	}
+	else
+	{
+		$page->output_confirm_action("index.php?module=arcade-scores&amp;action=delete&amp;sid={$score['sid']}", $lang->confirm_score_deletion);
+	}
+}
+
 if(!$mybb->input['action'])
 {
 	$plugins->run_hooks("admin_arcade_scores_start");
@@ -237,11 +340,12 @@ if(!$mybb->input['action'])
 
 	$table = new Table;
 	$table->construct_header($lang->username, array('width' => '10%'));
-	$table->construct_header($lang->game, array("class" => "align_center", 'width' => '20%'));
+	$table->construct_header($lang->game, array("class" => "align_center", 'width' => '15%'));
 	$table->construct_header($lang->score, array("class" => "align_center", 'width' => '5%'));
-	$table->construct_header($lang->comment, array("class" => "align_center", 'width' => '40%'));
+	$table->construct_header($lang->comment, array("class" => "align_center"));
 	$table->construct_header($lang->date, array("class" => "align_center", 'width' => '15%'));
 	$table->construct_header($lang->ipaddress, array("class" => "align_center", 'width' => '10%'));
+	$table->construct_header($lang->controls, array('class' => "align_center", 'colspan' => 2, "width" => "180"));
 
 	$query = $db->query("
 		SELECT s.*, u.username, u.usergroup, u.displaygroup, g.name AS gname
@@ -269,12 +373,14 @@ if(!$mybb->input['action'])
 		$table->construct_cell($logitem['comment']);
 		$table->construct_cell($logitem['dateline'], array("class" => "align_center"));
 		$table->construct_cell(my_inet_ntop($db->unescape_binary($logitem['ipaddress'])), array("class" => "align_center"));
+		$table->construct_cell("<a href=\"index.php?module=arcade-scores&amp;action=edit&amp;sid={$logitem['sid']}\">{$lang->edit}</a>", array("class" => "align_center", "width" => '90'));
+		$table->construct_cell("<a href=\"index.php?module=arcade-scores&amp;action=delete&amp;sid={$logitem['sid']}&amp;my_post_key={$mybb->post_code}\" onclick=\"return AdminCP.deleteConfirmation(this, '{$lang->confirm_score_deletion}')\">{$lang->delete}</a>", array("class" => "align_center", "width" => '90'));
 		$table->construct_row();
 	}
 
 	if($table->num_rows() == 0)
 	{
-		$table->construct_cell($lang->no_scores, array("colspan" => "6"));
+		$table->construct_cell($lang->no_scores, array("colspan" => "8"));
 		$table->construct_row();
 	}
 
