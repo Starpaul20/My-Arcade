@@ -19,7 +19,7 @@ $l['import_games_desc'] = "Here you can import games to your arcade.";
 
 $l['success_game_added'] = "The game has been added successfully.";
 $l['success_game_updated'] = "The game has been edited successfully.";
-$l['success_game_deleted'] = "The selected game has been deleted successfully. ";
+$l['success_game_deleted'] = "The selected game has been deleted successfully.";
 $l['success_game_disabled'] = "The selected game has been disabled successfully.";
 $l['success_game_enabled'] = "The selected game has been enabled successfully.";
 $l['error_invalid_game'] = "The game you selected does not exist.";

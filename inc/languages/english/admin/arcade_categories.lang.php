@@ -18,7 +18,7 @@ $l['error_invalid_category'] = "The specified category does not exist.";
 $l['error_no_groups_selected'] = "Please select the groups to which this category will be available.";
 $l['success_category_added'] = "The category has been created successfully.";
 $l['success_category_updated'] = "The category has been updated successfully.";
-$l['success_category_deleted'] = "The category has been deleted successfully. ";
+$l['success_category_deleted'] = "The category has been deleted successfully.";
 $l['success_category_disabled'] = "The category has been disabled successfully.";
 $l['success_category_enabled'] = "The category has been enabled successfully.";
 

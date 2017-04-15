@@ -365,7 +365,7 @@ if(!$mybb->input['action'])
 		$logitem['username'] = htmlspecialchars_uni($logitem['username']);
 		$username = format_name($logitem['username'], $logitem['usergroup'], $logitem['displaygroup']);
 		$logitem['profilelink'] = build_profile_link($username, $logitem['uid']);
-		$logitem['game'] = "<a href=\"arcade.php?action=scores&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['gname'])."</a>";
+		$logitem['game'] = "<a href=\"../arcade.php?action=scores&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['gname'])."</a>";
 
 		$table->construct_cell($logitem['profilelink']);
 		$table->construct_cell($logitem['game']);
