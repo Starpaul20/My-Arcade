@@ -46,14 +46,14 @@ $plugins->run_hooks("tournaments_start");
 add_breadcrumb($lang->arcade, "arcade.php");
 
 // Top Menu bar (for members only)
-$menu = "";
+$menu = '';
 if($mybb->user['uid'] != 0)
 {
 	eval("\$menu = \"".$templates->get("arcade_menu")."\";");
 }
 
 // Build Who's Online box
-$online = "";
+$online = '';
 if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'] == 1 && $mybb->user['whosonlinearcade'] == 1)
 {
 	if($mybb->settings['arcade_whosonline'] == 1 && ($mybb->usergroup['canmoderategames'] == 1 || $mybb->usergroup['cancp'] == 1))
@@ -396,7 +396,7 @@ if($mybb->input['action'] == "view")
 
 	for($rid = $tournament['rounds']; $rid > 0; $rid--)
 	{
-		$rounds_bit = "";
+		$rounds_bit = '';
 		$colspan_round = pow(2, ($rid - 1));
 		$numplayers = $players / $colspan_round;
 
@@ -600,7 +600,7 @@ if($mybb->input['action'] == "waiting")
 
 	if(!$tournament_bit)
 	{
-		$colspan = "3";
+		$colspan = 3;
 		eval("\$tournament_bit = \"".$templates->get("tournaments_no_tournaments")."\";");
 	}
 
@@ -637,7 +637,7 @@ if($mybb->input['action'] == "running")
 
 	if(!$tournament_bit)
 	{
-		$colspan = "4";
+		$colspan = 4;
 		eval("\$tournament_bit = \"".$templates->get("tournaments_no_tournaments")."\";");
 	}
 
@@ -694,7 +694,7 @@ if($mybb->input['action'] == "finished")
 
 	if(!$tournament_bit)
 	{
-		$colspan = "4";
+		$colspan = 4;
 		eval("\$tournament_bit = \"".$templates->get("tournaments_no_tournaments")."\";");
 	}
 
@@ -746,7 +746,7 @@ if($mybb->input['action'] == "cancelled")
 
 	if(!$tournament_bit)
 	{
-		$colspan = "4";
+		$colspan = 4;
 		eval("\$tournament_bit = \"".$templates->get("tournaments_no_tournaments")."\";");
 	}
 

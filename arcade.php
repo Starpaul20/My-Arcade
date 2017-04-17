@@ -87,7 +87,7 @@ if(!$mybb->settings['gamesorder'])
 }
 
 // Top Menu bar (for members only)
-$menu = "";
+$menu = '';
 if($mybb->user['uid'] != 0)
 {
 	eval("\$menu = \"".$templates->get("arcade_menu")."\";");
@@ -103,7 +103,7 @@ if($unviewable)
 }
 
 // Build Who's Online box
-$online = "";
+$online = '';
 if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'] == 1 && $mybb->user['whosonlinearcade'] == 1)
 {
 	if($mybb->settings['arcade_whosonline'] == 1 && ($mybb->usergroup['canmoderategames'] == 1 || $mybb->usergroup['cancp'] == 1))
@@ -163,7 +163,7 @@ switch($mybb->input['sessdo'])
 			$rank = get_rank($mybb->user['uid'], $game['gid'], $game['sortby']);
 			$pagenum = ceil($rank/$perpage);
 
-			$page = "";
+			$page = '';
 			if($pagenum > 1)
 			{
 				$page = "&page={$pagenum}";
@@ -404,7 +404,7 @@ if($mybb->input['action'] == "play")
 
 	$lang->object_of_game = $lang->sprintf($lang->object_of_game, $game['name']);
 
-	$guestmessage = "";
+	$guestmessage = '';
 	if($mybb->user['uid'] == 0)
 	{
 		eval("\$guestmessage = \"".$templates->get("arcade_play_guest")."\";");
@@ -769,11 +769,11 @@ if($mybb->input['action'] == "scores")
 	if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 	{
 		eval("\$ipaddresscol = \"".$templates->get("arcade_scores_ipaddress")."\";");
-		$colspan = "7";
+		$colspan = 7;
 	}
 	else
 	{
-		$colspan = "6";
+		$colspan = 6;
 	}
 
 	$plugins->run_hooks("arcade_scores_end");
@@ -1396,13 +1396,13 @@ if($mybb->input['action'] == "favorites")
 			$game['score'] = $lang->na;
 		}
 
-		$your_score = "";
+		$your_score = '';
 		if($mybb->user['uid'] != 0 && $mybb->usergroup['canplayarcade'] == 1)
 		{
 			eval("\$your_score = \"".$templates->get("arcade_gamebit_score")."\";");
 		}
 
-		$tournament = "";
+		$tournament = '';
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
 			eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
@@ -1411,7 +1411,7 @@ if($mybb->input['action'] == "favorites")
 		// Is this a new game?
 		$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
 
-		$new = "";
+		$new = '';
 		if($game['dateline'] >= $time)
 		{
 			eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
@@ -2165,11 +2165,11 @@ if($mybb->input['action'] == "scoreboard")
 	if($mybb->usergroup['cancp'] == 1 || $mybb->usergroup['canmoderategames'] == 1)
 	{
 		eval("\$ipaddresscol = \"".$templates->get("arcade_scores_ipaddress")."\";");
-		$colspan = "6";
+		$colspan = 6;
 	}
 	else
 	{
-		$colspan = "5";
+		$colspan = 5;
 	}
 
 	$plugins->run_hooks("arcade_scoreboard_end");
@@ -2354,7 +2354,7 @@ if($mybb->input['action'] == "results")
 	$upper = $end;
 
 	// Work out if we have terms to highlight
-	$highlight = "";
+	$highlight = '';
 	if($search['keywords'])
 	{
 		$highlight = "&amp;highlight=".urlencode($search['keywords']);
@@ -2471,13 +2471,13 @@ if($mybb->input['action'] == "results")
 			$game['score'] = $lang->na;
 		}
 
-		$your_score = "";
+		$your_score = '';
 		if($mybb->user['uid'] != 0 && $mybb->usergroup['canplayarcade'] == 1)
 		{
 			eval("\$your_score = \"".$templates->get("arcade_gamebit_score")."\";");
 		}
 
-		$tournament = "";
+		$tournament = '';
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
 			eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
@@ -2486,7 +2486,7 @@ if($mybb->input['action'] == "results")
 		// Is this a new game?
 		$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
 
-		$new = "";
+		$new = '';
 		if($game['dateline'] >= $time)
 		{
 			eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
@@ -2778,7 +2778,7 @@ if(!$mybb->input['action'])
 		$value = 100/$mybb->settings['arcade_category_number'];
 		$category['name'] = htmlspecialchars_uni($category['name']);
 
-		$image = "";
+		$image = '';
 		if(is_file($category['image']))
 		{
 			eval("\$image = \"".$templates->get('arcade_category_bit_image')."\";");
@@ -3098,13 +3098,13 @@ if(!$mybb->input['action'])
 			$game['score'] = $lang->na;
 		}
 
-		$your_score = "";
+		$your_score = '';
 		if($mybb->user['uid'] != 0 && $mybb->usergroup['canplayarcade'] == 1)
 		{
 			eval("\$your_score = \"".$templates->get("arcade_gamebit_score")."\";");
 		}
 
-		$tournament = "";
+		$tournament = '';
 		if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
 		{
 			eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
@@ -3113,7 +3113,7 @@ if(!$mybb->input['action'])
 		// Is this a new game?
 		$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
 
-		$new = "";
+		$new = '';
 		if($game['dateline'] >= $time)
 		{
 			eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
