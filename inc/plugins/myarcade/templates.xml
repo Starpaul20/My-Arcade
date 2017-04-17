@@ -451,9 +451,9 @@ body {
 		<template name="arcade_gamebit_champ" version="1000"><![CDATA[<a href="{$profilelink}">{$game['champusername']}</a>]]></template>
 		<template name="arcade_gamebit_favorite" version="1000"><![CDATA[<li class="{$add_remove_favorite_type}favorite"><a href="arcade.php?action={$add_remove_favorite_type}favorite&amp;gid={$game['gid']}&amp;my_post_key={$mybb->post_code}">{$add_remove_favorite_text}</a></li>]]></template>
 		<template name="arcade_gamebit_fullscreen" version="1000"><![CDATA[<li class="fullscreen"><a href="arcade.php?action=fullscreen&amp;gid={$game['gid']}">{$lang->play_full_screen}</a></li>]]></template>
-		<template name="arcade_gamebit_lastplayed" version="1000"><![CDATA[{$lastplayed} {$lang->by} <a href="{$profilelink}">{$game['user_name']}</a>]]></template>
+		<template name="arcade_gamebit_lastplayed" version="1300"><![CDATA[{$lastplayed} {$lang->by} <a href="{$profilelink}">{$game['username']}</a>]]></template>
 		<template name="arcade_gamebit_new" version="1000"><![CDATA[<img src="images/arcade/new.png" alt="{$lang->new}" title="{$lang->new}" />]]></template>
-		<template name="arcade_gamebit_playedby" version="1000"><![CDATA[<a href="{$profilelink}">{$game['user_name']}</a>]]></template>
+		<template name="arcade_gamebit_playedby" version="1300"><![CDATA[<a href="{$profilelink}">{$game['username']}</a>]]></template>
 		<template name="arcade_gamebit_rating" version="1000"><![CDATA[<td align="center" class="{$alt_bg}" id="rating_table_{$game['gid']}">
 	<ul class="star_rating{$not_rated}" id="rating_game_{$game['gid']}">
 		<li style="width: {$game['rating_width']}%" class="current_rating" id="current_rating_{$game['gid']}">{$ratingvotesav}</li>
@@ -464,7 +464,7 @@ body {
 	// -->
 	</script>
 </td>]]></template>
-		<template name="arcade_gamebit_score" version="1000"><![CDATA[<li class="yourscore">{$lang->your_high_score} <strong>{$game['your_score']}</strong></li>]]></template>
+		<template name="arcade_gamebit_score" version="1300"><![CDATA[<li class="yourscore">{$lang->your_high_score} <strong>{$game['score']}</strong></li>]]></template>
 		<template name="arcade_gamebit_tournaments" version="1000"><![CDATA[<li class="tournaments"><a href="tournaments.php?action=create&amp;gid={$game['gid']}">{$lang->create_tournament}</a></li>]]></template>
 		<template name="arcade_menu" version="1000"><![CDATA[<br />
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
@@ -833,7 +833,7 @@ body {
 		{$categoryoptions}
 	</select>
 </div>]]></template>
-		<template name="arcade_search_catagory_option" version="1200"><![CDATA[<option value="{$category['cid']}">{$name}</option>]]></template>
+		<template name="arcade_search_catagory_option" version="1300"><![CDATA[<option value="{$category['cid']}">{$category['name']}</option>]]></template>
 		<template name="arcade_search_results" version="1000"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->search_results}</title>
@@ -1381,7 +1381,7 @@ body {
 	<td class="{$alt_bg}" align="center">{$champion}</td>
 	<td class="{$alt_bg}" align="center">{$dateline}</td>
 </tr>]]></template>
-		<template name="tournaments_finished_champion" version="1200"><![CDATA[<a href="{$profilelink}">{$tournament['champ']}</a>]]></template>
+		<template name="tournaments_finished_champion" version="1300"><![CDATA[<a href="{$profilelink}">{$tournament['username']}</a>]]></template>
 		<template name="tournaments_finished_champion_cancelled" version="1200"><![CDATA[<em>{$lang->tournament_cancelled}</em>]]></template>
 		<template name="tournaments_no_tournaments" version="1000"><![CDATA[<tr>
 	<td class="trow1" colspan="{$colspan}" align="center">{$lang->no_tournaments}</td>

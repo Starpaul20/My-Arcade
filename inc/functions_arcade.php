@@ -320,7 +320,7 @@ function user_game_rank($uid, $cat_sql)
 	}
 
 	$query = $db->query("
-		SELECT g.sortby, g.active, g.cid, s.*
+		SELECT s.gid, s.uid, s.score
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
 		WHERE g.active='1' AND g.sortby='desc'{$cat_sql}
@@ -342,7 +342,7 @@ function user_game_rank($uid, $cat_sql)
 	}
 
 	$query = $db->query("
-		SELECT g.sortby, g.active, g.cid, s.*
+		SELECT s.gid, s.uid, s.score
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
 		WHERE g.active='1' AND g.sortby='asc'{$cat_sql}

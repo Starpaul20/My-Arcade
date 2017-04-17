@@ -348,7 +348,7 @@ if(!$mybb->input['action'])
 	$table->construct_header($lang->controls, array('class' => "align_center", 'colspan' => 2, "width" => "180"));
 
 	$query = $db->query("
-		SELECT s.*, u.username, u.usergroup, u.displaygroup, g.name AS gname
+		SELECT s.*, u.username, u.usergroup, u.displaygroup, g.name
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
 		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=s.uid)
@@ -365,7 +365,7 @@ if(!$mybb->input['action'])
 		$logitem['username'] = htmlspecialchars_uni($logitem['username']);
 		$username = format_name($logitem['username'], $logitem['usergroup'], $logitem['displaygroup']);
 		$logitem['profilelink'] = build_profile_link($username, $logitem['uid']);
-		$logitem['game'] = "<a href=\"../arcade.php?action=scores&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['gname'])."</a>";
+		$logitem['game'] = "<a href=\"../arcade.php?action=scores&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['name'])."</a>";
 
 		$table->construct_cell($logitem['profilelink']);
 		$table->construct_cell($logitem['game']);

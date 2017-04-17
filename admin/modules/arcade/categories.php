@@ -42,7 +42,7 @@ if($mybb->input['action'] == "add")
 
 		if(!$errors)
 		{
-			$new_categories = array(
+			$new_category = array(
 				"name" => $db->escape_string($mybb->input['name']),
 				"image" => $db->escape_string($mybb->input['image']),
 				"active" => $mybb->get_input('active', MyBB::INPUT_INT)
@@ -58,15 +58,15 @@ if($mybb->input['action'] == "add")
 						$checked[] = (int)$gid;
 					}
 
-					$new_categories['groups'] = implode(',', $checked);
+					$new_category['groups'] = implode(',', $checked);
 				}
 			}
 			else
 			{
-				$new_categories['groups'] = '-1';
+				$new_category['groups'] = '-1';
 			}
 
-			$cid = $db->insert_query("arcadecategories", $new_categories);
+			$cid = $db->insert_query("arcadecategories", $new_category);
 
 			$plugins->run_hooks("admin_arcade_categories_add_commit");
 

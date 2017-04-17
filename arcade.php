@@ -142,7 +142,7 @@ switch($mybb->input['sessdo'])
 		$sid = $mybb->cookies['arcadesession'];
 
 		$query = $db->query("
-			SELECT s.*, g.*
+			SELECT s.gid, s.tid. g.sortby
 			FROM ".TABLE_PREFIX."arcadesessions s
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
 			WHERE s.sid='{$sid}'
@@ -193,7 +193,7 @@ if($mybb->input['action'] == "play")
 		$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 
 		$query = $db->query("
-			SELECT t.*, p.*
+			SELECT t.tid, t.gid, t.information, t.round, t.tries, p.uid, p.attempts, p.score
 			FROM ".TABLE_PREFIX."arcadetournaments t
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (t.tid=p.tid AND p.round=t.round)
 			WHERE t.tid='{$tid}' AND t.status='2' AND p.uid='{$mybb->user['uid']}'
@@ -442,7 +442,7 @@ if($mybb->input['action'] == "fullscreen")
 		$tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 
 		$query = $db->query("
-			SELECT t.*, p.*
+			SELECT t.tid, t.gid, t.tries, p.uid, p.attempts
 			FROM ".TABLE_PREFIX."arcadetournaments t
 			LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (t.tid=p.tid AND p.round=t.round)
 			WHERE t.tid='{$tid}' AND t.status='2' AND p.uid='{$mybb->user['uid']}'
@@ -450,8 +450,6 @@ if($mybb->input['action'] == "fullscreen")
 		$tournament = $db->fetch_array($query);
 
 		$game = get_game($tournament['gid']);
-
-		$information = unserialize($tournament['information']);
 
 		// Invalid tournament
 		if(!$tournament['tid'])
@@ -516,13 +514,6 @@ if($mybb->input['action'] == "fullscreen")
 		$db->insert_query("arcadesessions", $new_session);
 
 		my_setcookie('arcadesession', $sid, 21600);
-
-		$startedon = $information[$tournament['round']]['starttime'];
-		$roundstartedon = my_date($mybb->settings['dateformat'], $startedon).", ".my_date($mybb->settings['timeformat'], $startedon);
-		$triesleft = ($tournament['tries'] - $tournament['attempts']);
-		$hightournamentscore = my_number_format(floatval($tournament['score']));
-
-		eval("\$tournaments = \"".$templates->get("arcade_play_tournament")."\";");
 	}
 	else
 	{
@@ -1316,7 +1307,7 @@ if($mybb->input['action'] == "favorites")
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT f.*, g.*, {$ratingadd}u.username AS user_name, s.score AS your_score, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT f.*, g.*, {$ratingadd}u.username, s.score, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadefavorites f
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=f.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (f.gid=s.gid AND s.uid='{$mybb->user['uid']}')
@@ -1348,7 +1339,7 @@ if($mybb->input['action'] == "favorites")
 		if($game['lastplayed'])
 		{
 			$lastplayed = my_date('relative', $game['lastplayed']);
-			$game['user_name'] = htmlspecialchars_uni($game['user_name']);
+			$game['username'] = htmlspecialchars_uni($game['username']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -1396,13 +1387,13 @@ if($mybb->input['action'] == "favorites")
 			$champusername = $lang->na;
 		}
 
-		if($game['your_score'])
+		if($game['score'])
 		{
-			$game['your_score'] = my_number_format(floatval($game['your_score']));
+			$game['score'] = my_number_format(floatval($game['score']));
 		}
 		else
 		{
-			$game['your_score'] = $lang->na;
+			$game['score'] = $lang->na;
 		}
 
 		$your_score = "";
@@ -1914,7 +1905,7 @@ if($mybb->input['action'] == "champions")
 	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->query("
-		SELECT COUNT(c.cid) AS page_count, g.active
+		SELECT COUNT(c.cid) AS page_count
 		FROM ".TABLE_PREFIX."arcadechampions c
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=c.gid)
 		WHERE g.active='1'{$cat_sql_game}
@@ -1950,7 +1941,7 @@ if($mybb->input['action'] == "champions")
 
 	// Fetch the champions which will be displayed on this page
 	$query = $db->query("
-		SELECT c.*, g.name, g.active, s.comment
+		SELECT c.*, g.name, s.comment
 		FROM ".TABLE_PREFIX."arcadechampions c
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (s.gid=c.gid AND s.uid=c.uid)
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=c.gid)
@@ -2063,7 +2054,7 @@ if($mybb->input['action'] == "scoreboard")
 	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
 	$query = $db->query("
-		SELECT COUNT(s.sid) AS page_count, g.active
+		SELECT COUNT(s.sid) AS page_count
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
 		WHERE g.active='1'{$cat_sql_game}
@@ -2099,7 +2090,7 @@ if($mybb->input['action'] == "scoreboard")
 
 	// Fetch the scores which will be displayed on this page
 	$query = $db->query("
-		SELECT s.*, g.name, g.active
+		SELECT s.*, g.name
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
 		WHERE g.active='1'{$cat_sql_game}
@@ -2391,7 +2382,7 @@ if($mybb->input['action'] == "results")
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT g.*, {$ratingadd}u.username AS user_name, s.score AS your_score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT g.*, {$ratingadd}u.username, s.score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (g.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (g.gid=c.gid)
@@ -2423,7 +2414,7 @@ if($mybb->input['action'] == "results")
 		if($game['lastplayed'])
 		{
 			$lastplayed = my_date('relative', $game['lastplayed']);
-			$game['user_name'] = htmlspecialchars_uni($game['user_name']);
+			$game['username'] = htmlspecialchars_uni($game['username']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -2471,13 +2462,13 @@ if($mybb->input['action'] == "results")
 			$champusername = $lang->na;
 		}
 
-		if($game['your_score'])
+		if($game['score'])
 		{
-			$game['your_score'] = my_number_format(floatval($game['your_score']));
+			$game['score'] = my_number_format(floatval($game['score']));
 		}
 		else
 		{
-			$game['your_score'] = $lang->na;
+			$game['score'] = $lang->na;
 		}
 
 		$your_score = "";
@@ -2634,7 +2625,7 @@ if(!$mybb->input['action'])
 		// Newest Champions
 		$newestchamps = '';
 		$query3 = $db->query("
-			SELECT c.*, g.active, g.name, g.smallimage
+			SELECT c.gid, c.uid, c.username, c.dateline, c.score, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
 			WHERE g.active ='1'{$cat_sql_game}
@@ -2678,7 +2669,7 @@ if(!$mybb->input['action'])
 		// Latest Scores
 		$latestscores = '';
 		$query4 = $db->query("
-			SELECT s.*, g.active, g.name, g.smallimage
+			SELECT s.gid, s.uid, s.username, s.dateline, s.score, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadescores s
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
 			WHERE g.active ='1'{$cat_sql_game}
@@ -2831,7 +2822,7 @@ if(!$mybb->input['action'])
 			$enrolledin = 0;
 
 			$query = $db->query("
-				SELECT t.*, p.uid, g.active, g.name, g.smallimage
+				SELECT t.tid, t.status, g.name, g.smallimage
 				FROM ".TABLE_PREFIX."arcadetournamentplayers p
 				LEFT JOIN ".TABLE_PREFIX."arcadetournaments t ON (p.tid=t.tid AND t.round=p.round)
 				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (t.gid=g.gid)
@@ -2880,7 +2871,7 @@ if(!$mybb->input['action'])
 		$query = $db->simple_select("arcadecategories", "*", "active='1'{$cat_sql}", array('order_by' => 'name', 'order_dir' => 'asc'));
 		while($category = $db->fetch_array($query))
 		{
-			$name = htmlspecialchars_uni($category['name']);
+			$category['name'] = htmlspecialchars_uni($category['name']);
 			eval("\$categoryoptions .= \"".$templates->get("arcade_search_catagory_option")."\";");
 			++$searchcategorycount;
 		}
@@ -3018,7 +3009,7 @@ if(!$mybb->input['action'])
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT g.*, {$ratingadd}u.username AS user_name, s.score AS your_score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT g.*, {$ratingadd}u.username, s.score, f.gid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (g.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (g.gid=c.gid)
@@ -3050,7 +3041,7 @@ if(!$mybb->input['action'])
 		if($game['lastplayed'])
 		{
 			$lastplayed = my_date('relative', $game['lastplayed']);
-			$game['user_name'] = htmlspecialchars_uni($game['user_name']);
+			$game['username'] = htmlspecialchars_uni($game['username']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -3098,13 +3089,13 @@ if(!$mybb->input['action'])
 			$champusername = $lang->na;
 		}
 
-		if($game['your_score'])
+		if($game['score'])
 		{
-			$game['your_score'] = my_number_format(floatval($game['your_score']));
+			$game['score'] = my_number_format(floatval($game['score']));
 		}
 		else
 		{
-			$game['your_score'] = $lang->na;
+			$game['score'] = $lang->na;
 		}
 
 		$your_score = "";

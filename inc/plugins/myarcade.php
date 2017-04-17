@@ -1341,7 +1341,7 @@ function myarcade_postbit_post($post)
 			}
 
 			$query = $db->query("
-				SELECT c.gid, c.uid, g.active, g.name, g.smallimage
+				SELECT c.gid, c.uid, g.name, g.smallimage
 				FROM ".TABLE_PREFIX."arcadechampions c
 				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
 				WHERE g.active ='1' AND c.uid='{$post['uid']}'{$cat_sql}
@@ -1362,7 +1362,7 @@ function myarcade_postbit_post($post)
 				$champ_cache = true;
 
 				$query = $db->query("
-					SELECT p.pid, c.gid, c.uid, g.active, g.name, g.smallimage, g.cid
+					SELECT p.pid, c.gid, c.uid, g.name, g.smallimage, g.cid
 					FROM ".TABLE_PREFIX."arcadechampions c
 					LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
 					LEFT JOIN ".TABLE_PREFIX."posts p ON (p.uid=c.uid)
@@ -1427,7 +1427,7 @@ function myarcade_postbit_other($post)
 		}
 
 		$query = $db->query("
-			SELECT c.*, g.active, g.name, g.smallimage
+			SELECT c.gid, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
 			WHERE g.active ='1' AND c.uid='{$post['uid']}'{$cat_sql}
@@ -1465,7 +1465,7 @@ function myarcade_profile()
 		$lang->arcade_profile = $lang->sprintf($lang->arcade_profile, $memprofile['username']);
 
 		$query = $db->query("
-			SELECT c.*, g.active, g.name, g.smallimage
+			SELECT c.gid, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
 			WHERE g.active ='1'AND c.uid='{$memprofile['uid']}'{$cat_sql}
@@ -1484,7 +1484,7 @@ function myarcade_profile()
 		}
 
 		$query2 = $db->query("
-			SELECT COUNT(s.sid) AS score_count, g.active
+			SELECT COUNT(s.sid) AS score_count
 			FROM ".TABLE_PREFIX."arcadescores s
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
 			WHERE g.active='1' AND s.uid={$memprofile['uid']}{$cat_sql}

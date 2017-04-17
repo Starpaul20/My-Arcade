@@ -320,7 +320,7 @@ if($mybb->input['action'] == "view")
 	{
 		$status_message = $lang->open_for_members;
 
-		$query = $db->simple_select("arcadetournamentplayers", "*", "tid='{$tid}' AND uid='{$mybb->user['uid']}'");
+		$query = $db->simple_select("arcadetournamentplayers", "uid", "tid='{$tid}' AND uid='{$mybb->user['uid']}'");
 		$player = $db->fetch_array($query);
 
 		if(($players > $tournament['numplayers']) && $mybb->usergroup['canjointournaments'] == 1 && ($player['uid'] != $mybb->user['uid']))
@@ -580,12 +580,11 @@ if($mybb->input['action'] == "waiting")
 
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
-		SELECT t.*, g.name, g.active, g.cid
+		SELECT t.tid, t.dateline, t.rounds, t.numplayers, g.name
 		FROM ".TABLE_PREFIX."arcadetournaments t
 		LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid)
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		WHERE t.status='1' AND g.active='1'{$cat_sql_game}
-		GROUP BY t.tid
 	");
 	while($tournament = $db->fetch_array($query))
 	{
@@ -620,7 +619,7 @@ if($mybb->input['action'] == "running")
 
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
-		SELECT t.*, g.name, g.active, g.cid
+		SELECT t.tid, t.numplayers, t.days, t.information, g.name
 		FROM ".TABLE_PREFIX."arcadetournaments t
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		WHERE t.status='2' AND g.active='1'{$cat_sql_game}
@@ -657,7 +656,7 @@ if($mybb->input['action'] == "finished")
 
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
-		SELECT t.*, g.name, g.active, g.cid, u.username AS champ
+		SELECT t.tid, t.champion, t.finishdateline, t.numplayers, g.name, u.username
 		FROM ".TABLE_PREFIX."arcadetournaments t
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=t.champion)
@@ -671,7 +670,7 @@ if($mybb->input['action'] == "finished")
 		$champion = '';
 		if($tournament['champion'])
 		{
-			$tournament['champ'] = htmlspecialchars_uni($tournament['champ']);
+			$tournament['username'] = htmlspecialchars_uni($tournament['username']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -719,7 +718,7 @@ if($mybb->input['action'] == "cancelled")
 
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
-		SELECT t.*, g.name, g.active, g.cid, u.username
+		SELECT t.tid, t.uid, t.finishdateline, g.name, u.username
 		FROM ".TABLE_PREFIX."arcadetournaments t
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=t.uid)
