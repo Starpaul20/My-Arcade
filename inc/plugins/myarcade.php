@@ -18,7 +18,7 @@ if(THIS_SCRIPT == 'member.php')
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'global_arcade_bit,member_profile_arcade';
+	$templatelist .= 'global_arcade_bit,member_profile_arcade,member_profile_arcade_stats';
 }
 
 if(THIS_SCRIPT == 'showthread.php')
@@ -759,7 +759,7 @@ function myarcade_uninstall()
 	$db->delete_query("templates", "title LIKE 'arcade_%'");
 	$db->delete_query("templates", "title LIKE 'tournaments_%'");
 	$db->delete_query("templates", "title='arcade'"); // The wildcard deletion above misses this template
-	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','header_menu_arcade')");
+	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','member_profile_arcade_stats','header_menu_arcade')");
 }
 
 // This function runs when the plugin is activated.
@@ -979,6 +979,15 @@ function myarcade_activate()
 	$db->insert_query("templates", $insert_array);
 
 	$insert_array = array(
+		'title'		=> 'member_profile_arcade_stats',
+		'template'	=> $db->escape_string('<a href="arcade.php?action=stats&uid={$memprofile[\'uid\']}">{$lang->view_game_stats}</a><br />'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
 		'title'		=> 'header_menu_arcade',
 		'template'	=> $db->escape_string('<li><a href="{$mybb->settings[\'bburl\']}/arcade.php" style="padding-left: 20px; background-image: url(images/arcade/arcade.png); background-repeat: no-repeat; display: inline-block;">{$lang->arcade}</a></li>'),
 		'sid'		=> '-1',
@@ -1054,7 +1063,7 @@ function myarcade_deactivate()
 	$db->delete_query("templates", "title LIKE 'arcade_%' AND sid='-2'");
 	$db->delete_query("templates", "title LIKE 'tournaments_%' AND sid='-2'");
 	$db->delete_query("templates", "title='arcade' AND sid='-2'"); // The wildcard deletion above misses this template
-	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','header_menu_arcade')");
+	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','member_profile_arcade_stats','header_menu_arcade')");
 	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime')");
 	$db->delete_query("settinggroups", "name IN('arcade','tournaments')");
 	rebuild_settings();
@@ -1480,7 +1489,7 @@ function myarcade_profile()
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
 			$lang->view_game_stats = $lang->sprintf($lang->view_game_stats, $memprofile['username']);
-			$profilelink = "<a href=\"arcade.php?action=stats&uid={$memprofile['uid']}\">{$lang->view_game_stats}</a><br />";
+			eval("\$profilelink = \"".$templates->get("member_profile_arcade_stats")."\";");
 		}
 
 		$query2 = $db->query("

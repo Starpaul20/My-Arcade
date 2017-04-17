@@ -453,7 +453,6 @@ body {
 		<template name="arcade_gamebit_fullscreen" version="1000"><![CDATA[<li class="fullscreen"><a href="arcade.php?action=fullscreen&amp;gid={$game['gid']}">{$lang->play_full_screen}</a></li>]]></template>
 		<template name="arcade_gamebit_lastplayed" version="1300"><![CDATA[{$lastplayed} {$lang->by} <a href="{$profilelink}">{$game['username']}</a>]]></template>
 		<template name="arcade_gamebit_new" version="1000"><![CDATA[<img src="images/arcade/new.png" alt="{$lang->new}" title="{$lang->new}" />]]></template>
-		<template name="arcade_gamebit_playedby" version="1300"><![CDATA[<a href="{$profilelink}">{$game['username']}</a>]]></template>
 		<template name="arcade_gamebit_rating" version="1000"><![CDATA[<td align="center" class="{$alt_bg}" id="rating_table_{$game['gid']}">
 	<ul class="star_rating{$not_rated}" id="rating_game_{$game['gid']}">
 		<li style="width: {$game['rating_width']}%" class="current_rating" id="current_rating_{$game['gid']}">{$ratingvotesav}</li>
