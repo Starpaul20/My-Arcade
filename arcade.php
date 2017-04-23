@@ -277,7 +277,7 @@ if($mybb->input['action'] == "play")
 		$startedon = $information[$tournament['round']]['starttime'];
 		$roundstartedon = my_date($mybb->settings['dateformat'], $startedon).", ".my_date($mybb->settings['timeformat'], $startedon);
 		$triesleft = ($tournament['tries'] - $tournament['attempts']);
-		$hightournamentscore = my_number_format(floatval($tournament['score']));
+		$hightournamentscore = my_number_format((float)$tournament['score']);
 
 		eval("\$tournaments = \"".$templates->get("arcade_play_tournament")."\";");
 	}
@@ -304,7 +304,7 @@ if($mybb->input['action'] == "play")
 
 	if($champ['score'])
 	{
-		$champ['score'] = my_number_format(floatval($champ['score']));
+		$champ['score'] = my_number_format((float)$champ['score']);
 		$lang->current_champion = $lang->sprintf($lang->current_champion, $champ['score']);
 	}
 	else
@@ -340,7 +340,7 @@ if($mybb->input['action'] == "play")
 
 		if($score['score'])
 		{
-			$userbestscore = my_number_format(floatval($score['score']));
+			$userbestscore = my_number_format((float)$score['score']);
 		}
 		else
 		{
@@ -379,9 +379,9 @@ if($mybb->input['action'] == "play")
 		}
 		else
 		{
-			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-			$game['rating_width'] = intval(round($game['averagerating']))*20;
-			$game['numratings'] = intval($game['numratings']);
+			$game['averagerating'] = (float)round($game['totalratings']/$game['numratings'], 2);
+			$game['rating_width'] = (int)round($game['averagerating'])*20;
+			$game['numratings'] = (int)$game['numratings'];
 		}
 
 		if($game['numratings'])
@@ -653,9 +653,9 @@ if($mybb->input['action'] == "scores")
 		}
 		else
 		{
-			$game['averagerating'] = floatval(round($game['totalratings']/$game['numratings'], 2));
-			$game['rating_width'] = intval(round($game['averagerating']))*20;
-			$game['numratings'] = intval($game['numratings']);
+			$game['averagerating'] = (float)round($game['totalratings']/$game['numratings'], 2);
+			$game['rating_width'] = (int)round($game['averagerating'])*20;
+			$game['numratings'] = (int)$game['numratings'];
 		}
 
 		if($game['numratings'])
@@ -686,7 +686,7 @@ if($mybb->input['action'] == "scores")
 	");
 	while($score = $db->fetch_array($query))
 	{
-		$score['score'] = my_number_format(floatval($score['score']));
+		$score['score'] = my_number_format((float)$score['score']);
 		$score['username'] = htmlspecialchars_uni($score['username']);
 		$dateline = my_date('relative', $score['dateline']);
 
@@ -1359,7 +1359,7 @@ if($mybb->input['action'] == "favorites")
 
 		if($game['champscore'])
 		{
-			$game['champscore'] = my_number_format(floatval($game['champscore']));
+			$game['champscore'] = my_number_format((float)$game['champscore']);
 			$champion = $lang->sprintf($lang->champion_with_score, $game['champscore']);
 		}
 		else
@@ -1389,7 +1389,7 @@ if($mybb->input['action'] == "favorites")
 
 		if($game['score'])
 		{
-			$game['score'] = my_number_format(floatval($game['score']));
+			$game['score'] = my_number_format((float)$game['score']);
 		}
 		else
 		{
@@ -1775,7 +1775,7 @@ if($mybb->input['action'] == "stats")
 
 		if($score['score'])
 		{
-			$score['score'] = my_number_format(floatval($score['score']));
+			$score['score'] = my_number_format((float)$score['score']);
 		}
 		else
 		{
@@ -1952,7 +1952,7 @@ if($mybb->input['action'] == "champions")
 	while($champ = $db->fetch_array($query))
 	{
 		$champ['name'] = htmlspecialchars_uni($champ['name']);
-		$champ['score'] = my_number_format(floatval($champ['score']));
+		$champ['score'] = my_number_format((float)$champ['score']);
 
 		$dateline = my_date('relative', $champ['dateline']);
 		$champ['username'] = htmlspecialchars_uni($champ['username']);
@@ -2100,7 +2100,7 @@ if($mybb->input['action'] == "scoreboard")
 	while($score = $db->fetch_array($query))
 	{
 		$score['name'] = htmlspecialchars_uni($score['name']);
-		$score['score'] = my_number_format(floatval($score['score']));
+		$score['score'] = my_number_format((float)$score['score']);
 
 		$dateline = my_date('relative', $score['dateline']);
 		$score['username'] = htmlspecialchars_uni($score['username']);
@@ -2434,7 +2434,7 @@ if($mybb->input['action'] == "results")
 
 		if($game['champscore'])
 		{
-			$game['champscore'] = my_number_format(floatval($game['champscore']));
+			$game['champscore'] = my_number_format((float)$game['champscore']);
 			$champion = $lang->sprintf($lang->champion_with_score, $game['champscore']);
 		}
 		else
@@ -2464,7 +2464,7 @@ if($mybb->input['action'] == "results")
 
 		if($game['score'])
 		{
-			$game['score'] = my_number_format(floatval($game['score']));
+			$game['score'] = my_number_format((float)$game['score']);
 		}
 		else
 		{
@@ -2635,7 +2635,7 @@ if(!$mybb->input['action'])
 		while($score = $db->fetch_array($query3))
 		{
 			$score['name'] = htmlspecialchars_uni($score['name']);
-			$score['score'] = my_number_format(floatval($score['score']));
+			$score['score'] = my_number_format((float)$score['score']);
 
 			$dateline = my_date('relative', $score['dateline']);
 			$score['username'] = htmlspecialchars_uni($score['username']);
@@ -2679,7 +2679,7 @@ if(!$mybb->input['action'])
 		while($score = $db->fetch_array($query4))
 		{
 			$score['name'] = htmlspecialchars_uni($score['name']);
-			$score['score'] = my_number_format(floatval($score['score']));
+			$score['score'] = my_number_format((float)$score['score']);
 
 			$dateline = my_date('relative', $score['dateline']);
 			$score['username'] = htmlspecialchars_uni($score['username']);
@@ -3061,7 +3061,7 @@ if(!$mybb->input['action'])
 
 		if($game['champscore'])
 		{
-			$game['champscore'] = my_number_format(floatval($game['champscore']));
+			$game['champscore'] = my_number_format((float)$game['champscore']);
 			$champion = $lang->sprintf($lang->champion_with_score, $game['champscore']);
 		}
 		else
@@ -3091,7 +3091,7 @@ if(!$mybb->input['action'])
 
 		if($game['score'])
 		{
-			$game['score'] = my_number_format(floatval($game['score']));
+			$game['score'] = my_number_format((float)$game['score']);
 		}
 		else
 		{

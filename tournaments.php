@@ -434,7 +434,7 @@ if($mybb->input['action'] == "view")
 
 			if($tournament['status'] == 3 || $tournament['status'] == 2)
 			{
-				$player['score'] = my_number_format(floatval($player['score']));
+				$player['score'] = my_number_format((float)$player['score']);
 				$lang->out_of_tries = $lang->sprintf($lang->out_of_tries, $tournament['tries']);
 				if($player['scoreattempt'] == 1)
 				{

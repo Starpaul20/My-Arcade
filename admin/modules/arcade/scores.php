@@ -360,6 +360,7 @@ if(!$mybb->input['action'])
 	{
 		$logitem['comment'] = htmlspecialchars_uni($logitem['comment']);
 		$logitem['dateline'] = my_date('relative', $logitem['dateline']);
+		$logitem['score'] = my_number_format((float)$logitem['score']);
 		$trow = alt_trow();
 
 		$logitem['username'] = htmlspecialchars_uni($logitem['username']);
