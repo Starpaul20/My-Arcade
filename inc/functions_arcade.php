@@ -589,6 +589,155 @@ function whos_online()
 }
 
 /**
+ * Build a game bit
+ *
+ * @param array $game The game data
+ * @return string The built game bit
+ */
+function build_gamebit($game)
+{
+	global $mybb, $lang, $templates, $plugins;
+
+	$alt_bg = alt_trow();
+
+	$game['name'] = htmlspecialchars_uni($game['name']);
+	$game['description'] = htmlspecialchars_uni($game['description']);
+
+	$play_full_screen = '';
+	if($mybb->usergroup['canplayarcade'] == 1)
+	{
+		$gamelink = "arcade.php?action=play&gid={$game['gid']}";
+		eval("\$play_full_screen = \"".$templates->get("arcade_gamebit_fullscreen")."\";");
+	}
+	else
+	{
+		$gamelink = "arcade.php?action=scores&gid={$game['gid']}";
+	}
+
+	if($game['lastplayed'])
+	{
+		$lastplayed = my_date('relative', $game['lastplayed']);
+		$game['username'] = htmlspecialchars_uni($game['username']);
+
+		if($mybb->usergroup['canviewgamestats'] == 1)
+		{
+			$profilelink = "arcade.php?action=stats&uid={$game['lastplayeduid']}";
+		}
+		else
+		{
+			$profilelink = get_profile_link($game['lastplayeduid']);
+		}
+
+		eval("\$lastplayedby = \"".$templates->get("arcade_gamebit_lastplayed")."\";");
+	}
+	else
+	{
+		$lastplayedby = $lang->na;
+	}
+
+	if($game['champscore'])
+	{
+		$game['champscore'] = my_number_format((float)$game['champscore']);
+		$champion = $lang->sprintf($lang->champion_with_score, $game['champscore']);
+	}
+	else
+	{
+		$champion = $lang->sprintf($lang->champion_with_score, $lang->na);
+	}
+
+	if($game['champusername'])
+	{
+		$game['champusername'] = htmlspecialchars_uni($game['champusername']);
+
+		if($mybb->usergroup['canviewgamestats'] == 1)
+		{
+			$profilelink = "arcade.php?action=stats&uid={$game['champuid']}";
+		}
+		else
+		{
+			$profilelink = get_profile_link($game['champuid']);
+		}
+
+		eval("\$champusername = \"".$templates->get("arcade_gamebit_champ")."\";");
+	}
+	else
+	{
+		$champusername = $lang->na;
+	}
+
+	if($game['score'])
+	{
+		$game['score'] = my_number_format((float)$game['score']);
+	}
+	else
+	{
+		$game['score'] = $lang->na;
+	}
+
+	$your_score = '';
+	if($mybb->user['uid'] != 0 && $mybb->usergroup['canplayarcade'] == 1)
+	{
+		eval("\$your_score = \"".$templates->get("arcade_gamebit_score")."\";");
+	}
+
+	$tournament = '';
+	if($game['tournamentselect'] == 1 && $mybb->usergroup['cancreatetournaments'] == 1)
+	{
+		eval("\$tournament = \"".$templates->get("arcade_gamebit_tournaments")."\";");
+	}
+
+	// Is this a new game?
+	$time = TIME_NOW-($mybb->settings['arcade_newgame']*60*60*24);
+
+	$new = '';
+	if($game['dateline'] >= $time)
+	{
+		eval("\$new = \"".$templates->get("arcade_gamebit_new")."\";");
+	}
+
+	// Favorite check
+	$add_remove_favorite = '';
+	if($mybb->user['uid'] != 0)
+	{
+		if($game['favorite'])
+		{
+			$add_remove_favorite_type = 'remove';
+			$add_remove_favorite_text = $lang->remove_from_favorites;
+		}
+		else
+		{
+			$add_remove_favorite_type = 'add';
+			$add_remove_favorite_text = $lang->add_to_favorites;
+		}
+
+		eval("\$add_remove_favorite = \"".$templates->get("arcade_gamebit_favorite")."\";");
+	}
+
+	// Work out the rating for this game.
+	$rategame = '';
+	if($mybb->settings['arcade_ratings'] != 0)
+	{
+		$game['averagerating'] = (float)round($game['averagerating'], 2);
+		$game['rating_width'] = (int)round($game['averagerating'])*20;
+		$game['numratings'] = (int)$game['numratings'];
+
+		$not_rated = '';
+		if(!isset($game['rated']) || empty($game['rated']))
+		{
+			$not_rated = ' star_rating_notrated';
+		}
+
+		$ratingvotesav = $lang->sprintf($lang->rating_votes_average, $game['numratings'], $game['averagerating']);
+		eval("\$rategame = \"".$templates->get("arcade_gamebit_rating")."\";");
+	}
+
+	$plugins->run_hooks("arcade_game");
+
+	eval("\$game_bit = \"".$templates->get("arcade_gamebit")."\";");
+	return $game_bit;
+}
+
+/**
  * Perform a game search under MySQL or MySQLi
  *
  * @param array $search Array of search data
