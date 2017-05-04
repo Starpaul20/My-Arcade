@@ -47,3 +47,5 @@ $l['error_score_comment_too_long'] = "The score comment cannot be longer then th
 $l['success_score_updated'] = "The score has been updated successfully.";
 $l['success_score_deleted'] = "The score has been deleted successfully.";
 $l['confirm_score_deletion'] = "Are you sure you wish to delete this score?";
+
+$l['na_deleted'] = "N/A - Been Deleted";

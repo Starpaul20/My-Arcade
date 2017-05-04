@@ -103,6 +103,12 @@ if($mybb->input['action'] == 'prune')
 	");
 	while($user = $db->fetch_array($query))
 	{
+		// Deleted Users
+		if(!$user['username'])
+		{
+			$user['username'] = htmlspecialchars_uni($lang->na_deleted);
+		}
+
 		$selected = '';
 		if($mybb->input['uid'] == $user['uid'])
 		{
@@ -122,6 +128,12 @@ if($mybb->input['action'] == 'prune')
 	");
 	while($game = $db->fetch_array($query2))
 	{
+		// Deleted Games
+		if(!$game['name'])
+		{
+			$game['name'] = htmlspecialchars_uni($lang->na_deleted);
+		}
+
 		$selected = '';
 		if($mybb->input['gid'] == $game['gid'])
 		{
@@ -363,9 +375,17 @@ if(!$mybb->input['action'])
 		$logitem['score'] = my_number_format((float)$logitem['score']);
 		$trow = alt_trow();
 
-		$logitem['username'] = htmlspecialchars_uni($logitem['username']);
-		$username = format_name($logitem['username'], $logitem['usergroup'], $logitem['displaygroup']);
-		$logitem['profilelink'] = build_profile_link($username, $logitem['uid']);
+		if($logitem['username'])
+		{
+			$logitem['username'] = htmlspecialchars_uni($logitem['username']);
+			$username = format_name($logitem['username'], $logitem['usergroup'], $logitem['displaygroup']);
+			$logitem['profilelink'] = build_profile_link($username, $logitem['uid']);
+		}
+		else
+		{
+			$username = $logitem['profilelink'] = $logitem['username'] = htmlspecialchars_uni($lang->na_deleted);
+		}
+
 		$logitem['game'] = "<a href=\"../arcade.php?action=scores&gid={$logitem['gid']}\" target=\"_blank\">".htmlspecialchars_uni($logitem['name'])."</a>";
 
 		$table->construct_cell($logitem['profilelink']);
@@ -408,6 +428,12 @@ if(!$mybb->input['action'])
 	");
 	while($user = $db->fetch_array($query))
 	{
+		// Deleted Users
+		if(!$user['username'])
+		{
+			$user['username'] = htmlspecialchars_uni($lang->na_deleted);
+		}
+
 		$selected = '';
 		if($mybb->input['uid'] == $user['uid'])
 		{
@@ -427,6 +453,12 @@ if(!$mybb->input['action'])
 	");
 	while($game = $db->fetch_array($query2))
 	{
+		// Deleted Games
+		if(!$game['name'])
+		{
+			$game['name'] = htmlspecialchars_uni($lang->na_deleted);
+		}
+
 		$selected = '';
 		if($mybb->input['gid'] == $game['gid'])
 		{
