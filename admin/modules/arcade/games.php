@@ -341,16 +341,6 @@ if($mybb->input['action'] == "add_tar")
 				@rename(MYBB_ROOT."arcade/".$filename.".swf", MYBB_ROOT."arcade/swf/".$filename.".swf");
 			}
 
-			// PHP file
-			if(!is_file(MYBB_ROOT."arcade/".$filename.".php"))
-			{
-				$errors[] = $lang->error_missing_game_tar_php;
-			}
-			else
-			{
-				@rename(MYBB_ROOT."arcade/".$filename.".php", MYBB_ROOT."arcade/php/".$filename.".php");
-			}
-
 			// Large image file
 			if(!is_file(MYBB_ROOT."arcade/".$filename."1.gif"))
 			{
@@ -370,12 +360,18 @@ if($mybb->input['action'] == "add_tar")
 			{
 				@rename(MYBB_ROOT."arcade/".$filename."2.gif", MYBB_ROOT."arcade/smallimages/".$filename."2.gif");
 			}
+
+			// PHP file
+			if(!is_file(MYBB_ROOT."arcade/".$filename.".php"))
+			{
+				$errors[] = $lang->error_missing_game_tar_php;
+			}
 		}
 
 		if(!$errors)
 		{
 			// Load PHP file and insert game into database
-			require_once(MYBB_ROOT."arcade/php/".$filename.".php");
+			require_once(MYBB_ROOT."arcade/".$filename.".php");
 
 			if($config['highscore_type'] == "low" || $config['highscore_type'] == "asc")
 			{
@@ -404,6 +400,9 @@ if($mybb->input['action'] == "add_tar")
 				"active" => $mybb->get_input('active', MyBB::INPUT_INT)
 			);
 			$gid = $db->insert_query("arcadegames", $new_game);
+
+			// Delete PHP file
+			@unlink(MYBB_ROOT."arcade/".$filename.".php");
 
 			$plugins->run_hooks("admin_arcade_games_add_tar_commit");
 
