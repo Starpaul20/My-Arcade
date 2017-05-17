@@ -617,7 +617,7 @@ function build_gamebit($game)
 	if($game['lastplayed'])
 	{
 		$lastplayed = my_date('relative', $game['lastplayed']);
-		$game['username'] = htmlspecialchars_uni($game['username']);
+		$game['username'] = format_name(htmlspecialchars_uni($game['username']), $game['usergroup'], $game['displaygroup']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -647,7 +647,7 @@ function build_gamebit($game)
 
 	if($game['champusername'])
 	{
-		$game['champusername'] = htmlspecialchars_uni($game['champusername']);
+		$game['champusername'] = format_name(htmlspecialchars_uni($game['champusername']), $game['champusergroup'], $game['champdisplaygroup']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{

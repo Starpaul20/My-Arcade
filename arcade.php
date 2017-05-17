@@ -299,7 +299,12 @@ if($mybb->input['action'] == "play")
 		my_setcookie('arcadesession', $sid, 21600);
 	}
 
-	$query = $db->simple_select("arcadechampions", "*", "gid='{$game['gid']}'");
+	$query = $db->query("
+		SELECT c.*, u.usergroup, u.displaygroup
+		FROM ".TABLE_PREFIX."arcadechampions c
+		LEFT JOIN ".TABLE_PREFIX."users u ON (c.uid=u.uid)
+		WHERE c.gid='{$game['gid']}'
+	");
 	$champ = $db->fetch_array($query);
 
 	if($champ['score'])
@@ -314,7 +319,7 @@ if($mybb->input['action'] == "play")
 
 	if($champ['username'])
 	{
-		$champ['username'] = htmlspecialchars_uni($champ['username']);
+		$champ['username'] = format_name(htmlspecialchars_uni($champ['username']), $champ['usergroup'], $champ['displaygroup']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -678,16 +683,17 @@ if($mybb->input['action'] == "scores")
 
 	// Fetch the scores which will be displayed on this page
 	$query = $db->query("
-		SELECT *
-		FROM ".TABLE_PREFIX."arcadescores
-		WHERE gid='{$gid}'
+		SELECT s.*, u.usergroup, u.displaygroup
+		FROM ".TABLE_PREFIX."arcadescores s
+		LEFT JOIN ".TABLE_PREFIX."users u ON (s.uid=u.uid)
+		WHERE s.gid='{$gid}'
 		ORDER BY score {$game['sortby']}, dateline ASC
 		LIMIT {$start}, {$perpage}
 	");
 	while($score = $db->fetch_array($query))
 	{
 		$score['score'] = my_number_format((float)$score['score']);
-		$score['username'] = htmlspecialchars_uni($score['username']);
+		$score['username'] = format_name(htmlspecialchars_uni($score['username']), $score['usergroup'], $score['displaygroup']);
 		$dateline = my_date('relative', $score['dateline']);
 
 		$plus = ($perpage * $page) - $perpage;
@@ -1307,13 +1313,14 @@ if($mybb->input['action'] == "favorites")
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT f.*, g.*, {$ratingadd}u.username, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT f.*, g.*, {$ratingadd}u.username, u.usergroup, u.displaygroup, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, cu.usergroup AS champusergroup, cu.displaygroup AS champdisplaygroup, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadefavorites f
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=f.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (f.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (f.gid=c.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcaderatings r ON (g.gid=r.gid AND r.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."users u ON (g.lastplayeduid=u.uid)
+		LEFT JOIN ".TABLE_PREFIX."users cu ON (c.uid=cu.uid)
 		WHERE g.active='1' AND f.uid='".$mybb->user['uid']."'{$cat_sql_game}
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
@@ -1820,10 +1827,11 @@ if($mybb->input['action'] == "champions")
 
 	// Fetch the champions which will be displayed on this page
 	$query = $db->query("
-		SELECT c.*, g.name, s.comment
+		SELECT c.*, g.name, s.comment, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadechampions c
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (s.gid=c.gid AND s.uid=c.uid)
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=c.gid)
+		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=c.uid)
 		WHERE g.active='1'{$cat_sql_game}
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
@@ -1834,7 +1842,7 @@ if($mybb->input['action'] == "champions")
 		$champ['score'] = my_number_format((float)$champ['score']);
 
 		$dateline = my_date('relative', $champ['dateline']);
-		$champ['username'] = htmlspecialchars_uni($champ['username']);
+		$champ['username'] = format_name(htmlspecialchars_uni($champ['username']), $champ['usergroup'], $champ['displaygroup']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -1969,9 +1977,10 @@ if($mybb->input['action'] == "scoreboard")
 
 	// Fetch the scores which will be displayed on this page
 	$query = $db->query("
-		SELECT s.*, g.name
+		SELECT s.*, g.name, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadescores s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=s.gid)
+		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=s.uid)
 		WHERE g.active='1'{$cat_sql_game}
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
@@ -1982,7 +1991,7 @@ if($mybb->input['action'] == "scoreboard")
 		$score['score'] = my_number_format((float)$score['score']);
 
 		$dateline = my_date('relative', $score['dateline']);
-		$score['username'] = htmlspecialchars_uni($score['username']);
+		$score['username'] = format_name(htmlspecialchars_uni($score['username']), $score['usergroup'], $score['displaygroup']);
 
 		if($mybb->usergroup['canviewgamestats'] == 1)
 		{
@@ -2261,13 +2270,14 @@ if($mybb->input['action'] == "results")
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT g.*, {$ratingadd}u.username, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT g.*, {$ratingadd}u.username, u.usergroup, u.displaygroup, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, cu.usergroup AS champusergroup, cu.displaygroup AS champdisplaygroup, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (g.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (g.gid=c.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcadefavorites f ON (g.gid=f.gid AND f.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcaderatings r ON (g.gid=r.gid AND r.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."users u ON (g.lastplayeduid=u.uid)
+		LEFT JOIN ".TABLE_PREFIX."users cu ON (c.uid=cu.uid)
 		WHERE g.gid IN(".$db->escape_string($search['querycache']).") AND g.active='1'{$cat_sql_game}
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
@@ -2369,9 +2379,10 @@ if(!$mybb->input['action'])
 		// Newest Champions
 		$newestchamps = '';
 		$query3 = $db->query("
-			SELECT c.gid, c.uid, c.username, c.dateline, c.score, g.name, g.smallimage
+			SELECT c.gid, c.uid, c.username, c.dateline, c.score, g.name, g.smallimage, u.usergroup, u.displaygroup
 			FROM ".TABLE_PREFIX."arcadechampions c
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
+			LEFT JOIN ".TABLE_PREFIX."users u ON (c.uid=u.uid)
 			WHERE g.active ='1'{$cat_sql_game}
 			ORDER BY c.dateline DESC
 			LIMIT {$mybb->settings['arcade_stats_newchamps']}
@@ -2382,7 +2393,7 @@ if(!$mybb->input['action'])
 			$score['score'] = my_number_format((float)$score['score']);
 
 			$dateline = my_date('relative', $score['dateline']);
-			$score['username'] = htmlspecialchars_uni($score['username']);
+			$score['username'] = format_name(htmlspecialchars_uni($score['username']), $score['usergroup'], $score['displaygroup']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -2413,9 +2424,10 @@ if(!$mybb->input['action'])
 		// Latest Scores
 		$latestscores = '';
 		$query4 = $db->query("
-			SELECT s.gid, s.uid, s.username, s.dateline, s.score, g.name, g.smallimage
+			SELECT s.gid, s.uid, s.username, s.dateline, s.score, g.name, g.smallimage, u.usergroup, u.displaygroup
 			FROM ".TABLE_PREFIX."arcadescores s
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
+			LEFT JOIN ".TABLE_PREFIX."users u ON (s.uid=u.uid)
 			WHERE g.active ='1'{$cat_sql_game}
 			ORDER BY s.dateline DESC
 			LIMIT {$mybb->settings['arcade_stats_newscores']}
@@ -2426,7 +2438,7 @@ if(!$mybb->input['action'])
 			$score['score'] = my_number_format((float)$score['score']);
 
 			$dateline = my_date('relative', $score['dateline']);
-			$score['username'] = htmlspecialchars_uni($score['username']);
+			$score['username'] = format_name(htmlspecialchars_uni($score['username']), $score['usergroup'], $score['displaygroup']);
 
 			if($mybb->usergroup['canviewgamestats'] == 1)
 			{
@@ -2460,7 +2472,7 @@ if(!$mybb->input['action'])
 			$rank = 0;
 
 			$query5 = $db->query("
-				SELECT c.uid, c.username, u.avatar, u.avatardimensions, COUNT(c.gid) AS champs
+				SELECT c.uid, c.username, u.avatar, u.avatardimensions, COUNT(c.gid) AS champs, u.usergroup, u.displaygroup
 				FROM ".TABLE_PREFIX."arcadechampions c
 				LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=c.gid)
 				LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=c.uid)
@@ -2481,7 +2493,7 @@ if(!$mybb->input['action'])
 					eval("\$best_player_avatar = \"".$templates->get("arcade_statistics_bestplayers_avatar")."\";");
 				}
 
-				$champ['username'] = htmlspecialchars_uni($champ['username']);
+				$champ['username'] = format_name(htmlspecialchars_uni($champ['username']), $champ['usergroup'], $champ['displaygroup']);
 				$with_wins = $lang->sprintf($lang->with_wins, $champ['champs']);
 
 				if($mybb->usergroup['canviewgamestats'] == 1)
@@ -2753,13 +2765,14 @@ if(!$mybb->input['action'])
 
 	// Fetch the games which will be displayed on this page
 	$query = $db->query("
-		SELECT g.*, {$ratingadd}u.username, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, r.uid AS rated
+		SELECT g.*, {$ratingadd}u.username, u.usergroup, u.displaygroup, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, cu.usergroup AS champusergroup, cu.displaygroup AS champdisplaygroup, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
 		LEFT JOIN ".TABLE_PREFIX."arcadescores s ON (g.gid=s.gid AND s.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcadechampions c ON (g.gid=c.gid)
 		LEFT JOIN ".TABLE_PREFIX."arcadefavorites f ON (g.gid=f.gid AND f.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."arcaderatings r ON (g.gid=r.gid AND r.uid='{$mybb->user['uid']}')
 		LEFT JOIN ".TABLE_PREFIX."users u ON (g.lastplayeduid=u.uid)
+		LEFT JOIN ".TABLE_PREFIX."users cu ON (c.uid=cu.uid)
 		WHERE g.active='1'{$where_cat}{$cat_sql_game}
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
