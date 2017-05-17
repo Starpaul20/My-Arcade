@@ -200,29 +200,22 @@ function get_rank($uid, $gid, $sortby)
 
 /**
  *  Build a comma separated list of the categories this user cannot view
- * 
- *  @param int $usergroup The primary group ID
+ *
  *  @return string return a CSV list of categories user cannot view or play games in
  */
-function get_unviewable_categories($usergroup)
+function get_unviewable_categories()
 {
-	global $db, $lang, $mybb;
+	global $db;
 
 	$categories = array();
 
-	switch($db->type)
-	{
-		case "pgsql":
-		case "sqlite":
-			$query = $db->simple_select("arcadecategories", "cid", "','||groups||',' NOT LIKE '%,$usergroup,%' AND ','||groups||',' NOT LIKE '%,-1,%'");
-			break;
-		default:
-			$query = $db->simple_select("arcadecategories", "cid", "CONCAT(',',groups,',') NOT LIKE '%,$usergroup,%' AND CONCAT(',',groups,',') NOT LIKE '%,-1,%'");
-	}
-
+	$query = $db->simple_select("arcadecategories", "cid, groups");
 	while($category = $db->fetch_array($query))
 	{
-		$categories[] = $category['cid'];
+		if(!is_member($category['groups']))
+		{
+			$categories[] = $category['cid'];
+		}
 	}
 
 	$categories = implode(',', $categories);

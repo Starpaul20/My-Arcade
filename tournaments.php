@@ -71,7 +71,7 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 }
 
 // Gets only games this user can view (based on category group permission)
-$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+$unviewable = get_unviewable_categories();
 if($unviewable)
 {
 	$cat_sql .= " AND cid NOT IN ($unviewable)";

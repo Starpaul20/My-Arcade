@@ -94,7 +94,7 @@ if($mybb->user['uid'] != 0)
 }
 
 // Gets only games this user can view (based on category group permission)
-$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+$unviewable = get_unviewable_categories();
 if($unviewable)
 {
 	$cat_sql_cat .= " AND c.cid NOT IN ($unviewable)";
