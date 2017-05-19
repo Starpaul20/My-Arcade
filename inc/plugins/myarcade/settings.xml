@@ -226,10 +226,19 @@ min=0]]></optionscode>
 			<settingvalue><![CDATA[1]]></settingvalue>
 			<isdefault>0</isdefault>
 		</setting>
+		<setting name="tournamentperpage">
+			<title>Tournaments Per Page</title>
+			<description><![CDATA[The number of tournaments to show per page on the arcade tournament pages.]]></description>
+			<disporder>2</disporder>
+			<optionscode><![CDATA[numeric
+min=1]]></optionscode>
+			<settingvalue><![CDATA[20]]></settingvalue>
+			<isdefault>0</isdefault>
+		</setting>
 		<setting name="tournaments_numrounds">
 			<title>Number Of Rounds</title>
 			<description><![CDATA[The user selectable number of rounds for a tournament. The higher the number, the more players can participate (2 rounds = 4 players, 4 rounds = 16 players).]]></description>
-			<disporder>2</disporder>
+			<disporder>3</disporder>
 			<optionscode><![CDATA[text]]></optionscode>
 			<settingvalue><![CDATA[1,2,3,4,5]]></settingvalue>
 			<isdefault>0</isdefault>
@@ -237,7 +246,7 @@ min=0]]></optionscode>
 		<setting name="tournaments_numtries">
 			<title>Number Of Tries Per Round</title>
 			<description><![CDATA[The user selectable number of tries a player has to get the best score possible in a round.]]></description>
-			<disporder>3</disporder>
+			<disporder>4</disporder>
 			<optionscode><![CDATA[text]]></optionscode>
 			<settingvalue><![CDATA[1,2,3,4,5]]></settingvalue>
 			<isdefault>0</isdefault>
@@ -245,7 +254,7 @@ min=0]]></optionscode>
 		<setting name="tournaments_numdays">
 			<title>Number Of Days Per Round</title>
 			<description><![CDATA[The user selectable number of days a single round will last.]]></description>
-			<disporder>4</disporder>
+			<disporder>5</disporder>
 			<optionscode><![CDATA[text]]></optionscode>
 			<settingvalue><![CDATA[1,2,3,4,5,6,7]]></settingvalue>
 			<isdefault>0</isdefault>
@@ -253,7 +262,7 @@ min=0]]></optionscode>
 		<setting name="tournaments_canceltime">
 			<title>Tournament Cancel Time</title>
 			<description><![CDATA[The amount of time a tournament has (in days) to get players before it is cancelled.]]></description>
-			<disporder>5</disporder>
+			<disporder>6</disporder>
 			<optionscode><![CDATA[numeric
 min=1]]></optionscode>
 			<settingvalue><![CDATA[90]]></settingvalue>

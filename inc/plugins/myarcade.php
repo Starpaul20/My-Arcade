@@ -1064,7 +1064,7 @@ function myarcade_deactivate()
 	$db->delete_query("templates", "title LIKE 'tournaments_%' AND sid='-2'");
 	$db->delete_query("templates", "title='arcade' AND sid='-2'"); // The wildcard deletion above misses this template
 	$db->delete_query("templates", "title IN('global_arcade_bit','member_profile_arcade','member_profile_arcade_stats','header_menu_arcade')");
-	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime')");
+	$db->delete_query("settings", "name IN('enablearcade','arcade_stats','arcade_stats_newgames','arcade_stats_newchamps','arcade_stats_newscores','arcade_stats_bestplayers','arcade_stats_avatar','gamesperpage','gamessortby','gamesorder','arcade_category_number','arcade_newgame','arcade_ratings','arcade_searching','arcade_whosonline','arcade_onlineimage','scoresperpage','arcade_editcomment','arcade_maxcommentlength','statsperpage','gamesperpageoptions','scoresperpageoptions','arcade_postbit','arcade_postbitlimit','enabletournaments','tournamentperpage','tournaments_numrounds','tournaments_numtries','tournaments_numdays','tournaments_canceltime')");
 	$db->delete_query("settinggroups", "name IN('arcade','tournaments')");
 	rebuild_settings();
 

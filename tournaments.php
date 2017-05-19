@@ -7,11 +7,12 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'tournaments.php');
 
-$templatelist = "arcade_online,tournaments_waiting_bit,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished_bit,tournaments_view_rounds_profile";
-$templatelist .= ",arcade_menu,tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_cancel";
-$templatelist .= ",tournaments_view,arcade_online_memberbit,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_finished_champion_cancelled";
-$templatelist .= ",tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_create,tournaments_view_rounds,tournaments_finished_champion";
+$templatelist = "arcade_online,tournaments_waiting,tournaments_no_tournaments,tournaments_running,tournaments_running_bit,tournaments_finished_bit,tournaments_view_rounds_profile";
+$templatelist .= ",tournaments_view_rounds_champion,tournaments_view_rounds_bit_info,tournaments_view_rounds_bit,tournaments_view_join,tournaments_view_play,tournaments_view_cancel";
+$templatelist .= ",arcade_online_memberbit,tournaments_cancel_success,tournaments_cancelled,tournaments_cancelled_bit,tournaments_create_tries,tournaments_finished_champion_cancelled";
+$templatelist .= ",arcade_menu,tournaments_cancel_error_nomodal,tournaments_create_round,tournaments_create_days,tournaments_create_game,tournaments_view_rounds,tournaments_finished_champion";
 $templatelist .= ",arcade_online_memberbit_image_home,arcade_online_memberbit_image_game,tournaments_view_delete,tournaments_finished,tournaments_view_champion,tournaments_view_rounds_disqualify";
+$templatelist .= ",multipage_page_current,multipage_page,multipage_nextpage,multipage_prevpage,multipage_start,multipage_end,multipage,tournaments_waiting_bit,tournaments_view,tournaments_create";
 
 require_once "./global.php";
 require_once MYBB_ROOT."inc/functions_arcade.php";
@@ -44,6 +45,11 @@ if($mybb->usergroup['canviewtournaments'] == 0)
 $plugins->run_hooks("tournaments_start");
 
 add_breadcrumb($lang->arcade, "arcade.php");
+
+if(!$mybb->settings['tournamentperpage'] || (int)$mybb->settings['tournamentperpage'] < 1)
+{
+	$mybb->settings['tournamentperpage'] = 20;
+}
 
 // Top Menu bar (for members only)
 $menu = '';
@@ -579,13 +585,43 @@ if($mybb->input['action'] == "waiting")
 
 	$plugins->run_hooks("tournaments_waiting_start");
 
+	// Figure out if we need to display multiple pages.
+	$perpage = $mybb->settings['tournamentperpage'];
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
+
+	$query = $db->query("
+		SELECT COUNT(t.tid) AS page_count
+		FROM ".TABLE_PREFIX."arcadetournaments t
+		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
+		WHERE t.status='1' AND g.active='1'{$cat_sql_game}
+	");
+	$page_count = $db->fetch_field($query, "page_count");
+
+	$pages = ceil($page_count/$perpage);
+
+	if($page > $pages || $page <= 0)
+	{
+		$page = 1;
+	}
+	if($page)
+	{
+		$start = ($page-1) * $perpage;
+	}
+	else
+	{
+		$start = 0;
+		$page = 1;
+	}
+
+	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=waiting");
+
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
 		SELECT t.tid, t.dateline, t.rounds, t.numplayers, g.name
 		FROM ".TABLE_PREFIX."arcadetournaments t
-		LEFT JOIN ".TABLE_PREFIX."arcadetournamentplayers p ON (p.tid=t.tid)
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		WHERE t.status='1' AND g.active='1'{$cat_sql_game}
+		LIMIT {$start}, {$perpage}
 	");
 	while($tournament = $db->fetch_array($query))
 	{
@@ -618,12 +654,43 @@ if($mybb->input['action'] == "running")
 
 	$plugins->run_hooks("tournaments_running_start");
 
+	// Figure out if we need to display multiple pages.
+	$perpage = $mybb->settings['tournamentperpage'];
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
+
+	$query = $db->query("
+		SELECT COUNT(t.tid) AS page_count
+		FROM ".TABLE_PREFIX."arcadetournaments t
+		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
+		WHERE t.status='2' AND g.active='1'{$cat_sql_game}
+	");
+	$page_count = $db->fetch_field($query, "page_count");
+
+	$pages = ceil($page_count/$perpage);
+
+	if($page > $pages || $page <= 0)
+	{
+		$page = 1;
+	}
+	if($page)
+	{
+		$start = ($page-1) * $perpage;
+	}
+	else
+	{
+		$start = 0;
+		$page = 1;
+	}
+
+	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=running");
+
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
 		SELECT t.tid, t.numplayers, t.days, t.information, g.name
 		FROM ".TABLE_PREFIX."arcadetournaments t
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		WHERE t.status='2' AND g.active='1'{$cat_sql_game}
+		LIMIT {$start}, {$perpage}
 	");
 	while($tournament = $db->fetch_array($query))
 	{
@@ -655,6 +722,36 @@ if($mybb->input['action'] == "finished")
 
 	$plugins->run_hooks("tournaments_finished_start");
 
+	// Figure out if we need to display multiple pages.
+	$perpage = $mybb->settings['tournamentperpage'];
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
+
+	$query = $db->query("
+		SELECT COUNT(t.tid) AS page_count
+		FROM ".TABLE_PREFIX."arcadetournaments t
+		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
+		WHERE t.status='3' AND g.active='1'{$cat_sql_game}
+	");
+	$page_count = $db->fetch_field($query, "page_count");
+
+	$pages = ceil($page_count/$perpage);
+
+	if($page > $pages || $page <= 0)
+	{
+		$page = 1;
+	}
+	if($page)
+	{
+		$start = ($page-1) * $perpage;
+	}
+	else
+	{
+		$start = 0;
+		$page = 1;
+	}
+
+	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=finished");
+
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
 		SELECT t.tid, t.champion, t.finishdateline, t.numplayers, g.name, u.username, u.usergroup, u.displaygroup
@@ -662,6 +759,7 @@ if($mybb->input['action'] == "finished")
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=t.champion)
 		WHERE t.status='3' AND g.active='1'{$cat_sql_game}
+		LIMIT {$start}, {$perpage}
 	");
 	while($tournament = $db->fetch_array($query))
 	{
@@ -717,6 +815,36 @@ if($mybb->input['action'] == "cancelled")
 
 	$plugins->run_hooks("tournaments_cancelled_start");
 
+	// Figure out if we need to display multiple pages.
+	$perpage = $mybb->settings['tournamentperpage'];
+	$page = $mybb->get_input('page', MyBB::INPUT_INT);
+
+	$query = $db->query("
+		SELECT COUNT(t.tid) AS page_count
+		FROM ".TABLE_PREFIX."arcadetournaments t
+		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
+		WHERE t.status='4' AND g.active='1'{$cat_sql_game}
+	");
+	$page_count = $db->fetch_field($query, "page_count");
+
+	$pages = ceil($page_count/$perpage);
+
+	if($page > $pages || $page <= 0)
+	{
+		$page = 1;
+	}
+	if($page)
+	{
+		$start = ($page-1) * $perpage;
+	}
+	else
+	{
+		$start = 0;
+		$page = 1;
+	}
+
+	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=cancelled");
+
 	// Fetch the tournaments which will be displayed on this page
 	$query = $db->query("
 		SELECT t.tid, t.uid, t.finishdateline, g.name, u.username, u.usergroup, u.displaygroup
@@ -724,6 +852,7 @@ if($mybb->input['action'] == "cancelled")
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (g.gid=t.gid)
 		LEFT JOIN ".TABLE_PREFIX."users u ON (u.uid=t.uid)
 		WHERE t.status='4' AND g.active='1'{$cat_sql_game}
+		LIMIT {$start}, {$perpage}
 	");
 	while($tournament = $db->fetch_array($query))
 	{

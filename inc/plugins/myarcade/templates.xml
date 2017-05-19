@@ -1272,7 +1272,7 @@ body {
 		</td>
 	</tr>
 </table>]]></template>
-		<template name="tournaments_cancelled" version="1000"><![CDATA[<html>
+		<template name="tournaments_cancelled" version="1300"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->tournaments_cancelled}</title>
 {$headerinclude}
@@ -1281,6 +1281,7 @@ body {
 {$header}
 {$menu}
 <br />
+{$multipage}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 	<tr>
 		<td class="thead" colspan="4"><strong>{$lang->tournaments_cancelled}</strong></td>
@@ -1293,6 +1294,7 @@ body {
 	</tr>
 	{$tournament_bit}
 </table>
+{$multipage}
 {$online}
 {$footer}
 </body>
@@ -1349,7 +1351,7 @@ body {
 		<template name="tournaments_create_game" version="1000"><![CDATA[<option value="{$game['gid']}" {$selected}>{$game['name']}</option>]]></template>
 		<template name="tournaments_create_round" version="1000"><![CDATA[<option value="{$val}">{$round}</option>]]></template>
 		<template name="tournaments_create_tries" version="1000"><![CDATA[<option value="{$val}">{$tries}</option>]]></template>
-		<template name="tournaments_finished" version="1000"><![CDATA[<html>
+		<template name="tournaments_finished" version="1300"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->tournaments_finished}</title>
 {$headerinclude}
@@ -1358,6 +1360,7 @@ body {
 {$header}
 {$menu}
 <br />
+{$multipage}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 	<tr>
 		<td class="thead" colspan="4"><strong>{$lang->tournaments_finished}</strong></td>
@@ -1370,6 +1373,7 @@ body {
 	</tr>
 	{$tournament_bit}
 </table>
+{$multipage}
 {$online}
 {$footer}
 </body>
@@ -1385,7 +1389,7 @@ body {
 		<template name="tournaments_no_tournaments" version="1000"><![CDATA[<tr>
 	<td class="trow1" colspan="{$colspan}" align="center">{$lang->no_tournaments}</td>
 </tr>]]></template>
-		<template name="tournaments_running" version="1000"><![CDATA[<html>
+		<template name="tournaments_running" version="1300"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->tournaments_running}</title>
 {$headerinclude}
@@ -1394,6 +1398,7 @@ body {
 {$header}
 {$menu}
 <br />
+{$multipage}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 	<tr>
 		<td class="thead" colspan="4"><strong>{$lang->tournaments_running}</strong></td>
@@ -1406,6 +1411,7 @@ body {
 	</tr>
 	{$tournament_bit}
 </table>
+{$multipage}
 {$online}
 {$footer}
 </body>
@@ -1475,7 +1481,7 @@ body {
 </tr>]]></template>
 		<template name="tournaments_view_rounds_disqualify" version="1000"><![CDATA[<br /><span class="smalltext">[<a href="tournaments.php?action=disqualify&amp;pid={$player['pid']}&amp;my_post_key={$mybb->post_code}" onclick="if(confirm(&quot;{$lang->disqualify_user_confirm}&quot;))window.location=this.href.replace('action=disqualify','action=disqualify');return false;">{$lang->disqualify_user}</a>]</span>]]></template>
 		<template name="tournaments_view_rounds_profile" version="1200"><![CDATA[<a href="{$profilelink}">{$player['username']}</a>]]></template>
-		<template name="tournaments_waiting" version="1000"><![CDATA[<html>
+		<template name="tournaments_waiting" version="1300"><![CDATA[<html>
 <head>
 <title>{$mybb->settings['bbname']} - {$lang->tournaments_waiting}</title>
 {$headerinclude}
@@ -1484,6 +1490,7 @@ body {
 {$header}
 {$menu}
 <br />
+{$multipage}
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 	<tr>
 		<td class="thead" colspan="3"><strong>{$lang->tournaments_waiting}</strong></td>
@@ -1495,6 +1502,7 @@ body {
 	</tr>
 	{$tournament_bit}
 </table>
+{$multipage}
 {$online}
 {$footer}
 </body>
