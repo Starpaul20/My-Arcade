@@ -1340,7 +1340,7 @@ function myarcade_categories()
 
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $mybb->user['champdisplaypostbit'] == 1)
 	{
-		$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+		$unviewable = get_unviewable_categories();
 	}
 }
 
@@ -1371,13 +1371,13 @@ function myarcade_postbit_post($post)
 			$mybb->settings['arcade_postbitlimit'] = 50;
 		}
 
+		if($unviewable)
+		{
+			$cat_sql .= " AND g.cid NOT IN ($unviewable)";
+		}
+
 		if(!empty($mybb->input['ajax']) || $mybb->input['mode'] == "threaded")
 		{
-			if($unviewable)
-			{
-				$cat_sql .= " AND g.cid NOT IN ($unviewable)";
-			}
-
 			$query = $db->query("
 				SELECT c.gid, c.uid, g.name, g.smallimage
 				FROM ".TABLE_PREFIX."arcadechampions c
@@ -1394,17 +1394,16 @@ function myarcade_postbit_post($post)
 		}
 		else
 		{
-			$categories = explode(",", $unviewable);
 			if(!$champ_cache)
 			{
 				$champ_cache = true;
 
 				$query = $db->query("
-					SELECT p.pid, c.gid, c.uid, g.name, g.smallimage, g.cid
+					SELECT p.pid, c.gid, c.uid, g.name, g.smallimage
 					FROM ".TABLE_PREFIX."arcadechampions c
 					LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (c.gid=g.gid)
 					LEFT JOIN ".TABLE_PREFIX."posts p ON (p.uid=c.uid)
-					WHERE {$pids}
+					WHERE {$pids} AND g.active ='1'{$cat_sql}
 					ORDER BY c.dateline DESC
 				");
 				while($value = $db->fetch_array($query))
@@ -1417,7 +1416,7 @@ function myarcade_postbit_post($post)
 			{
 				foreach($champs as $champ)
 				{
-					if($champ['pid'] == $post['pid'] && $champ['active'] == 1 && $champnum < $mybb->settings['arcade_postbitlimit'] && !in_array($champ['cid'], $categories))
+					if($champ['pid'] == $post['pid'] && $champnum < $mybb->settings['arcade_postbitlimit'])
 					{
 						$champion_of = $lang->sprintf($lang->champion_of, $champ['name']);
 						eval("\$post['champions'] .= \"".$templates->get('global_arcade_bit')."\";");
@@ -1452,7 +1451,7 @@ function myarcade_postbit_other($post)
 	$post['champions'] = "";
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
-		$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+		$unviewable = get_unviewable_categories();
 		if($unviewable)
 		{
 			$cat_sql .= " AND g.cid NOT IN ($unviewable)";
@@ -1494,7 +1493,7 @@ function myarcade_profile()
 	$arcadeprofile = "";
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1)
 	{
-		$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+		$unviewable = get_unviewable_categories();
 		if($unviewable)
 		{
 			$cat_sql .= " AND g.cid NOT IN ($unviewable)";
@@ -1544,7 +1543,7 @@ function myarcade_online_unviewable()
 
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
 	{
-		$unviewable = get_unviewable_categories($mybb->user['usergroup']);
+		$unviewable = get_unviewable_categories();
 	}
 }
 
