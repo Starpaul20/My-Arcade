@@ -236,7 +236,16 @@ if($mybb->input['action'] == "play")
 	// Check group limits
 	if($mybb->usergroup['maxplaysday'] > 0)
 	{
-		$query = $db->simple_select("arcadesessions", "COUNT(*) AS play_count", "uid='{$mybb->user['uid']}' AND dateline >= '".(TIME_NOW - (60*60*24))."'");
+		if($mybb->user['uid'] > 0)
+		{
+			$user_check = "uid='{$mybb->user['uid']}'";
+		}
+		else
+		{
+			$user_check = "ipaddress=".$db->escape_binary($session->packedip);
+		}
+
+		$query = $db->simple_select("arcadesessions", "COUNT(*) AS play_count", "{$user_check} AND dateline >= '".(TIME_NOW - (60*60*24))."'");
 		$play_count = $db->fetch_field($query, "play_count");
 		if($play_count >= $mybb->usergroup['maxplaysday'])
 		{
@@ -488,7 +497,16 @@ if($mybb->input['action'] == "fullscreen")
 	// Check group limits
 	if($mybb->usergroup['maxplaysday'] > 0)
 	{
-		$query = $db->simple_select("arcadesessions", "COUNT(*) AS play_count", "uid='{$mybb->user['uid']}' AND dateline >= '".(TIME_NOW - (60*60*24))."'");
+		if($mybb->user['uid'] > 0)
+		{
+			$user_check = "uid='{$mybb->user['uid']}'";
+		}
+		else
+		{
+			$user_check = "ipaddress=".$db->escape_binary($session->packedip);
+		}
+
+		$query = $db->simple_select("arcadesessions", "COUNT(*) AS play_count", "{$user_check} AND dateline >= '".(TIME_NOW - (60*60*24))."'");
 		$play_count = $db->fetch_field($query, "play_count");
 		if($play_count >= $mybb->usergroup['maxplaysday'])
 		{
