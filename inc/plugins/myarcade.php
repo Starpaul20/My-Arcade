@@ -588,6 +588,35 @@ function myarcade_install()
 	$db->update_query("usergroups", $update_array, "isbannedgroup='1' OR canview='0' OR gid IN('1','5')");
 
 	$cache->update_usergroups();
+
+	require_once MYBB_ROOT."inc/class_xml.php";
+
+	// Insert default games
+	$games = @file_get_contents(MYBB_ROOT.'inc/plugins/myarcade/games.xml');
+	$parser = new XMLParser($games);
+	$parser->collapse_dups = 0;
+	$tree = $parser->get_tree();
+
+	foreach($tree['games'][0]['game'] as $game)
+	{
+		$new_game = array(
+			'name' => $db->escape_string($game['name'][0]['value']),
+			'description' => $db->escape_string($game['description'][0]['value']),
+			'about' => $db->escape_string($game['about'][0]['value']),
+			'controls' => $db->escape_string($game['controls'][0]['value']),
+			'file' => $db->escape_string($game['file'][0]['value']),
+			'smallimage' => $db->escape_string($game['smallimage'][0]['value']),
+			'largeimage' => $db->escape_string($game['largeimage'][0]['value']),
+			'dateline' => TIME_NOW,
+			'bgcolor' => $db->escape_string($game['bgcolor'][0]['value']),
+			'width' => $db->escape_string($game['width'][0]['value']),
+			'height' => $db->escape_string($game['height'][0]['value']),
+			'tournamentselect' => $db->escape_string($game['tournamentselect'][0]['value']),
+			'active' => $db->escape_string($game['active'][0]['value'])
+		);
+
+		$db->insert_query("arcadegames", $new_game);
+	}
 }
 
 // Checks to make sure plugin is installed

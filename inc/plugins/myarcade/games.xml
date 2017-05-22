@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<games version="1810" exported="1485989616">
+	<game>
+		<name><![CDATA[Asteroids]]></name>
+		<description><![CDATA[Kill some asteroids and flying saucers!]]></description>
+		<about><![CDATA[Shoot all of the asteroids.]]></about>
+		<controls><![CDATA[Arrow keys move the ship.
+Space bar fires.]]></controls>
+		<file><![CDATA[asteroids]]></file>
+		<smallimage><![CDATA[asteroids2]]></smallimage>
+		<largeimage><![CDATA[asteroids1]]></largeimage>
+		<bgcolor><![CDATA[000000]]></bgcolor>
+		<width><![CDATA[500]]></width>
+		<height><![CDATA[375]]></height>
+		<tournamentselect><![CDATA[1]]></tournamentselect>
+		<active><![CDATA[1]]></active>
+	</game>
+	<game>
+		<name><![CDATA[Pacman]]></name>
+		<description><![CDATA[Eat all the little dots without letting the ghosts get you!]]></description>
+		<about><![CDATA[Eat all of the dots.]]></about>
+		<controls><![CDATA[Arrow keys to move.]]></controls>
+		<file><![CDATA[pacman]]></file>
+		<smallimage><![CDATA[pacman2]]></smallimage>
+		<largeimage><![CDATA[pacman1]]></largeimage>
+		<bgcolor><![CDATA[000000]]></bgcolor>
+		<width><![CDATA[360]]></width>
+		<height><![CDATA[420]]></height>
+		<tournamentselect><![CDATA[1]]></tournamentselect>
+		<active><![CDATA[1]]></active>
+	</game>
+	<game>
+		<name><![CDATA[Snake]]></name>
+		<description><![CDATA[Eat the apples and don't hit the walls.... or yourself.]]></description>
+		<about><![CDATA[Eat all of the apples.]]></about>
+		<controls><![CDATA[Arrow keys to move.]]></controls>
+		<file><![CDATA[snake]]></file>
+		<smallimage><![CDATA[snake2]]></smallimage>
+		<largeimage><![CDATA[snake1]]></largeimage>
+		<bgcolor><![CDATA[000000]]></bgcolor>
+		<width><![CDATA[360]]></width>
+		<height><![CDATA[300]]></height>
+		<tournamentselect><![CDATA[1]]></tournamentselect>
+		<active><![CDATA[1]]></active>
+	</game>
+	<game>
+		<name><![CDATA[Space Invaders]]></name>
+		<description><![CDATA[Kill the invading army of UFO's]]></description>
+		<about><![CDATA[To shoot all of the aliens.]]></about>
+		<controls><![CDATA[Left and Right arrow keys to move.
+Space bar to shoot.]]></controls>
+		<file><![CDATA[invaders]]></file>
+		<smallimage><![CDATA[invaders2]]></smallimage>
+		<largeimage><![CDATA[invaders1]]></largeimage>
+		<bgcolor><![CDATA[000000]]></bgcolor>
+		<width><![CDATA[500]]></width>
+		<height><![CDATA[410]]></height>
+		<tournamentselect><![CDATA[1]]></tournamentselect>
+		<active><![CDATA[1]]></active>
+	</game>
+	<game>
+		<name><![CDATA[Tetris]]></name>
+		<description><![CDATA[Build solid lines to clear and get points. Clear 4 rows at the same time and you've just Tetris'd!]]></description>
+		<about><![CDATA[Form lines using the different shapes.]]></about>
+		<controls><![CDATA[Up arrow changes the rotation of the piece.
+Left and Right arrows move it.
+Down arrow brings it down faster.]]></controls>
+		<file><![CDATA[tetris]]></file>
+		<smallimage><![CDATA[tetris2]]></smallimage>
+		<largeimage><![CDATA[tetris1]]></largeimage>
+		<bgcolor><![CDATA[000000]]></bgcolor>
+		<width><![CDATA[382]]></width>
+		<height><![CDATA[380]]></height>
+		<tournamentselect><![CDATA[1]]></tournamentselect>
+		<active><![CDATA[1]]></active>
+	</game>
+</games>
