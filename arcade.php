@@ -259,8 +259,8 @@ if($mybb->input['action'] == "play")
 	my_unsetcookie('arcadesession');
 
 	$game['name'] = htmlspecialchars_uni($game['name']);
-	$game['about'] = htmlspecialchars_uni($game['about']);
-	$game['controls'] = htmlspecialchars_uni($game['controls']);
+	$game['about'] = nl2br(htmlspecialchars_uni($game['about']));
+	$game['controls'] = nl2br(htmlspecialchars_uni($game['controls']));
 
 	add_breadcrumb($game['name'], "arcade.php?action=play&gid={$game['gid']}");
 
