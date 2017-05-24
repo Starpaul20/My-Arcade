@@ -51,6 +51,36 @@ if(THIS_SCRIPT == 'announcements.php')
 	$templatelist .= 'global_arcade_bit';
 }
 
+if(THIS_SCRIPT == 'newthread.php')
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'global_arcade_bit';
+}
+
+if(THIS_SCRIPT == 'newreply.php')
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'global_arcade_bit';
+}
+
+if(THIS_SCRIPT == 'editpost.php')
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'global_arcade_bit';
+}
+
 // Tell MyBB when to run the hooks
 $plugins->add_hook("index_start", "myarcade_index");
 $plugins->add_hook("global_start", "myarcade_link_cache");
