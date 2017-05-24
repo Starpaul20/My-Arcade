@@ -66,12 +66,12 @@ if($mybb->user['scoresperpage'])
 	$mybb->settings['scoresperpage'] = $mybb->user['scoresperpage'];
 }
 
-if(!$mybb->settings['scoresperpage'])
+if(!$mybb->settings['scoresperpage'] || (int)$mybb->settings['scoresperpage'] < 1)
 {
 	$mybb->settings['scoresperpage'] = 10;
 }
 
-if(!$mybb->settings['gamesperpage'])
+if(!$mybb->settings['gamesperpage'] || (int)$mybb->settings['gamesperpage'] < 1)
 {
 	$mybb->settings['gamesperpage'] = 10;
 }
