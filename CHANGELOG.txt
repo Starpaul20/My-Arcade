@@ -1,3 +1,30 @@
+1.3 (May 25th, 2017)
+- Added ability to export and import games (Issue #4)
+- Various Javascript updates
+- Improved TAR upload code
+- Replaced TAR library (Issue #5)
+- Renamed plugin arcade directory to myarcade
+- Removed PHP closing tags
+- Updated Doc Blocks
+- Use THIS_SCRIPT for template caching
+- Ability to edit and delete scores from Admin CP (Issue #6)
+- Moved last bits of hardcoded HTML to templates
+- Optimized queries
+- Various variable cleanup
+- Typecast conversion for float values
+- Added build_gamebit function
+- Remove game PHP files after add (Issue #7)
+- Handle display of deleted users/games in logs
+- Format usernames
+- Bug: Fixed additional group permissions problem (Issue #8)
+- Tournament paging (Issue #9)
+- Added games when installing
+- Added maxplayday check for guests
+- Added nl2br for about/controls fields
+- Sanitized per page settings
+- Caching templates in all postbit areas
+- Dropped useless globals
+
 1.2 (December 28th, 2016)
 - MyAlerts support: Removed dateline from sprintf
 - Bug: Fixed possible XSS Injection when pruning scores/logs in Admin CP
