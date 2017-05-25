@@ -1174,7 +1174,7 @@ function myarcade_deactivate()
 // Insert score (for IBProArcade games)
 function myarcade_index()
 {
-	global $mybb, $db, $lang, $arcade_session;
+	global $mybb, $db, $lang;
 	$lang->load("arcade");
 
 	if($mybb->input['act'] != "Arcade" && $mybb->input['autocom'] != "arcade")
@@ -1200,7 +1200,7 @@ function myarcade_index()
 	$sid = $mybb->cookies['arcadesession'];
 
 	$query = $db->query("
-		SELECT s.*, g.gid, g.sortby
+		SELECT s.*, g.sortby
 		FROM ".TABLE_PREFIX."arcadesessions s
 		LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
 		WHERE s.sid='{$sid}'
@@ -1230,7 +1230,7 @@ function myarcade_index()
 						$rank = get_rank($mybb->user['uid'], $game['gid'], $game['sortby']);
 						$pagenum = ceil($rank/$perpage);
 
-						$page = "";
+						$page = '';
 						if($pagenum > 1)
 						{
 							$page = "&page={$pagenum}";
@@ -1275,7 +1275,7 @@ function myarcade_index()
 						$rank = get_rank($mybb->user['uid'], $game['gid'], $game['sortby']);
 						$pagenum = ceil($rank/$perpage);
 
-						$page = "";
+						$page = '';
 						if($pagenum > 1)
 						{
 							$page = "&page={$pagenum}";
@@ -1297,7 +1297,7 @@ function myarcade_index()
 						$rank = get_rank($mybb->user['uid'], $game['gid'], $game['sortby']);
 						$pagenum = ceil($rank/$perpage);
 
-						$page = "";
+						$page = '';
 						if($pagenum > 1)
 						{
 							$page = "&page={$pagenum}";
@@ -1314,7 +1314,7 @@ function myarcade_index()
 // Cache the header link template / Register My Alerts Formmatter
 function myarcade_link_cache()
 {
-	global $templatelist, $mybb, $lang, $formatterManager;
+	global $templatelist, $mybb, $lang;
 	$lang->load("arcade");
 
 	if(isset($templatelist))
@@ -1352,7 +1352,7 @@ function myarcade_link_cache()
 // Arcade header link
 function myarcade_link()
 {
-	global $db, $mybb, $templates, $lang, $menu_arcade;
+	global $mybb, $templates, $lang, $menu_arcade;
 	$lang->load("arcade");
 
 	$menu_arcade = '';
@@ -1365,7 +1365,7 @@ function myarcade_link()
 // Gets arcade unviewable categories (for postbit display, to reduce number of queries)
 function myarcade_categories()
 {
-	global $db, $mybb, $unviewable;
+	global $mybb, $unviewable;
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $mybb->user['champdisplaypostbit'] == 1)
@@ -1378,7 +1378,7 @@ function myarcade_categories()
 // If get_unviewable_categories function is used here, it would re-quered the database for every post visible
 function myarcade_postbit_post($post)
 {
-	global $db, $mybb, $templates, $lang, $unviewable, $champ_cache, $pids, $champnum, $champs;
+	global $db, $mybb, $templates, $lang, $unviewable, $champ_cache, $pids, $champs;
 	$lang->load("arcade");
 	$usergroup = user_permissions($post['uid']);
 
@@ -1392,11 +1392,11 @@ function myarcade_postbit_post($post)
 	}
 
 	$champnum = 0;
-	$post['champions'] = "";
+	$post['champions'] = '';
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
 		// Championship hard limit (to prevent overloading of the postbit)
-		if(!$mybb->settings['arcade_postbitlimit'] || $mybb->settings['arcade_postbitlimit'] > 50)
+		if(!$mybb->settings['arcade_postbitlimit'] || (int)$mybb->settings['arcade_postbitlimit'] > 50)
 		{
 			$mybb->settings['arcade_postbitlimit'] = 50;
 		}
@@ -1478,7 +1478,7 @@ function myarcade_postbit_other($post)
 		$champdisplaypostbit = $mybb->user['champdisplaypostbit'];
 	}
 
-	$post['champions'] = "";
+	$post['champions'] = '';
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
 		$unviewable = get_unviewable_categories();
@@ -1520,7 +1520,7 @@ function myarcade_profile()
 
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 
-	$arcadeprofile = "";
+	$arcadeprofile = '';
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1)
 	{
 		$unviewable = get_unviewable_categories();
@@ -1568,7 +1568,7 @@ function myarcade_profile()
 // Get unviewable games (for who's online, to reduce number of queries)
 function myarcade_online_unviewable()
 {
-	global $db, $mybb, $unviewable;
+	global $mybb, $unviewable;
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1)
@@ -1681,7 +1681,7 @@ function myarcade_online_activity($user_activity)
 
 function myarcade_online_location($plugin_array)
 {
-	global $db, $mybb, $lang, $parameters, $unviewable, $gid_list, $games;
+	global $db, $lang, $parameters, $unviewable, $gid_list, $games;
 	$lang->load("arcade");
 
 	if($unviewable)
@@ -1842,7 +1842,7 @@ function myarcade_templates()
 // Merge everything if users are merged
 function myarcade_merge()
 {
-	global $db, $mybb, $source_user, $destination_user;
+	global $db, $source_user, $destination_user;
 	$username = array(
 		"username" => $destination_user['username']
 	);
@@ -2041,7 +2041,6 @@ function myarcade_usergroups_commit()
 // Rebuild arcade caches in Admin CP
 function myarcade_datacache_class()
 {
-	global $cache;
 	require_once MYBB_ROOT."inc/functions_arcade.php";
 }
 
