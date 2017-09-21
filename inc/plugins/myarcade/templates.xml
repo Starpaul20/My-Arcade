@@ -512,7 +512,7 @@ body {
 		<template name="arcade_online_memberbit" version="1000"><![CDATA[{$comma}{$location}{$online['profilelink']}{$invisiblemark}]]></template>
 		<template name="arcade_online_memberbit_image_home" version="1300"><![CDATA[<a href="arcade.php"><img src="images/arcade/arcade.png" alt="{$lang->home}" /></a> ]]></template>
 		<template name="arcade_online_memberbit_image_game" version="1300"><![CDATA[<a href="{$gamelink}"><img src="arcade/smallimages/{$gameimage}.gif" alt="{$lang->game}" /></a> ]]></template>
-		<template name="arcade_play" version="1000"><![CDATA[<html>
+		<template name="arcade_play" version="1400"><![CDATA[<html>
 <head>
 <title>{$lang->arcade} - {$game['name']}</title>
 {$headerinclude}
@@ -533,11 +533,12 @@ body {
 				<param name="type" value="application/x-shockwave-flash" />
 				<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer/" />
 				<param name="bgcolor" value="#{$game['bgcolor']}" />
+				<param name="wmode" value="direct">
 				<param name="quality" value="high" />
 				<param name="menu" value="false" />
 				<param name="width" value="{$game['width']}" />
 				<param name="height" value="{$game['height']}" />
-				<embed src="./arcade/swf/{$game['file']}.swf?ibpro_gameid={$game['gid']}" width="{$game['width']}" height="{$game['height']}" quality="high" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" menu="false"></embed>
+				<embed src="./arcade/swf/{$game['file']}.swf?ibpro_gameid={$game['gid']}" wmode="direct" width="{$game['width']}" height="{$game['height']}" quality="high" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" menu="false"></embed>
 				<noembed>{$lang->flash_not_installed}</noembed>
 			</object>
 		</td>
