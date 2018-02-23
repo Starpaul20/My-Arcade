@@ -1096,6 +1096,8 @@ if($mybb->input['action'] == "edit")
 		exit;
 	}
 
+	$score['comment'] = htmlspecialchars_uni($score['comment']);
+
 	$plugins->run_hooks("arcade_edit_end");
 
 	eval("\$edit = \"".$templates->get("arcade_edit", 1, 0)."\";");
