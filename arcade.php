@@ -142,7 +142,7 @@ switch($mybb->input['sessdo'])
 		$sid = $mybb->cookies['arcadesession'];
 
 		$query = $db->query("
-			SELECT s.gid, s.tid. g.sortby
+			SELECT s.gid, s.tid, g.sortby
 			FROM ".TABLE_PREFIX."arcadesessions s
 			LEFT JOIN ".TABLE_PREFIX."arcadegames g ON (s.gid=g.gid)
 			WHERE s.sid='{$sid}'
