@@ -2050,35 +2050,35 @@ function myarcade_admin_adminlog($plugin_array)
 	global $lang;
 	$lang->load("arcade_module_meta");
 
-	if($plugin_array['lang_string'] == admin_log_arcade_scores_prune)
+	if($plugin_array['lang_string'] == 'admin_log_arcade_scores_prune')
 	{
 		if($plugin_array['logitem']['data'][1] && !$plugin_array['logitem']['data'][2])
 		{
-			$plugin_array['lang_string'] = admin_log_arcade_scores_prune_user;
+			$plugin_array['lang_string'] = 'admin_log_arcade_scores_prune_user';
 		}
 		elseif($plugin_array['logitem']['data'][2] && !$plugin_array['logitem']['data'][1])
 		{
-			$plugin_array['lang_string'] = admin_log_arcade_scores_prune_game;
+			$plugin_array['lang_string'] = 'admin_log_arcade_scores_prune_game';
 		}
 		elseif($plugin_array['logitem']['data'][1] && $plugin_array['logitem']['data'][2])
 		{
-			$plugin_array['lang_string'] = admin_log_arcade_scores_prune_user_game;
+			$plugin_array['lang_string'] = 'admin_log_arcade_scores_prune_user_game';
 		}
 	}
 
-	elseif($plugin_array['lang_string'] == admin_log_arcade_logs_prune)
+	elseif($plugin_array['lang_string'] == 'admin_log_arcade_logs_prune')
 	{
 		if($plugin_array['logitem']['data'][1] && !$plugin_array['logitem']['data'][2])
 		{
-			$plugin_array['lang_string'] = admin_log_arcade_logs_prune_user;
+			$plugin_array['lang_string'] = 'admin_log_arcade_logs_prune_user';
 		}
 		elseif($plugin_array['logitem']['data'][2] && !$plugin_array['logitem']['data'][1])
 		{
-			$plugin_array['lang_string'] = admin_log_arcade_logs_prune_game;
+			$plugin_array['lang_string'] = 'admin_log_arcade_logs_prune_game';
 		}
 		elseif($plugin_array['logitem']['data'][1] && $plugin_array['logitem']['data'][2])
 		{
-			$plugin_array['lang_string'] = admin_log_arcade_logs_prune_user_game;
+			$plugin_array['lang_string'] = 'admin_log_arcade_logs_prune_user_game';
 		}
 	}
 
