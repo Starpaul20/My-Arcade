@@ -1,3 +1,7 @@
+1.3.2 (March 11th, 2019)
+- Bug: Fixed PHP 7.2 does not cast unquoted string literals to strings (Issue #15)
+- Bug: Fixed SQL error with V3arcade game scoring
+
 1.3.1 (February 23rd, 2018)
 - Bug: Fixed XSS issue with score comment (Issue #13)
 - Corrected spelling mistake (Issue #10)
