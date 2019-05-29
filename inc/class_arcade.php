@@ -18,10 +18,9 @@ class Arcade
 	 */
 	function submit_score($score, $name, $sid)
 	{
-		global $db, $mybb, $lang, $plugins, $session, $arcade_session;
+		global $db, $mybb, $lang, $plugins, $session;
 		$lang->load("arcade");
 
-		$uid = (int)$mybb->user['uid'];
 		$mybb->binary_fields["arcadescores"] = array('ipaddress' => true);
 
 		if(!$name)
@@ -45,6 +44,8 @@ class Arcade
 
 		$query = $db->simple_select("arcadegames", "*", "file='{$name}'");
 		$gamecheck = $db->fetch_array($query);
+
+		$user = get_user($arcade_session['uid']);
 
 		// Some games input their name by the title not file name, this exists to ensure no errors
 		if(!$gamecheck['gid'])
@@ -73,11 +74,6 @@ class Arcade
 			error($lang->bad_input);
 		}
 
-		if($arcade_session['uid'] != $uid)
-		{
-			error($lang->bad_input);
-		}
-
 		// Looks clean, now time to get scoring
 		$game = get_game($arcade_session['gid']);
 
@@ -94,10 +90,10 @@ class Arcade
 			}
 		}
 
-		if($uid != 0)
+		if($user['uid'] != 0)
 		{
 			// Check to see if this user already has a score
-			$query = $db->simple_select("arcadescores", "*", "uid='{$uid}' AND gid='{$game['gid']}'");
+			$query = $db->simple_select("arcadescores", "*", "uid='{$user['uid']}' AND gid='{$game['gid']}'");
 			$current_score = $db->fetch_array($query);
 
 			if($current_score['sid'])
@@ -107,15 +103,13 @@ class Arcade
 					$timeplayed = TIME_NOW - $arcade_session['dateline'];
 
 					$update_score = array(
-						"gid" => (int)$game['gid'],
-						"uid" => (int)$uid,
-						"username" => $db->escape_string($mybb->user['username']),
+						"username" => $db->escape_string($user['username']),
 						"score" => $db->escape_string($score),
 						"dateline" => TIME_NOW,
 						"timeplayed" => (int)$timeplayed,
 						"ipaddress" => $db->escape_binary($session->packedip)
 					);
-					$db->update_query("arcadescores", $update_score, "gid='{$game['gid']}' AND uid='{$uid}'");
+					$db->update_query("arcadescores", $update_score, "gid='{$game['gid']}' AND uid='{$arcade_session['uid']}'");
 
 					$arguments = array("gid" => $game['gid'], "score" => $score);
 					$plugins->run_hooks("class_arcade_submit_score_update_score", $arguments);
@@ -133,8 +127,8 @@ class Arcade
 
 				$new_score = array(
 					"gid" => (int)$game['gid'],
-					"uid" => (int)$uid,
-					"username" => $db->escape_string($mybb->user['username']),
+					"uid" => (int)$user['uid'],
+					"username" => $db->escape_string($user['username']),
 					"score" => $db->escape_string($score),
 					"dateline" => TIME_NOW,
 					"timeplayed" => (int)$timeplayed,
@@ -157,14 +151,14 @@ class Arcade
 				if(($current_champion['score'] < $score && $game['sortby'] == "desc") || ($current_champion['score'] > $score && $game['sortby'] == "asc"))
 				{
 					// Send old champion a notice (pm or email depending on setting) that they've lost their championship
-					if($current_champion['uid'] != $mybb->user['uid'])
+					if($current_champion['uid'] != $user['uid'])
 					{
 						$champ = get_user($current_champion['uid']);
 						if($champ['champnotify'] == 1)
 						{
 							$champ_pm = array(
 								'subject' => array('champ_subject', $game['name']),
-								'message' => array('champ_pm_message', $mybb->user['username'], $game['name'], $score),
+								'message' => array('champ_pm_message', $user['username'], $game['name'], $score),
 								'touid' => $champ['uid'],
 								'receivepms' => (int)$champ['receivepms'],
 								'language' => $champ['language'],
@@ -176,7 +170,7 @@ class Arcade
 						else if($champ['champnotify'] == 2)
 						{
 							$emailsubject = $lang->sprintf($lang->champ_subject, $game['name']);
-							$emailmessage = $lang->sprintf($lang->champ_email_message, $mybb->user['username'], $game['name'], $score);
+							$emailmessage = $lang->sprintf($lang->champ_email_message, $user['username'], $game['name'], $score);
 
 							my_mail($champ['email'], $emailsubject, $emailmessage);
 						}
@@ -187,7 +181,7 @@ class Arcade
 							$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('arcade_championship');
 
 							if ($alertType != null && $alertType->getEnabled()) {
-								$alert = new MybbStuff_MyAlerts_Entity_Alert($current_champion['uid'], $alertType, $game['gid'], $mybb->user['uid']);
+								$alert = new MybbStuff_MyAlerts_Entity_Alert($current_champion['uid'], $alertType, $game['gid'], $user['uid']);
 										$alert->setExtraDetails(
 										array(
 											'gid' 		=> $game['gid'],
@@ -200,7 +194,7 @@ class Arcade
 
 					$update_champ = array(
 						"uid" => (int)$uid,
-						"username" => $db->escape_string($mybb->user['username']),
+						"username" => $db->escape_string($user['username']),
 						"score" => $db->escape_string($score),
 						"dateline" => TIME_NOW
 					);
@@ -215,7 +209,7 @@ class Arcade
 				$new_champion = array(
 					"gid" => (int)$game['gid'],
 					"uid" => (int)$uid,
-					"username" => $db->escape_string($mybb->user['username']),
+					"username" => $db->escape_string($user['username']),
 					"score" => $db->escape_string($score),
 					"dateline" => TIME_NOW
 				);
@@ -253,8 +247,6 @@ class Arcade
 		global $db, $mybb, $lang, $plugins, $arcade_session;
 		$lang->load("arcade");
 
-		$uid = (int)$mybb->user['uid'];
-
 		// Submit score to high scores also (also checks for cheating/errors)
 		$this->submit_score($score, $name, $sid);
 
@@ -262,12 +254,14 @@ class Arcade
 		$query = $db->simple_select("arcadesessions", "*", "sid='{$sid}'");
 		$arcade_session = $db->fetch_array($query);
 
+		$user = get_user($arcade_session['uid']);
+
 		$tournament = get_tournament($arcade_session['tid']);
 		$game = get_game($tournament['gid']);
 		$information = unserialize($tournament['information']);
 
 		// Check to see if this user already has a score
-		$query = $db->simple_select("arcadetournamentplayers", "*", "uid='{$uid}' AND tid='{$tournament['tid']}' AND round='{$tournament['round']}'");
+		$query = $db->simple_select("arcadetournamentplayers", "*", "uid='{$user['uid']}' AND tid='{$tournament['tid']}' AND round='{$tournament['round']}'");
 		$current_score = $db->fetch_array($query);
 
 		if(($current_score['score'] < $score && $game['sortby'] == "desc") || ($current_score['score'] > $score && $game['sortby'] == "asc"))
