@@ -1,6 +1,6 @@
 ## INFORMATION ##
 
-My Arcade (1.3.2) for MyBB 1.8
+My Arcade (1.3.3) for MyBB 1.8
 Created by: Starpaul20
 Copyright: ©2015
 License: GPL
