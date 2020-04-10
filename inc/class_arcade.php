@@ -193,7 +193,7 @@ class Arcade
 					}
 
 					$update_champ = array(
-						"uid" => (int)$uid,
+						"uid" => (int)$user['uid'],
 						"username" => $db->escape_string($user['username']),
 						"score" => $db->escape_string($score),
 						"dateline" => TIME_NOW
@@ -208,7 +208,7 @@ class Arcade
 			{
 				$new_champion = array(
 					"gid" => (int)$game['gid'],
-					"uid" => (int)$uid,
+					"uid" => (int)$user['uid'],
 					"username" => $db->escape_string($user['username']),
 					"score" => $db->escape_string($score),
 					"dateline" => TIME_NOW
