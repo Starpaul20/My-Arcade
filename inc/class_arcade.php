@@ -165,7 +165,7 @@ class Arcade
 								'language_file' => 'arcade'
 							);
 
-							send_pm($champ_pm);
+							send_pm($champ_pm, $user['uid']);
 						}
 						else if($champ['champnotify'] == 2)
 						{
