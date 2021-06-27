@@ -1056,7 +1056,7 @@ function myarcade_activate()
 	$db->insert_query("templates", $insert_array);
 
 	// Update templates
-	include MYBB_ROOT."/inc/adminfunctions_templates.php";
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("member_profile", "#".preg_quote('{$signature}')."#i", '{$signature}{$arcadeprofile}');
 	find_replace_templatesets("postbit", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
 	find_replace_templatesets("postbit_classic", "#".preg_quote('{$post[\'user_details\']}')."#i", '{$post[\'user_details\']}<br />{$post[\'champions\']}');
@@ -1148,7 +1148,7 @@ function myarcade_deactivate()
 	$db->delete_query("tasks", "tid='{$task['tid']}'");
 	$db->delete_query("tasklog", "tid='{$task['tid']}'");
 
-	include MYBB_ROOT."/inc/adminfunctions_templates.php";
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("member_profile", "#".preg_quote('{$arcadeprofile}')."#i", '', 0);
 	find_replace_templatesets("postbit", "#".preg_quote('<br />{$post[\'champions\']}')."#i", '', 0);
 	find_replace_templatesets("postbit_classic", "#".preg_quote('<br />{$post[\'champions\']}')."#i", '', 0);
