@@ -622,11 +622,9 @@ function myarcade_install()
 
 	$cache->update_usergroups();
 
-	require_once MYBB_ROOT."inc/class_xml.php";
-
 	// Insert default games
 	$games = @file_get_contents(MYBB_ROOT.'inc/plugins/myarcade/games.xml');
-	$parser = new XMLParser($games);
+	$parser = create_xml_parser($games);
 	$parser->collapse_dups = 0;
 	$tree = $parser->get_tree();
 
@@ -828,11 +826,10 @@ function myarcade_uninstall()
 function myarcade_activate()
 {
 	global $db, $cache;
-	require_once MYBB_ROOT."inc/class_xml.php";
 
 	// Insert settings
 	$settings = @file_get_contents(MYBB_ROOT.'inc/plugins/myarcade/settings.xml');
-	$parser = new XMLParser($settings);
+	$parser = create_xml_parser($settings);
 	$parser->collapse_dups = 0;
 	$tree = $parser->get_tree();
 
@@ -882,7 +879,7 @@ function myarcade_activate()
 	require_once MYBB_ADMIN_DIR."inc/functions.php";
 	require_once MYBB_ADMIN_DIR."inc/functions_themes.php";
 
-	$parser = new XMLParser($contents);
+	$parser = create_xml_parser($contents);
 	$tree = $parser->get_tree();
 
 	if(!is_array($tree) || !is_array($tree['theme']))
@@ -1115,6 +1112,9 @@ function myarcade_activate()
 			$alertTypeManager->addTypes($alertTypesToAdd);
 		}
 	}
+
+	require_once MYBB_ROOT."inc/functions_arcade.php";
+	update_tournaments_stats();
 }
 
 // This function runs when the plugin is deactivated.
@@ -1180,6 +1180,8 @@ function myarcade_index()
 	global $mybb, $db, $lang;
 	$lang->load("arcade");
 
+	$mybb->input['act'] = $mybb->get_input('act');
+	$mybb->input['autocom'] = $mybb->get_input('autocom');
 	if($mybb->input['act'] != "Arcade" && $mybb->input['autocom'] != "arcade")
 	{
 		return;

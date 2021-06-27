@@ -86,6 +86,8 @@ if(!$mybb->settings['gamesorder'])
 	$mybb->settings['gamesorder'] = "asc";
 }
 
+$errors = '';
+
 // Top Menu bar (for members only)
 $menu = '';
 if($mybb->user['uid'] != 0)
@@ -94,6 +96,7 @@ if($mybb->user['uid'] != 0)
 }
 
 // Gets only games this user can view (based on category group permission)
+$cat_sql_cat = $cat_sql_game = $cat_sql = '';
 $unviewable = get_unviewable_categories();
 if($unviewable)
 {
@@ -121,7 +124,7 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 }
 
 // V3Arcade insert of a score
-switch($mybb->input['sessdo'])
+switch($mybb->get_input('sessdo'))
 {
 	case 'sessionstart':
 		$gamerand = rand(1,20);
@@ -174,6 +177,8 @@ switch($mybb->input['sessdo'])
 		}
 	break;
 }
+
+$mybb->input['action'] = $mybb->get_input('action');
 
 // Playing a game
 if($mybb->input['action'] == "play")
@@ -582,6 +587,9 @@ if($mybb->input['action'] == "scores")
 		error($lang->error_invalidgame);
 	}
 
+	$collapsed['game_info_e'] = '';
+	$collapsedimg['game_info'] = '';
+
 	$category = explode(',', $unviewable);
 	if(in_array($game['cid'], $category))
 	{
@@ -609,7 +617,7 @@ if($mybb->input['action'] == "scores")
 	$query = $db->simple_select("arcadescores", "COUNT(sid) AS count", "gid ='{$gid}'");
 	$result = $db->fetch_field($query, "count");
 
-	if($mybb->input['page'] != "last")
+	if($mybb->get_input('page') != "last")
 	{
 		$page = $mybb->get_input('page', MyBB::INPUT_INT);
 	}
@@ -617,7 +625,7 @@ if($mybb->input['action'] == "scores")
 	$pages = $result / $perpage;
 	$pages = ceil($pages);
 
-	if($mybb->input['page'] == "last")
+	if($mybb->get_input('page') == "last")
 	{
 		$page = $pages;
 	}
@@ -681,6 +689,7 @@ if($mybb->input['action'] == "scores")
 			$game['numratings'] = (int)$game['numratings'];
 		}
 
+		$rated = '';
 		if($game['numratings'])
 		{
 			// At least >someone< has rated this game, was it me?
@@ -700,6 +709,7 @@ if($mybb->input['action'] == "scores")
 	}
 
 	// Fetch the scores which will be displayed on this page
+	$score_bit = '';
 	$query = $db->query("
 		SELECT s.*, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadescores s
@@ -1135,9 +1145,10 @@ if($mybb->input['action'] == "addfavorite")
 		error($lang->error_nogamepermission);
 	}
 
-	$query = $db->simple_select("arcadefavorites", "*", "gid='".$game['gid']."' AND uid='".(int)$mybb->user['uid']."'", array('limit' => 1));
-	$favorite = $db->fetch_array($query);
-	if(!$favorite['gid'])
+	$query = $db->simple_select("arcadefavorites", "fid", "gid='".$game['gid']."' AND uid='".(int)$mybb->user['uid']."'", array('limit' => 1));
+	$favorite = $db->fetch_field($query, "fid");
+
+	if(empty($favorite))
 	{
 		$insert_array = array(
 			'uid' => (int)$mybb->user['uid'],
@@ -1225,6 +1236,9 @@ if($mybb->input['action'] == "favorites")
 			$db->delete_query("arcadefavorites", "gid='{$delete_fav['gid']}' AND uid='".(int)$mybb->user['uid']."'");
 		}
 	}
+
+	$sortby_selected = array('date' => '', 'plays' => '', 'lastplayed' => '', 'rating' => '', 'name' => '');
+	$order_selected = array('asc' => '', 'desc' => '');
 
 	// Pick the sort order.
 	if(!isset($mybb->input['order']) && !empty($mybb->settings['gamesorder']))
@@ -1332,6 +1346,7 @@ if($mybb->input['action'] == "favorites")
 	}
 
 	// Fetch the games which will be displayed on this page
+	$game_bit = '';
 	$query = $db->query("
 		SELECT f.*, g.*, {$ratingadd}u.username, u.usergroup, u.displaygroup, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, cu.usergroup AS champusergroup, cu.displaygroup AS champdisplaygroup, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadefavorites f
@@ -1418,6 +1433,7 @@ if($mybb->input['action'] == "settings")
 		$user = $mybb->user;
 	}
 
+	$pm_tournamentnotify_selected = $email_tournamentnotify_selected = $no_tournamentnotify_selected = '';
 	if($user['tournamentnotify'] == 1)
 	{
 		$pm_tournamentnotify_selected = "selected=\"selected\"";
@@ -1431,6 +1447,7 @@ if($mybb->input['action'] == "settings")
 		$no_tournamentnotify_selected = "selected=\"selected\"";
 	}
 
+	$pm_champnotify_selected = $email_champnotify_selected = $no_champnotify_selected = '';
 	if($user['champnotify'] == 1)
 	{
 		$pm_champnotify_selected = "selected=\"selected\"";
@@ -1444,23 +1461,20 @@ if($mybb->input['action'] == "settings")
 		$no_champnotify_selected = "selected=\"selected\"";
 	}
 
+	$whosonlinearcadecheck = '';
 	if($user['whosonlinearcade'] == 1)
 	{
 		$whosonlinearcadecheck = "checked=\"checked\"";
 	}
-	else
-	{
-		$whosonlinearcadecheck = "";
-	}
 
+	$champdisplaypostbitcheck ='';
 	if($user['champdisplaypostbit'] == 1)
 	{
 		$champdisplaypostbitcheck = "checked=\"checked\"";
 	}
-	else
-	{
-		$champdisplaypostbitcheck = "";
-	}
+
+	$sortbysel = array('date' => '', 'plays' => '', 'lastplayed' => '', 'rating' => '', 'name' => '');
+	$ordersel = array('asc' => '', 'desc' => '');
 
 	$sortbysel[$user['gamessortby']] = 'selected="selected"';
 	$ordersel[$user['gamesorder']] = 'selected="selected"';
@@ -1537,7 +1551,7 @@ if($mybb->input['action'] == "settings")
 if($mybb->input['action'] == "stats")
 {
 	$uid = $mybb->get_input('uid', MyBB::INPUT_INT);
-	if(!$mybb->input['uid'])
+	if(!$uid)
 	{
 		$uid = (int)$mybb->user['uid'];
 	}
@@ -1563,12 +1577,15 @@ if($mybb->input['action'] == "stats")
 	$lang->player_details = $lang->sprintf($lang->player_details, $user['username']);
 
 	$userinput = '';
-	if($mybb->input['uid'])
+	if($uid)
 	{
 		eval("\$userinput = \"".$templates->get("arcade_stats_userinput")."\";");
 	}
 
-	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
+	$sortby_selected = array('date' => '', 'name' => '');
+	$order_selected = array('asc' => '', 'desc' => '');
+
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->get_input('order'));
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -1585,7 +1602,7 @@ if($mybb->input['action'] == "stats")
 	}
 
 	// Sort by which field?
-	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->get_input('sortby'));
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -1630,7 +1647,7 @@ if($mybb->input['action'] == "stats")
 
 	if($mybb->input['order'] || $mybb->input['sortby'])
 	{
-		if($mybb->input['uid'])
+		if($uid)
 		{
 			$page_url = "arcade.php?action=stats&uid={$uid}&sortby={$mybb->input['sortby']}&order={$mybb->input['order']}";
 		}
@@ -1639,7 +1656,7 @@ if($mybb->input['action'] == "stats")
 			$page_url = "arcade.php?action=stats&sortby={$mybb->input['sortby']}&order={$mybb->input['order']}";
 		}
 	}
-	elseif($mybb->input['uid'])
+	elseif($uid)
 	{
 		$page_url = "arcade.php?action=stats&uid={$uid}";
 	}
@@ -1651,6 +1668,7 @@ if($mybb->input['action'] == "stats")
 	$multipage = multipage($page_count, $perpage, $page, $page_url);
 
 	// Fetch the games and scores which will be displayed on this page
+	$stats_bit = '';
 	$query = $db->query("
 		SELECT g.*, s.uid, s.score, s.dateline, COUNT(c.gid) AS totalscores, ch.uid AS firstplace
 		FROM ".TABLE_PREFIX."arcadegames g
@@ -1759,7 +1777,11 @@ if($mybb->input['action'] == "champions")
 
 	$plugins->run_hooks("arcade_champions_start");
 
-	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
+	$sortby_selected = array('name' => '', 'user' => '', 'date' => '');
+	$order_selected = array('asc' => '', 'desc' => '');
+	$perpage_selected = array(5 => '', 10 => '', 15 => '', 20 => '', 25 => '', 30 => '', 40 => '', 50 => '');
+
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->get_input('order'));
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -1776,7 +1798,7 @@ if($mybb->input['action'] == "champions")
 	}
 
 	// Sort by which field?
-	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->get_input('sortby'));
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -1795,7 +1817,7 @@ if($mybb->input['action'] == "champions")
 			break;
 	}
 
-	$perpage_selected[$mybb->input['perpage']] = 'selected="selected"';
+	$perpage_selected[$mybb->get_input('perpage')] = 'selected="selected"';
 
 	// Figure out if we need to display multiple pages.
 	$mybb->input['perpage'] = $mybb->get_input('perpage', MyBB::INPUT_INT);
@@ -1846,6 +1868,7 @@ if($mybb->input['action'] == "champions")
 	$multipage = multipage($page_count, $perpage, $page, $page_url);
 
 	// Fetch the champions which will be displayed on this page
+	$champ_bit = '';
 	$query = $db->query("
 		SELECT c.*, g.name, s.comment, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadechampions c
@@ -1909,7 +1932,11 @@ if($mybb->input['action'] == "scoreboard")
 
 	$plugins->run_hooks("arcade_scoreboard_start");
 
-	$mybb->input['order'] = htmlspecialchars_uni($mybb->input['order']);
+	$sortby_selected = array('name' => '', 'user' => '', 'date' => '');
+	$order_selected = array('asc' => '', 'desc' => '');
+	$perpage_selected = array(5 => '', 10 => '', 15 => '', 20 => '', 25 => '', 30 => '', 40 => '', 50 => '');
+
+	$mybb->input['order'] = htmlspecialchars_uni($mybb->get_input('order'));
 
 	// Check the sorting order for games
 	$order_select = '';
@@ -1926,7 +1953,7 @@ if($mybb->input['action'] == "scoreboard")
 	}
 
 	// Sort by which field?
-	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->input['sortby']);
+	$mybb->input['sortby'] = htmlspecialchars_uni($mybb->get_input('sortby'));
 
 	$sortby_select = '';
 	switch($mybb->input['sortby'])
@@ -1945,7 +1972,7 @@ if($mybb->input['action'] == "scoreboard")
 			break;
 	}
 
-	$perpage_selected[$mybb->input['perpage']] = 'selected="selected"';
+	$perpage_selected[$mybb->get_input('perpage')] = 'selected="selected"';
 
 	// Figure out if we need to display multiple pages.
 	$mybb->input['perpage'] = $mybb->get_input('perpage', MyBB::INPUT_INT);
@@ -1996,6 +2023,7 @@ if($mybb->input['action'] == "scoreboard")
 	$multipage = multipage($page_count, $perpage, $page, $page_url);
 
 	// Fetch the scores which will be displayed on this page
+	$score_bit = '';
 	$query = $db->query("
 		SELECT s.*, g.name, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadescores s
@@ -2354,6 +2382,9 @@ if(!$mybb->input['action'])
 	// Stats box
 	if($mybb->settings['arcade_stats'] == 1)
 	{
+		$collapsed['arcadestats_e'] = $collapsed['arcadecat_e'] ='';
+		$collapsedimg['arcadestats'] = $collapsedimg['arcadecat'] ='';
+
 		// Newest Games
 		$newestgames = '';
 		$query = $db->simple_select("arcadegames", "gid, name, dateline, smallimage", "active='1'{$cat_sql}", array('order_by' => 'dateline', 'order_dir' => 'desc', 'limit' => $mybb->settings['arcade_stats_newgames']));
@@ -2501,6 +2532,7 @@ if(!$mybb->input['action'])
 				ORDER BY champs DESC
 				LIMIT 3
 			");
+			$bestplayers_bit = '';
 			while($champ = $db->fetch_array($query5))
 			{
 				$rank++;
@@ -2541,6 +2573,7 @@ if(!$mybb->input['action'])
 
 	// Category box
 	$categorycount = 0;
+	$categorybit = '';
 	$query = $db->query("
 		SELECT c.*, COUNT(g.gid) AS games
 		FROM ".TABLE_PREFIX."arcadecategories c
@@ -2573,6 +2606,7 @@ if(!$mybb->input['action'])
 	if($mybb->settings['enabletournaments'] == 1 && $mybb->usergroup['canviewtournaments'] == 1)
 	{
 		$tournaments_stats = $cache->read("tournaments_stats");
+
 		$tournaments_stats['numwaitingtournaments'] = my_number_format($tournaments_stats['numwaitingtournaments']);
 		$tournaments_stats['numrunningtournaments'] = my_number_format($tournaments_stats['numrunningtournaments']);
 		$tournaments_stats['numfinishedtournaments'] = my_number_format($tournaments_stats['numfinishedtournaments']);
@@ -2591,7 +2625,7 @@ if(!$mybb->input['action'])
 			eval("\$tournamentscancelled = \"".$templates->get('arcade_tournaments_cancelled')."\";");
 		}
 
-		$tournamentswaiting = '';
+		$tournamentswaiting = $tournamentmember = '';
 		if($mybb->usergroup['canjointournaments'] == 1)
 		{
 			$numgames = 0;
@@ -2623,6 +2657,7 @@ if(!$mybb->input['action'])
 				$activetournaments = $lang->na;
 			}
 
+			$tournamentcreate = '';
 			if($mybb->usergroup['cancreatetournaments'] == 1)
 			{
 				eval("\$tournamentcreate .= \"".$templates->get('arcade_tournaments_create')."\";");
@@ -2644,6 +2679,7 @@ if(!$mybb->input['action'])
 	if($mybb->settings['arcade_searching'] == 1 && $mybb->usergroup['cansearchgames'] == 1)
 	{
 		$searchcategorycount = 0;
+		$categoryoptions = '';
 		$query = $db->simple_select("arcadecategories", "*", "active='1'{$cat_sql}", array('order_by' => 'name', 'order_dir' => 'asc'));
 		while($category = $db->fetch_array($query))
 		{
@@ -2659,6 +2695,9 @@ if(!$mybb->input['action'])
 
 		eval("\$search = \"".$templates->get('arcade_search')."\";");
 	}
+
+	$sortby_selected = array('date' => '', 'plays' => '', 'lastplayed' => '', 'rating' => '', 'name' => '');
+	$order_selected = array('asc' => '', 'desc' => '');
 
 	// Pick the sort order.
 	if(!isset($mybb->input['order']) && !empty($mybb->settings['gamesorder']))
@@ -2727,7 +2766,7 @@ if(!$mybb->input['action'])
 	$perpage = $mybb->settings['gamesperpage'];
 	$page = $mybb->get_input('page', MyBB::INPUT_INT);
 
-	if($mybb->input['cid'])
+	if($mybb->get_input('cid') > 0)
 	{
 		$query = $db->simple_select("arcadegames", "COUNT(gid) AS page_count", "cid='{$cid}' AND active='1'");
 	}
@@ -2756,7 +2795,8 @@ if(!$mybb->input['action'])
 	// Assemble page URL
 	$page_url = "arcade.php";
 
-	if($mybb->input['cid'] > 0)
+	$q = $and = '';
+	if($mybb->get_input('cid') > 0)
 	{
 		$cid = $mybb->get_input('cid', MyBB::INPUT_INT);
 		$page_url .= "?cid={$cid}";
@@ -2797,6 +2837,7 @@ if(!$mybb->input['action'])
 		ORDER BY {$sortby} {$order}
 		LIMIT {$start}, {$perpage}
 	");
+	$game_bit = '';
 	while($game = $db->fetch_array($query))
 	{
 		$game_bit .= build_gamebit($game);

@@ -27,16 +27,18 @@ if($mybb->input['action'] == "add")
 
 		if($mybb->input['group_type'] == 2)
 		{
-			if(count($mybb->input['group_1_groups']) < 1)
+			if(empty($mybb->input['group_1_groups']))
 			{
 				$errors[] = $lang->error_no_groups_selected;
 			}
 
+			$group_checked[1] = '';
 			$group_checked[2] = "checked=\"checked\"";
 		}
 		else
 		{
 			$group_checked[1] = "checked=\"checked\"";
+			$group_checked[2] = '';
 			$mybb->input['group_1_groups'] = '';
 		}
 
@@ -107,8 +109,8 @@ if($mybb->input['action'] == "add")
 	}
 
 	$form_container = new FormContainer($lang->add_new_category);
-	$form_container->output_row($lang->name." <em>*</em>", "", $form->generate_text_box('name', $mybb->input['name'], array('id' => 'name')), 'name');
-	$form_container->output_row($lang->image, "", $form->generate_text_box('image', $mybb->input['image'], array('id' => 'image')), 'image');
+	$form_container->output_row($lang->name." <em>*</em>", "", $form->generate_text_box('name', $mybb->get_input('name'), array('id' => 'name')), 'name');
+	$form_container->output_row($lang->image, "", $form->generate_text_box('image', $mybb->get_input('image'), array('id' => 'image')), 'image');
 
 	$group_select = "<script type=\"text/javascript\">
 	function checkAction(id)
@@ -139,7 +141,7 @@ if($mybb->input['action'] == "add")
 			<table cellpadding=\"4\">
 				<tr>
 					<td valign=\"top\"><small>{$lang->groups_colon}</small></td>
-					<td>".$form->generate_group_select('group_1_groups[]', $mybb->input['group_1_groups'], array('multiple' => true, 'size' => 5))."</td>
+					<td>".$form->generate_group_select('group_1_groups[]', $mybb->get_input('group_1_groups'), array('multiple' => true, 'size' => 5))."</td>
 				</tr>
 			</table>
 		</dd>
@@ -149,7 +151,7 @@ if($mybb->input['action'] == "add")
 	</script>";
 	$form_container->output_row($lang->available_to_groups." <em>*</em>", '', $group_select);
 
-	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->input['active'], true));
+	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->get_input('active'), true));
 
 	$plugins->run_hooks("admin_arcade_categories_add_end");
 

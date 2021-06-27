@@ -1019,7 +1019,7 @@ body {
 	<td valign="top" width="1"><input type="checkbox" class="checkbox" name="champdisplaypostbit" id="champdisplaypostbit" value="1" {$champdisplaypostbitcheck} /></td>
 	<td><span class="smalltext"><label for="champdisplaypostbit">{$lang->champ_display_postbit}</label></span></td>
 </tr>]]></template>
-		<template name="arcade_statistics" version="1000"><![CDATA[<br />
+		<template name="arcade_statistics" version="1400"><![CDATA[<br />
 <table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 	<thead>
 		<tr>
@@ -1053,7 +1053,6 @@ body {
 						{$latestscores}
 					</table>
 				</fieldset>
-				{$randomgames}
 			</td>
 			<td class="trow1" valign="top">
 				{$mostplayedgames}

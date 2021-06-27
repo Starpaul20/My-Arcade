@@ -150,10 +150,10 @@ if($mybb->input['action'] == "add_simple")
 		$mybb->input['height'] = 500;
 	}
 	$form_container = new FormContainer($lang->add_new_game_simple);
-	$form_container->output_row($lang->name." <em>*</em>", "", $form->generate_text_box('name', $mybb->input['name'], array('id' => 'name')), 'name');
-	$form_container->output_row($lang->description." <em>*</em>", "", $form->generate_text_area('description', $mybb->input['description'], array('id' => 'description')), 'description');
-	$form_container->output_row($lang->about." <em>*</em>", $lang->about_desc, $form->generate_text_area('about', $mybb->input['about'], array('id' => 'about')), 'about');
-	$form_container->output_row($lang->game_controls." <em>*</em>", $lang->game_controls_desc, $form->generate_text_area('controls', $mybb->input['controls'], array('id' => 'controls')), 'controls');
+	$form_container->output_row($lang->name." <em>*</em>", "", $form->generate_text_box('name', $mybb->get_input('name'), array('id' => 'name')), 'name');
+	$form_container->output_row($lang->description." <em>*</em>", "", $form->generate_text_area('description', $mybb->get_input('description'), array('id' => 'description')), 'description');
+	$form_container->output_row($lang->about." <em>*</em>", $lang->about_desc, $form->generate_text_area('about', $mybb->get_input('about'), array('id' => 'about')), 'about');
+	$form_container->output_row($lang->game_controls." <em>*</em>", $lang->game_controls_desc, $form->generate_text_area('controls', $mybb->get_input('controls'), array('id' => 'controls')), 'controls');
 
 	$swf_list = array();
 	$swf_files = scandir(MYBB_ROOT."arcade/swf/");
@@ -165,7 +165,7 @@ if($mybb->input['action'] == "add_simple")
 			$swf_list[$swf_file_id] = $swf_file;
 		}
 	}
-	$form_container->output_row($lang->swf_file." <em>*</em>", $lang->swf_file_desc, $form->generate_select_box("file", $swf_list, $mybb->input['file'], array('id' => 'file')), 'file');
+	$form_container->output_row($lang->swf_file." <em>*</em>", $lang->swf_file_desc, $form->generate_select_box("file", $swf_list, $mybb->get_input('file'), array('id' => 'file')), 'file');
 
 	$small_list = array();
 	$small_files = scandir(MYBB_ROOT."arcade/smallimages/");
@@ -177,7 +177,7 @@ if($mybb->input['action'] == "add_simple")
 			$small_list[$small_file_id] = $small_file;
 		}
 	}
-	$form_container->output_row($lang->small_image." <em>*</em>", $lang->small_image_desc, $form->generate_select_box("smallimage", $small_list, $mybb->input['smallimage'], array('id' => 'smallimage')), 'smallimage');
+	$form_container->output_row($lang->small_image." <em>*</em>", $lang->small_image_desc, $form->generate_select_box("smallimage", $small_list, $mybb->get_input('smallimage'), array('id' => 'smallimage')), 'smallimage');
 
 	$large_list = array();
 	$large_files = scandir(MYBB_ROOT."arcade/largeimages/");
@@ -189,7 +189,7 @@ if($mybb->input['action'] == "add_simple")
 			$large_list[$large_file_id] = $large_file;
 		}
 	}
-	$form_container->output_row($lang->large_image." <em>*</em>", $lang->large_image_desc, $form->generate_select_box("largeimage", $large_list, $mybb->input['largeimage'], array('id' => 'largeimage')), 'largeimage');
+	$form_container->output_row($lang->large_image." <em>*</em>", $lang->large_image_desc, $form->generate_select_box("largeimage", $large_list, $mybb->get_input('largeimage'), array('id' => 'largeimage')), 'largeimage');
 
 	$categories['0'] = $lang->no_category;
 
@@ -198,11 +198,11 @@ if($mybb->input['action'] == "add_simple")
 	{
 		$categories[$category['cid']] = $category['name'];
 	}
-	$form_container->output_row($lang->category, "", $form->generate_select_box("cid", $categories, $mybb->input['cid'], array('id' => 'cid')), 'cid');
+	$form_container->output_row($lang->category, "", $form->generate_select_box("cid", $categories, $mybb->get_input('cid'), array('id' => 'cid')), 'cid');
 
-	$form_container->output_row($lang->bg_color, "", $form->generate_text_box('bgcolor', $mybb->input['bgcolor'], array('id' => 'bgcolor')), 'bgcolor');
-	$form_container->output_row($lang->width, "", $form->generate_numeric_field('width', $mybb->input['width'], array('id' => 'width', 'min' => 0)), 'width');
-	$form_container->output_row($lang->height, "", $form->generate_numeric_field('height', $mybb->input['height'], array('id' => 'height', 'min' => 0)), 'height');
+	$form_container->output_row($lang->bg_color, "", $form->generate_text_box('bgcolor', $mybb->get_input('bgcolor'), array('id' => 'bgcolor')), 'bgcolor');
+	$form_container->output_row($lang->width, "", $form->generate_numeric_field('width', $mybb->get_input('width'), array('id' => 'width', 'min' => 0)), 'width');
+	$form_container->output_row($lang->height, "", $form->generate_numeric_field('height', $mybb->get_input('height'), array('id' => 'height', 'min' => 0)), 'height');
 
 	$sort_by = array(
 		'desc' => $lang->desc_score,
@@ -210,8 +210,8 @@ if($mybb->input['action'] == "add_simple")
 	);
 
 	$form_container->output_row($lang->score_sort_by." <em>*</em>", "", $form->generate_select_box('sortby', $sort_by, array('id' => 'sortby')), 'sortby');
-	$form_container->output_row($lang->tournament_select." <em>*</em>", "", $form->generate_yes_no_radio("tournamentselect", $mybb->input['tournamentselect'], true));
-	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->input['active'], true));
+	$form_container->output_row($lang->tournament_select." <em>*</em>", "", $form->generate_yes_no_radio("tournamentselect", $mybb->get_input('tournamentselect'), true));
+	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->get_input('active'), true));
 
 	$plugins->run_hooks("admin_arcade_games_add_simple_end");
 
@@ -464,9 +464,9 @@ if($mybb->input['action'] == "add_tar")
 	{
 		$categories[$category['cid']] = $category['name'];
 	}
-	$form_container->output_row($lang->category, "", $form->generate_select_box("cid", $categories, $mybb->input['cid'], array('id' => 'cid')), 'cid');
-	$form_container->output_row($lang->tournament_select." <em>*</em>", "", $form->generate_yes_no_radio("tournamentselect", $mybb->input['tournamentselect'], true));
-	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->input['active'], true));
+	$form_container->output_row($lang->category, "", $form->generate_select_box("cid", $categories, $mybb->get_input('cid'), array('id' => 'cid')), 'cid');
+	$form_container->output_row($lang->tournament_select." <em>*</em>", "", $form->generate_yes_no_radio("tournamentselect", $mybb->get_input('tournamentselect'), true));
+	$form_container->output_row($lang->active." <em>*</em>", "", $form->generate_yes_no_radio("active", $mybb->get_input('active'), true));
 
 	$plugins->run_hooks("admin_arcade_games_add_tar_end");
 
@@ -791,25 +791,37 @@ if($mybb->input['action'] == "export")
 
 		if($exporttype == 3)
 		{
-			if(count($mybb->input['category_1_categories']) < 1)
+			if(empty($mybb->input['category_1_categories']))
 			{
 				$errors[] = $lang->error_no_categories_selected;
 			}
 
+			$game_checked[0] = '';
+			$game_checked[1] = '';
+			$game_checked[2] = '';
 			$game_checked[3] = "checked=\"checked\"";
+			$game_checked[4] = '';
 		}
 		elseif($exporttype == 4)
 		{
-			if(count($mybb->input['game_1_games']) < 1)
+			if(empty($mybb->input['game_1_games']))
 			{
 				$errors[] = $lang->error_no_games_selected;
 			}
 
+			$game_checked[0] = '';
+			$game_checked[1] = '';
+			$game_checked[2] = '';
+			$game_checked[3] = '';
 			$game_checked[4] = "checked=\"checked\"";
 		}
 		else
 		{
 			$game_checked[0] = "checked=\"checked\"";
+			$game_checked[1] = '';
+			$game_checked[2] = '';
+			$game_checked[3] = '';
+			$game_checked[4] = '';
 			$mybb->input['game_1_games'] = '';
 			$mybb->input['category_1_categories'] = '';
 		}
@@ -992,7 +1004,7 @@ if($mybb->input['action'] == "export")
 			<table cellpadding=\"4\">
 				<tr>
 					<td valign=\"top\"><small>{$lang->categories_colon}</small></td>
-					<td>".$form->generate_select_box('category_1_categories[]', $categories, $mybb->input['category_1_categories'], array('multiple' => true, 'size' => 5))."</td>
+					<td>".$form->generate_select_box('category_1_categories[]', $categories, $mybb->get_input('category_1_categories'), array('multiple' => true, 'size' => 5))."</td>
 				</tr>
 			</table>
 		</dd>
@@ -1001,7 +1013,7 @@ if($mybb->input['action'] == "export")
 			<table cellpadding=\"4\">
 				<tr>
 					<td valign=\"top\"><small>{$lang->games_colon}</small></td>
-					<td>".$form->generate_select_box('game_1_games[]', $games, $mybb->input['game_1_games'], array('multiple' => true, 'size' => 5))."</td>
+					<td>".$form->generate_select_box('game_1_games[]', $games, $mybb->get_input('game_1_games'), array('multiple' => true, 'size' => 5))."</td>
 				</tr>
 			</table>
 		</dd>
@@ -1011,7 +1023,7 @@ if($mybb->input['action'] == "export")
 	</script>";
 
 	$form_container->output_row($lang->export_type." <em>*</em>", '', $type_select);
-	$form_container->output_row($lang->file_name.' <em>*</em>', $lang->file_name_desc, $form->generate_text_box('name', $mybb->input['name'], array('id' => 'name')), 'name');
+	$form_container->output_row($lang->file_name.' <em>*</em>', $lang->file_name_desc, $form->generate_text_box('name', $mybb->get_input('name'), array('id' => 'name')), 'name');
 
 	$form_container->end();
 
@@ -1040,14 +1052,13 @@ if($mybb->input['action'] == "import")
 
 		if(!$errors)
 		{
-			require_once MYBB_ROOT."inc/class_xml.php";
 			$count = 0;
 
 			$contents = @file_get_contents($_FILES['gamefile']['tmp_name']);
 			// Delete the temporary file if possible
 			@unlink($_FILES['gamefile']['tmp_name']);
 
-			$parser = new XMLParser($contents);
+			$parser = create_xml_parser($contents);
 			$parser->collapse_dups = 0;
 			$tree = $parser->get_tree();
 

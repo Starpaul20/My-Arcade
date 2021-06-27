@@ -358,7 +358,7 @@ function user_game_rank($uid, $cat_sql)
 
 	foreach($games as $the_game)
 	{
-		if($users_place[$the_game['gid']])
+		if(isset($users_place[$the_game['gid']]))
 		{
 			$rank = $users_place[$the_game['gid']];
 
@@ -399,6 +399,10 @@ function whos_online()
 {
 	global $mybb, $db, $lang, $theme, $session, $cache, $plugins, $templates, $cat_sql;
 
+	$collapse = $collapsed = $collapsedimg = array();
+	$collapsed['online_e'] = '';
+	$collapsedimg['online'] = '';
+
 	if($mybb->settings['arcade_onlineimage'] == 1)
 	{
 		$query = $db->simple_select("arcadegames", "*", "active='1'{$cat_sql}");
@@ -423,6 +427,7 @@ function whos_online()
 	$onlinemembers = '';
 	$guestcount = 0;
 	$anoncount = 0;
+	$botcount = 0;
 	$doneusers = array();
 
 	// Fetch spiders
@@ -443,7 +448,7 @@ function whos_online()
 			if($mybb->settings['arcade_onlineimage'] == 1)
 			{
 				$loc_image_gid = explode("gid=", $online['location']);
-				$loc_image_gid = explode("&", $loc_image_gid[1]);
+				$loc_image_gid = explode("&", isset($loc_image_gid[1]));
 				$loc_image_link = my_substr($online['location'], -strpos(strrev($online['location']), "/"));
 
 				if(isset($loc_image_gid[0]) && isset($game[trim($loc_image_gid[0])]))
@@ -468,10 +473,10 @@ function whos_online()
 			if($online['uid'] > 0)
 			{
 				// The user is registered.
-				if($doneusers[$online['uid']] < $online['time'] || !$doneusers[$online['uid']])
+				if(isset($doneusers[$online['uid']]) < $online['time'] || $doneusers[$online['uid']])
 				{
 					// If the user is logged in anonymously, update the count for that.
-					if($user['invisible'] == 1)
+					if($online['invisible'] == 1)
 					{
 						++$anoncount;
 					}
