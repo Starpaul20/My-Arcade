@@ -124,7 +124,7 @@ function myarcade_info()
 		"website"			=> "http://galaxiesrealm.com/index.php",
 		"author"			=> "Starpaul20",
 		"authorsite"		=> "http://galaxiesrealm.com/index.php",
-		"version"			=> "1.3.3",
+		"version"			=> "1.4",
 		"codename"			=> "myarcade",
 		"compatibility"		=> "18*"
 	);
