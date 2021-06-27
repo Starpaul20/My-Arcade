@@ -11,74 +11,77 @@ if(!defined("IN_MYBB"))
 }
 
 // Neat trick for caching our custom template(s)
-if(THIS_SCRIPT == 'member.php')
+if(defined('THIS_SCRIPT'))
 {
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'member.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit,member_profile_arcade,member_profile_arcade_stats';
 	}
-	$templatelist .= 'global_arcade_bit,member_profile_arcade,member_profile_arcade_stats';
-}
 
-if(THIS_SCRIPT == 'showthread.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'showthread.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit';
 	}
-	$templatelist .= 'global_arcade_bit';
-}
 
-if(THIS_SCRIPT == 'private.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'private.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit';
 	}
-	$templatelist .= 'global_arcade_bit';
-}
 
-if(THIS_SCRIPT == 'announcements.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'announcements.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit';
 	}
-	$templatelist .= 'global_arcade_bit';
-}
 
-if(THIS_SCRIPT == 'newthread.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'newthread.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit';
 	}
-	$templatelist .= 'global_arcade_bit';
-}
 
-if(THIS_SCRIPT == 'newreply.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'newreply.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit';
 	}
-	$templatelist .= 'global_arcade_bit';
-}
 
-if(THIS_SCRIPT == 'editpost.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'editpost.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'global_arcade_bit';
 	}
-	$templatelist .= 'global_arcade_bit';
 }
 
 // Tell MyBB when to run the hooks
