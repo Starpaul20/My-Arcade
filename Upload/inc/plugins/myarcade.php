@@ -418,7 +418,7 @@ function myarcade_install()
 				cid smallint unsigned NOT NULL auto_increment,
 				name varchar(50) NOT NULL default '',
 				image varchar(200) NOT NULL default '',
-				groups text NOT NULL,
+				`groups` text NOT NULL,
 				active tinyint(1) NOT NULL default '1',
 				PRIMARY KEY(cid)
 			) ENGINE=MyISAM{$collation};");

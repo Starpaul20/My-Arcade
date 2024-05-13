@@ -209,7 +209,7 @@ function get_unviewable_categories()
 
 	$categories = array();
 
-	$query = $db->simple_select("arcadecategories", "cid, groups");
+	$query = $db->simple_select("arcadecategories", "cid, `groups`");
 	while($category = $db->fetch_array($query))
 	{
 		if(!is_member($category['groups']))
