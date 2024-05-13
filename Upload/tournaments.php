@@ -77,6 +77,7 @@ if($mybb->settings['arcade_whosonline'] != 0 && $mybb->usergroup['canviewonline'
 }
 
 // Gets only games this user can view (based on category group permission)
+$cat_sql = $cat_sql_game = '';
 $unviewable = get_unviewable_categories();
 if($unviewable)
 {
@@ -197,6 +198,7 @@ if($mybb->input['action'] == "create")
 		}
 	}
 
+	$gameoptions = '';
 	$query = $db->simple_select("arcadegames", "gid, name", "active='1' AND tournamentselect='1'{$cat_sql}", array('order_by' => 'name', 'order_dir' => 'asc'));
 	while($game = $db->fetch_array($query))
 	{
@@ -289,6 +291,8 @@ if($mybb->input['action'] == "view")
 		WHERE t.tid='{$tid}'
 	");
 	$tournament = $db->fetch_array($query);
+
+	$rounds = '';
 
 	$plugins->run_hooks("tournaments_view_start");
 
@@ -439,6 +443,7 @@ if($mybb->input['action'] == "view")
 				eval("\$disqualifylink = \"".$templates->get("tournaments_view_rounds_disqualify")."\";");
 			}
 
+			$rounds_bit_info = '';
 			if($tournament['status'] == 3 || $tournament['status'] == 2)
 			{
 				$player['score'] = my_number_format((float)$player['score']);
@@ -616,6 +621,7 @@ if($mybb->input['action'] == "waiting")
 	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=waiting");
 
 	// Fetch the tournaments which will be displayed on this page
+	$tournament_bit = '';
 	$query = $db->query("
 		SELECT t.tid, t.dateline, t.rounds, t.numplayers, g.name
 		FROM ".TABLE_PREFIX."arcadetournaments t
@@ -685,6 +691,7 @@ if($mybb->input['action'] == "running")
 	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=running");
 
 	// Fetch the tournaments which will be displayed on this page
+	$tournament_bit = '';
 	$query = $db->query("
 		SELECT t.tid, t.numplayers, t.days, t.information, g.name
 		FROM ".TABLE_PREFIX."arcadetournaments t
@@ -753,6 +760,7 @@ if($mybb->input['action'] == "finished")
 	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=finished");
 
 	// Fetch the tournaments which will be displayed on this page
+	$tournament_bit = '';
 	$query = $db->query("
 		SELECT t.tid, t.champion, t.finishdateline, t.numplayers, g.name, u.username, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadetournaments t
@@ -846,6 +854,7 @@ if($mybb->input['action'] == "cancelled")
 	$multipage = multipage($page_count, $perpage, $page, "tournaments.php?action=cancelled");
 
 	// Fetch the tournaments which will be displayed on this page
+	$tournament_bit = '';
 	$query = $db->query("
 		SELECT t.tid, t.uid, t.finishdateline, g.name, u.username, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadetournaments t

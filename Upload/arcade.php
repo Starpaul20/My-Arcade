@@ -270,6 +270,7 @@ if($mybb->input['action'] == "play")
 	add_breadcrumb($game['name'], "arcade.php?action=play&gid={$game['gid']}");
 
 	// Load Tournament info if inputted
+	$tournaments = '';
 	if($mybb->settings['enabletournaments'] == 1 && !empty($mybb->input['tid']))
 	{
 		// Create an arcade session (to ensure proper submitting and scoring)
@@ -321,7 +322,7 @@ if($mybb->input['action'] == "play")
 	");
 	$champ = $db->fetch_array($query);
 
-	if($champ['score'])
+	if(isset($champ['score']))
 	{
 		$champ['score'] = my_number_format((float)$champ['score']);
 		$lang->current_champion = $lang->sprintf($lang->current_champion, $champ['score']);
@@ -331,7 +332,7 @@ if($mybb->input['action'] == "play")
 		$lang->current_champion = $lang->sprintf($lang->current_champion, $lang->na);
 	}
 
-	if($champ['username'])
+	if(isset($champ['username']))
 	{
 		$champ['username'] = format_name(htmlspecialchars_uni($champ['username']), $champ['usergroup'], $champ['displaygroup']);
 
@@ -357,7 +358,7 @@ if($mybb->input['action'] == "play")
 		$query = $db->simple_select("arcadescores", "score", "gid='{$game['gid']}' AND uid='".(int)$mybb->user['uid']."'");
 		$score = $db->fetch_array($query);
 
-		if($score['score'])
+		if(isset($score['score']))
 		{
 			$userbestscore = my_number_format((float)$score['score']);
 		}
@@ -403,6 +404,7 @@ if($mybb->input['action'] == "play")
 			$game['numratings'] = (int)$game['numratings'];
 		}
 
+		$rated = '';
 		if($game['numratings'])
 		{
 			// At least >someone< has rated this game, was it me?
@@ -2573,7 +2575,7 @@ if(!$mybb->input['action'])
 
 	// Category box
 	$categorycount = 0;
-	$categorybit = '';
+	$categories = $categorybit = '';
 	$query = $db->query("
 		SELECT c.*, COUNT(g.gid) AS games
 		FROM ".TABLE_PREFIX."arcadecategories c
@@ -2688,6 +2690,7 @@ if(!$mybb->input['action'])
 			++$searchcategorycount;
 		}
 
+		$categorysearch = '';
 		if($searchcategorycount > 0)
 		{
 			eval("\$categorysearch = \"".$templates->get("arcade_search_catagory")."\";");
