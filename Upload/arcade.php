@@ -712,6 +712,7 @@ if($mybb->input['action'] == "scores")
 
 	// Fetch the scores which will be displayed on this page
 	$score_bit = '';
+	$counter = 0;
 	$query = $db->query("
 		SELECT s.*, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."arcadescores s
@@ -2466,9 +2467,9 @@ if(!$mybb->input['action'])
 				$gamelink = "arcade.php?action=scores&amp;gid={$score['gid']}";
 			}
 
-			$lang->scored_playing = $lang->sprintf($lang->scored_playing, $score['score']);
 			eval("\$newestchamps .= \"".$templates->get("arcade_statistics_scorebit")."\";");
 		}
+
 		if(!$newestchamps)
 		{
 			eval("\$newestchamps = \"".$templates->get("arcade_statistics_no_champs")."\";");
@@ -2511,7 +2512,6 @@ if(!$mybb->input['action'])
 				$gamelink = "arcade.php?action=scores&gid={$score['gid']}";
 			}
 
-			$lang->scored_playing = $lang->sprintf($lang->scored_playing, $score['score']);
 			eval("\$latestscores .= \"".$templates->get("arcade_statistics_scorebit")."\";");
 		}
 		if(!$latestscores)
@@ -2541,6 +2541,7 @@ if(!$mybb->input['action'])
 				$bestplayer_rank_lang = "bestplayers_place_".$rank;
 				$bestplayer_rank_lang = $lang->$bestplayer_rank_lang;
 
+				$best_player_avatar = '';
 				if($mybb->settings['arcade_stats_avatar'] == 1)
 				{
 					$useravatar = format_avatar(htmlspecialchars_uni($champ['avatar']), $champ['avatardimensions'], '100x100');

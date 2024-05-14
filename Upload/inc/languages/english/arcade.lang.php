@@ -166,6 +166,7 @@ $l['ip_address'] = "IP Address";
 $l['current_champion'] = "is the current champion with a score of<br /><strong>{1}</strong>";
 $l['categories'] = "Categories";
 $l['time_played'] = "Time Played";
+$l['avatar'] = "Avatar";
 
 $l['play_game'] = "Play {1}";
 $l['play_game_fullscreen'] = "Play {1} Full Screen";

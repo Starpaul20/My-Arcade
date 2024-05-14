@@ -96,7 +96,7 @@ class Arcade
 			$query = $db->simple_select("arcadescores", "*", "uid='{$user['uid']}' AND gid='{$game['gid']}'");
 			$current_score = $db->fetch_array($query);
 
-			if($current_score['sid'])
+			if(isset($current_score['sid']))
 			{
 				if(($current_score['score'] < $score && $game['sortby'] == "desc") || ($current_score['score'] > $score && $game['sortby'] == "asc"))
 				{
@@ -146,7 +146,7 @@ class Arcade
 			$query = $db->simple_select("arcadechampions", "*", "gid='{$game['gid']}'");
 			$current_champion = $db->fetch_array($query);
 
-			if($current_champion['cid'])
+			if(isset($current_champion['cid']))
 			{
 				if(($current_champion['score'] < $score && $game['sortby'] == "desc") || ($current_champion['score'] > $score && $game['sortby'] == "asc"))
 				{

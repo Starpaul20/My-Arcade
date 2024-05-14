@@ -321,7 +321,10 @@ function user_game_rank($uid, $cat_sql)
 	");
 	while($this_score = $db->fetch_array($query))
 	{
-		$score_totals[$this_score['gid']]++;
+		if(isset($score_totals[$this_score['gid']]))
+		{
+			$score_totals[$this_score['gid']]++;
+		}
 
 		if($this_score['uid'] == $uid)
 		{
@@ -329,7 +332,10 @@ function user_game_rank($uid, $cat_sql)
 			if(($this_score['score'] > $users_top[$this_score['gid']]) || $users_top[$this_score['gid']] == 0)
 			{
 				$users_top[$this_score['gid']] = $this_score['score'];
-				$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
+				if(isset($score_totals[$this_score['gid']]))
+				{
+					$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
+				}
 			}
 		}
 	}
@@ -343,7 +349,10 @@ function user_game_rank($uid, $cat_sql)
 	");
 	while($this_score = $db->fetch_array($query))
 	{
-		$score_totals[$this_score['gid']]++;
+		if(isset($score_totals[$this_score['gid']]))
+		{
+			$score_totals[$this_score['gid']]++;
+		}
 
 		if($this_score['uid'] == $uid)
 		{
@@ -351,7 +360,10 @@ function user_game_rank($uid, $cat_sql)
 			if(($this_score['score'] < $users_top[$this_score['gid']]) || $users_top[$this_score['gid']] == 0)
 			{
 				$users_top[$this_score['gid']] = $this_score['score'];
-				$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
+				if(isset($score_totals[$this_score['gid']]))
+				{
+					$users_place[$this_score['gid']] = $score_totals[$this_score['gid']];
+				}
 			}
 		}
 	}

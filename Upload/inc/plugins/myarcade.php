@@ -1212,8 +1212,8 @@ function myarcade_index()
 	");
 	$game = $db->fetch_array($query);
 
-	$game_name = $mybb->input['gname'];
-	$game_score = $mybb->input['gscore'];
+	$game_name = $mybb->get_input('gname');
+	$game_score = $mybb->get_input('gscore');
 	$perpage = $mybb->settings['scoresperpage'];
 
 	// IBProArcade v2 insert of a score
