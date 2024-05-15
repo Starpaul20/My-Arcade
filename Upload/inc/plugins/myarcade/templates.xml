@@ -510,8 +510,8 @@ body {
 	</tbody>
 </table>]]></template>
 		<template name="arcade_online_memberbit" version="1000"><![CDATA[{$comma}{$location}{$online['profilelink']}{$invisiblemark}]]></template>
-		<template name="arcade_online_memberbit_image_home" version="1300"><![CDATA[<a href="arcade.php"><img src="images/arcade/arcade.png" alt="{$lang->home}" /></a> ]]></template>
-		<template name="arcade_online_memberbit_image_game" version="1300"><![CDATA[<a href="{$gamelink}"><img src="arcade/smallimages/{$gameimage}.gif" alt="{$lang->game}" /></a> ]]></template>
+		<template name="arcade_online_memberbit_image_home" version="1500"><![CDATA[<a href="arcade.php"><img src="images/arcade/arcade.png" alt="{$lang->home}" /></a>&nbsp;]]></template>
+		<template name="arcade_online_memberbit_image_game" version="1500"><![CDATA[<a href="{$gamelink}"><img src="arcade/smallimages/{$gameimage}.gif" alt="{$lang->game}" /></a>&nbsp;]]></template>
 		<template name="arcade_play" version="1400"><![CDATA[<html>
 <head>
 <title>{$lang->arcade} - {$game['name']}</title>

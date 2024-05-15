@@ -417,7 +417,7 @@ function whos_online()
 
 	if($mybb->settings['arcade_onlineimage'] == 1)
 	{
-		$query = $db->simple_select("arcadegames", "*", "active='1'{$cat_sql}");
+		$query = $db->simple_select("arcadegames", "gid, smallimage", "active='1'{$cat_sql}");
 		while($games = $db->fetch_array($query))
 		{
 			$game[$games['gid']] = $games['smallimage'];
@@ -428,7 +428,7 @@ function whos_online()
 	$timesearch = TIME_NOW - $mybb->settings['wolcutoffmins']*60;
 	$comma = '';
 	$query = $db->query("
-		SELECT s.sid, s.ip, s.uid, s.time, s.location, s.location1, u.username, u.invisible, u.usergroup, u.displaygroup
+		SELECT s.sid, s.ip, s.uid, s.time, s.location, u.username, u.invisible, u.usergroup, u.displaygroup
 		FROM ".TABLE_PREFIX."sessions s
 		LEFT JOIN ".TABLE_PREFIX."users u ON (s.uid=u.uid)
 		WHERE s.time>'$timesearch'
@@ -460,13 +460,11 @@ function whos_online()
 			if($mybb->settings['arcade_onlineimage'] == 1)
 			{
 				$loc_image_gid = explode("gid=", $online['location']);
-				$loc_image_gid = explode("&", isset($loc_image_gid[1]));
-				$loc_image_link = my_substr($online['location'], -strpos(strrev($online['location']), "/"));
 
-				if(isset($loc_image_gid[0]) && isset($game[trim($loc_image_gid[0])]))
+				if(isset($loc_image_gid[1]) && isset($game[trim($loc_image_gid[1])]))
 				{
-					$gamelink = "arcade.php?action=scores&gid={$loc_image_gid[0]}";
-					$gameimage = $game[trim($loc_image_gid[0])];
+					$gamelink = "arcade.php?action=scores&gid={$loc_image_gid[1]}";
+					$gameimage = $game[trim($loc_image_gid[1])];
 
 					eval("\$location = \"".$templates->get("arcade_online_memberbit_image_game", 1, 0)."\";");
 				}

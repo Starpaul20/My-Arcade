@@ -776,7 +776,7 @@ if($mybb->input['action'] == "scores")
 			$timeplayed = nice_time($score['timeplayed'], array('short' => 1));
 		}
 
-		if($mybb->input['newscore'] == 1 && $mybb->user['uid'] == $score['uid'])
+		if($mybb->get_input('newscore', MyBB::INPUT_INT) == 1 && $mybb->user['uid'] == $score['uid'])
 		{
 			$alt_bg = "trow_shaded";
 		}
