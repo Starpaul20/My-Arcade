@@ -2164,7 +2164,7 @@ if($mybb->input['action'] == "do_search" && $mybb->request_method == "post")
 		"keywords" => $mybb->input['keywords'],
 		"name" => $mybb->input['name'],
 		"description" => $mybb->input['description'],
-		"cid" => $mybb->input['cid'],
+		"cid" => $mybb->get_input('cid', MyBB::INPUT_INT),
 	);
 
 	if($db->can_search == true)
@@ -2216,6 +2216,9 @@ if($mybb->input['action'] == "results")
 	{
 		error($lang->error_invalidsearch);
 	}
+
+	$sortby_selected = array('date' => '', 'plays' => '', 'lastplayed' => '', 'rating' => '', 'name' => '');
+	$order_selected = array('asc' => '', 'desc' => '');
 
 	$plugins->run_hooks("arcade_results_start");
 
@@ -2320,6 +2323,7 @@ if($mybb->input['action'] == "results")
 	}
 
 	// Fetch the games which will be displayed on this page
+	$game_bit = '';
 	$query = $db->query("
 		SELECT g.*, {$ratingadd}u.username, u.usergroup, u.displaygroup, s.score, f.fid AS favorite, c.score AS champscore, c.uid AS champuid, c.username AS champusername, cu.usergroup AS champusergroup, cu.displaygroup AS champdisplaygroup, r.uid AS rated
 		FROM ".TABLE_PREFIX."arcadegames g
@@ -2634,6 +2638,7 @@ if(!$mybb->input['action'])
 			$numgames = 0;
 			$enrolledin = 0;
 
+			$activetournaments = '';
 			$query = $db->query("
 				SELECT t.tid, t.status, g.name, g.smallimage
 				FROM ".TABLE_PREFIX."arcadetournamentplayers p

@@ -333,7 +333,7 @@ if($mybb->input['action'] == "view")
 		$query = $db->simple_select("arcadetournamentplayers", "uid", "tid='{$tid}' AND uid='{$mybb->user['uid']}'");
 		$player = $db->fetch_array($query);
 
-		if(($players > $tournament['numplayers']) && $mybb->usergroup['canjointournaments'] == 1 && ($player['uid'] != $mybb->user['uid']))
+		if(($players > $tournament['numplayers']) && $mybb->usergroup['canjointournaments'] == 1 && (!empty($player['uid']) != $mybb->user['uid']))
 		{
 			$remainingspots = $players - $tournament['numplayers'];
 			$lang->join_now = $lang->sprintf($lang->join_now, $remainingspots);
@@ -538,7 +538,7 @@ if($mybb->input['action'] == "join")
 	$query = $db->simple_select("arcadetournamentplayers", "pid", "tid='{$tid}' AND uid='{$mybb->user['uid']}'");
 	$player = $db->fetch_array($query);
 
-	if($player['pid'])
+	if($player)
 	{
 		error($lang->error_alreadyjoined);
 	}

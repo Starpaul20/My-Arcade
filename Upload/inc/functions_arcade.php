@@ -329,7 +329,7 @@ function user_game_rank($uid, $cat_sql)
 		if($this_score['uid'] == $uid)
 		{
 			$totalscores++;
-			if(($this_score['score'] > $users_top[$this_score['gid']]) || $users_top[$this_score['gid']] == 0)
+			if(isset($this_score['score']) && isset($users_top[$this_score['gid']]) && ($this_score['score'] > $users_top[$this_score['gid']]) || empty($users_top[$this_score['gid']]))
 			{
 				$users_top[$this_score['gid']] = $this_score['score'];
 				if(isset($score_totals[$this_score['gid']]))
@@ -357,7 +357,7 @@ function user_game_rank($uid, $cat_sql)
 		if($this_score['uid'] == $uid)
 		{
 			$totalscores++;
-			if(($this_score['score'] < $users_top[$this_score['gid']]) || $users_top[$this_score['gid']] == 0)
+			if(isset($this_score['score']) && isset($users_top[$this_score['gid']]) && ($this_score['score'] < $users_top[$this_score['gid']]) || empty($users_top[$this_score['gid']]))
 			{
 				$users_top[$this_score['gid']] = $this_score['score'];
 				if(isset($score_totals[$this_score['gid']]))

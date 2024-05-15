@@ -1406,6 +1406,7 @@ function myarcade_postbit_post($post)
 			$mybb->settings['arcade_postbitlimit'] = 50;
 		}
 
+		$cat_sql = '';
 		if($unviewable)
 		{
 			$cat_sql .= " AND g.cid NOT IN ($unviewable)";
@@ -1486,6 +1487,7 @@ function myarcade_postbit_other($post)
 	$post['champions'] = '';
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1 && $mybb->settings['arcade_postbit'] == 1 && $champdisplaypostbit == 1)
 	{
+		$cat_sql = '';
 		$unviewable = get_unviewable_categories();
 		if($unviewable)
 		{
@@ -1528,6 +1530,7 @@ function myarcade_profile()
 	$arcadeprofile = '';
 	if($mybb->settings['enablearcade'] == 1 && $mybb->usergroup['canviewarcade'] == 1 && $usergroup['canviewarcade'] == 1)
 	{
+		$cat_sql = '';
 		$unviewable = get_unviewable_categories();
 		if($unviewable)
 		{
@@ -1536,6 +1539,7 @@ function myarcade_profile()
 
 		$lang->arcade_profile = $lang->sprintf($lang->arcade_profile, $memprofile['username']);
 
+		$champ_bit = '';
 		$query = $db->query("
 			SELECT c.gid, g.name, g.smallimage
 			FROM ".TABLE_PREFIX."arcadechampions c
@@ -1590,7 +1594,7 @@ function myarcade_online_activity($user_activity)
 	$gid_list = array();
 
 	$split_loc = explode(".php", $user_activity['location']);
-	if($split_loc[0] == $user['location'])
+	if(isset($user['location']) && $split_loc[0] == $user['location'])
 	{
 		$filename = '';
 	}
